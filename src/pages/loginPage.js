@@ -25,6 +25,7 @@ function LoginPage() {
         return () => {
             window.recaptchaVerifier = null;
         }
+        //eslint-disable-next-line
     }, [])
 
     return (
