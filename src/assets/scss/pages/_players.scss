@@ -1,0 +1,106 @@
+.players {
+
+    .coca-img {
+        margin-top: 30px;
+        width: 200px;
+    }
+
+    &__header {
+        color: white;
+        text-transform: uppercase;
+        font-weight: 900;
+        font-size: 24px;
+        margin: 40px 0;
+    }
+
+    .round-table {
+        animation: spin .7s ease-out;
+    }
+    .row {
+        display: flex;
+        justify-content: space-between;
+
+        &--1 {
+            width: 68%;
+        }
+        &--2 {
+            width: 100%;
+        }
+        &--3 {
+            width: 68%;
+        }
+    }
+
+    .tiger {
+        animation: toPosition .5s ease-out forwards;
+        transition: .2s transform ease-out;
+
+        &__img {
+            width: 130px;
+        }
+
+        &:active {
+            transform: scale(.978)
+        }
+
+        &--1 {
+            transform: translate(80px, 120px)
+        }
+        &--2 {
+            transform: translate(-72px, 120px)
+        }
+        &--3 {
+            transform: translate(144px, -15px)
+        }
+        &--4 {
+            transform: translate(-140px, -12px)
+        }
+        &--5 {
+            transform: translate(80px, -153px)
+        }
+        &--6 {
+            transform: translate(-70px, -153px)
+        }
+        
+    }
+
+    .floating-img {
+        position: absolute;
+    
+        &--1 {
+            top: 85px;
+            left: 8px;
+            width: 30px;
+        }
+    
+        &--2 {
+            bottom: 35px;
+            right: 60px;
+            width: 30px;
+        }
+    
+        &--3 {
+            bottom: 160px;
+            right: 14px;
+            width: 58px;
+        }
+    
+        &--4 {
+            bottom: 35px;
+            right: 150px;
+            width: 58px;
+        }
+    
+        &--5 {
+            bottom: 65px;
+            left: 10px;
+            width: 150px;
+        }
+    
+        &--6 {
+            top: 176px;
+            right: 3px;
+            width: 90px;
+        }
+    }
+}

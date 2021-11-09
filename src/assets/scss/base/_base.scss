@@ -1,0 +1,14 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.page {
+    background: url(../../img/bg.png);
+    position: relative;
+    min-height: 100vh;
+    min-width: 320px;
+    max-width: 768px;
+    margin: 0 auto;
+}

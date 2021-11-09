@@ -1,0 +1,54 @@
+.welcome {
+
+    .floating-img {
+        position: absolute;
+    
+        &--1 {
+            top: 60px;
+            left: 0;
+            width: 90px;
+        }
+    
+        &--2 {
+            top: 130px;
+            left: 120px;
+            width: 30px;
+        }
+    
+        &--3 {
+            top: 35px;
+            right: 70px;
+            width: 58px;
+        }
+    
+        &--4 {
+            bottom: 55px;
+            left: 70px;
+            width: 58px;
+        }
+    
+        &--5 {
+            bottom: 170px;
+            right: 30px;
+            width: 90px;
+        }
+    
+        &--6 {
+            bottom: 80px;
+            right: 30px;
+            width: 40px;
+        }
+    
+        &--7 {
+            bottom: 200px;
+            left: 5px;
+            width: 150px;
+        }
+    
+        &--8 {
+            top: 140px;
+            right: 5px;
+            width: 130px;
+        }
+    }
+}

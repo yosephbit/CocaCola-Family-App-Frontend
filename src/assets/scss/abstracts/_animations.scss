@@ -1,0 +1,38 @@
+.floating-img {
+    animation: fadeup .5s ease-in;
+
+    &--3, &--5, &--7 {
+        animation-delay: .1s;
+    }
+}
+
+@keyframes fadeup {
+    from {
+        opacity: 0;
+        transform: translateY(5px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes toPosition {
+    from {
+        filter: grayscale(1);
+    }
+    to {
+        filter: grayscale(0);
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

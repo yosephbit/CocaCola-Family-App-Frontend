@@ -1,0 +1,18 @@
+.img-btn {
+    background: url(../../img/btn-img.png);
+    background-size: cover;
+    border: none;
+    width: 200px;
+    min-height: 40px;
+    background-repeat: no-repeat;
+    color: $main-red;
+    font-size: 24px;
+    font-weight: 900;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: transform .2s ease-out;
+
+    &:active {
+        transform: scale(0.98)
+    }
+}
