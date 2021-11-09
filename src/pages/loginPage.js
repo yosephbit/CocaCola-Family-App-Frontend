@@ -33,6 +33,7 @@ function LoginPage() {
             <div className="img-container fl-col just-center align-center">
                 <img src={coca} alt="" className="main-coca" />
                 <img src={banner} alt="" className="main-banner" />
+                <h2 className="welcome__header family_text">FAMILY REUNION</h2>
                 <h2 className="login__header">Trivia Challenge</h2>
             </div>
             <form onSubmit={onSubmitHandler} className="form fl-col justify-center align-center">
