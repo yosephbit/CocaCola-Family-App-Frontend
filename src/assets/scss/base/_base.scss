@@ -3,9 +3,13 @@
     padding: 0;
     box-sizing: border-box;
 }
+body {
+    background: url(../../img/bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 
 .page {
-    background: url(../../img/bg.png);
     position: relative;
     min-height: 100vh;
     min-width: 320px;

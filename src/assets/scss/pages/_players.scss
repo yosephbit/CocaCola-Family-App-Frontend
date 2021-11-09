@@ -37,11 +37,13 @@
 
         &__img {
             width: 130px;
+            transition: .2s transform ease-out;
+            
+            &:active {
+                transform: translate(0, 0) scale(.975);
+            }
         }
 
-        &:active {
-            transform: scale(.978)
-        }
 
         &--1 {
             transform: translate(80px, 120px)

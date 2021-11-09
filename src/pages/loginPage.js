@@ -5,7 +5,7 @@ import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import { useNavigate } from 'react-router-dom'
 
-// const auth = getAuth(FirebaseApp);
+const auth = getAuth(FirebaseApp);
 
 function LoginPage() {
     const [name, setName] = useState('')
@@ -13,16 +13,16 @@ function LoginPage() {
     let navigate = useNavigate()
 
     useEffect(() => {
-        // window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
-        //     'size': 'invisible',
-        //     'callback': (response) => {
-        //         // reCAPTCHA solved, allow signInWithPhoneNumber.
-        //         onSubmitHandler();
-        //     }
-        // }, auth);
-        // return () => {
-        //     window.recaptchaVerifier = null;
-        // }
+        window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+                onSubmitHandler();
+            }
+        }, auth);
+        return () => {
+            window.recaptchaVerifier = null;
+        }
     }, [])
 
     return (
@@ -54,21 +54,25 @@ function LoginPage() {
 
     function onSubmitHandler(e) {
         e.preventDefault()
-        navigate("/players")
+        if(!name || !phone) {
+            return
+        }
         // console.log("submitting")
-        // signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-        //     .then((confirmationResult) => {
-        //         console.log(confirmationResult)
-        //         // SMS sent. Prompt user to type the code from the message, then sign the
-        //         // user in with confirmationResult.confirm(code).
-        //         window.confirmationResult = confirmationResult;
-        //         // ...
-        //     }).catch((error) => {
-        //         console.log(error)
-        //         // Error; SMS not sent
+        signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+                console.log(confirmationResult)
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+                navigate("/players")
+                // ...
+            }).catch((error) => {
+                console.log(error)
+                navigate("/players")
+                // Error; SMS not sent
 
-        //         // ...
-        //     });
+                // ...
+            });
     }
 }
 
