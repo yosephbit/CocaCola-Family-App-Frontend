@@ -12,6 +12,7 @@ function WelcomePage() {
             <div className="container fl-col just-center align-center">
                 <img src={coca} alt="" className="main-coca" />
                 <img src={banner} alt="" className="main-banner" />
+                <h2 className="welcome__header family_text">FAMILY REUNION</h2>
                 <h2 className="welcome__header">Trivia Challenge</h2>
 
                 <Link to="/login" className="img-btn fl-row just-center align-center">
