@@ -1,4 +1,20 @@
 .login {
+    .img-container {
+        margin-top: -180px;
+    }
+    .main-coca {
+        width: 150px;
+        margin-bottom: -25px;
+        margin-left: 15px;
+    }
+    .main-banner {
+        width: 370px;
+    }
+    &__header {
+        color: white;
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
 
     .form {
         width: 90%;

@@ -3,6 +3,8 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth
 import FirebaseApp from '../Firebase'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
+import banner from '../assets/img/banner.png'
+import coca from '../assets/img/coca.png'
 import { useNavigate } from 'react-router-dom'
 
 const auth = getAuth(FirebaseApp);
@@ -27,7 +29,11 @@ function LoginPage() {
 
     return (
         <div className="page login fl-col just-center align-center">
-            <img src="" alt="" className="main-img" />
+            <div className="img-container fl-col just-center align-center">
+                <img src={coca} alt="" className="main-coca" />
+                <img src={banner} alt="" className="main-banner" />
+                <h2 className="login__header">Trivia Challenge</h2>
+            </div>
             <form onSubmit={onSubmitHandler} className="form fl-col justify-center align-center">
                 <h2 className="form__header">Enter your details</h2>
                 <div className="form__group">
@@ -54,7 +60,7 @@ function LoginPage() {
 
     function onSubmitHandler(e) {
         e.preventDefault()
-        if(!name || !phone) {
+        if (!name || !phone) {
             return
         }
         // console.log("submitting")
