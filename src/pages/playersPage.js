@@ -3,6 +3,7 @@ import coca from '../assets/img/coca.png'
 import grandpa from '../assets/img/tiger-1.png'
 import grandma from '../assets/img/tiger-2.png'
 import father from '../assets/img/tiger-3.png'
+import mother from '../assets/img/tiger-4.png'
 import sister from '../assets/img/tiger-5.png'
 import brother from '../assets/img/tiger-6.png'
 import flower from '../assets/img/flower.png'
@@ -24,7 +25,7 @@ function PlayersPage() {
                 </div>
                 <div className="row row--2">
                     <div onClick={tempRoute} className="tiger tiger--3"><img src={father} alt="" className="tiger__img" /></div>
-                    <div onClick={tempRoute} className="tiger tiger--4"><img src={father} alt="" className="tiger__img" /></div>
+                    <div onClick={tempRoute} className="tiger tiger--4"><img src={mother} alt="" className="tiger__img" /></div>
                 </div>
                 <div className="row row--3">
                     <div onClick={tempRoute} className="tiger tiger--5"><img src={sister} alt="" className="tiger__img" /></div>
