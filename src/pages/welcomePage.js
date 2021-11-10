@@ -3,13 +3,12 @@ import banner from '../assets/img/banner-full.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 
 function WelcomePage() {
     const [searchParams] = useSearchParams()
     const link = searchParams.get("invite")
     
-    let navigate = useNavigate()
     return (
         <div className="page welcome fl-col just-center align-center">
             <div className="container fl-col just-center align-center">
@@ -26,9 +25,9 @@ function WelcomePage() {
                     </>
                 )}
 
-                <button onClick={toggleFullScreenAndNavigate} className="img-btn fl-row just-center align-center">
+                <Link to="/login" className="img-btn fl-row just-center align-center">
                     Start now
-                </button>
+                </Link>
             </div>
             <img src={flower} alt="" className="floating-img floating-img--1" />
             <img src={flower} alt="" className="floating-img floating-img--2" />
@@ -42,21 +41,21 @@ function WelcomePage() {
         </div>
     )
 
-    function toggleFullScreenAndNavigate() {
-        var doc = window.document;
-        var docEl = doc.documentElement;
+    // function toggleFullScreenAndNavigate() {
+    //     var doc = window.document;
+    //     var docEl = doc.documentElement;
       
-        var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-        var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+    //     var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    //     var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
       
-        if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-          requestFullScreen.call(docEl);
-        }
-        else {
-          cancelFullScreen.call(doc);
-        }
-        navigate("/login")
-    }
+    //     if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+    //       requestFullScreen.call(docEl);
+    //     }
+    //     else {
+    //       cancelFullScreen.call(doc);
+    //     }
+    //     navigate("/login")
+    // }
 }
 
 export default WelcomePage

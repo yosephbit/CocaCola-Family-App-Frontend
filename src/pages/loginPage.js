@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { getAuth, RecaptchaVerifier } from "firebase/auth";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import FirebaseApp from '../Firebase'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
@@ -11,7 +11,6 @@ const auth = getAuth(FirebaseApp);
 function LoginPage() {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
-    const [loading, setLoading] = useState(false)
     let navigate = useNavigate()
 
     useLayoutEffect(() => {
@@ -49,9 +48,10 @@ function LoginPage() {
                     <label htmlFor="" className="form__label">MOBILE NO:</label>
                     <input onChange={e => setPhone(e.target.value)} type="tel" value={phone} className="form__input" />
                 </div>
-                {!loading && (<button id="sign-in-button" type="submit" className="img-btn form__btn">
+                {/* {!loading && ()} */}
+                <button id="sign-in-button" type="submit" className="img-btn form__btn">
                     Send
-                </button>)}
+                </button>
             </form>
 
             <img src={flower} alt="" className="floating-img floating-img--1" />
@@ -65,28 +65,28 @@ function LoginPage() {
 
     function onSubmitHandler(e) {
         e.preventDefault()
-        navigate("/players")
+        // navigate("/players")
 
         if (!name || !phone) {
             return
         }
-        setLoading(true)
-        // console.log("submitting")
-        // signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-        //     .then((confirmationResult) => {
-        //         console.log(confirmationResult)
-        //         // SMS sent. Prompt user to type the code from the message, then sign the
-        //         // user in with confirmationResult.confirm(code).
-        //         window.confirmationResult = confirmationResult;
-        //         navigate("/players")
-        //         // ...
-        //     }).catch((error) => {
-        //         console.log(error)
-        //         navigate("/players")
-        //         // Error; SMS not sent
+        // setLoading(true)
+        console.log("submitting")
+        signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+                console.log(confirmationResult)
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+                navigate("/players")
+                // ...
+            }).catch((error) => {
+                console.log(error)
+                navigate("/players")
+                // Error; SMS not sent
 
-        //         // ...
-        //     });
+                // ...
+            });
     }
 }
 
