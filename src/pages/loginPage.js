@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { getAuth, RecaptchaVerifier } from "firebase/auth";
 import FirebaseApp from '../Firebase'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
-import banner from '../assets/img/banner.png'
-import coca from '../assets/img/coca.png'
+import banner from '../assets/img/banner-full.png'
 import { useNavigate } from 'react-router-dom'
 
 const auth = getAuth(FirebaseApp);
@@ -14,6 +13,12 @@ function LoginPage() {
     const [phone, setPhone] = useState('')
     let navigate = useNavigate()
 
+    useLayoutEffect(() => {
+        const page = document.querySelector('.page');
+        page.style.minHeight = window.innerHeight+'px'
+      }, [])
+
+      
     useEffect(() => {
         window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
             'size': 'invisible',
@@ -31,12 +36,9 @@ function LoginPage() {
     return (
         <div className="page login fl-col just-center align-center">
             <div className="img-container fl-col just-center align-center">
-                <img src={coca} alt="" className="main-coca" />
                 <img src={banner} alt="" className="main-banner" />
-                <h2 className="welcome__header family_text">FAMILY REUNION</h2>
-                <h2 className="login__header">Trivia Challenge</h2>
             </div>
-            <form onSubmit={onSubmitHandler} className="form fl-col justify-center align-center">
+            <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
                 <h2 className="form__header">Enter your details</h2>
                 <div className="form__group">
                     <label htmlFor="" className="form__label">NAME:</label>
@@ -62,25 +64,27 @@ function LoginPage() {
 
     function onSubmitHandler(e) {
         e.preventDefault()
+        navigate("/players")
+
         if (!name || !phone) {
             return
         }
         // console.log("submitting")
-        signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-            .then((confirmationResult) => {
-                console.log(confirmationResult)
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-                navigate("/players")
-                // ...
-            }).catch((error) => {
-                console.log(error)
-                navigate("/players")
-                // Error; SMS not sent
+        // signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+        //     .then((confirmationResult) => {
+        //         console.log(confirmationResult)
+        //         // SMS sent. Prompt user to type the code from the message, then sign the
+        //         // user in with confirmationResult.confirm(code).
+        //         window.confirmationResult = confirmationResult;
+        //         navigate("/players")
+        //         // ...
+        //     }).catch((error) => {
+        //         console.log(error)
+        //         navigate("/players")
+        //         // Error; SMS not sent
 
-                // ...
-            });
+        //         // ...
+        //     });
     }
 }
 

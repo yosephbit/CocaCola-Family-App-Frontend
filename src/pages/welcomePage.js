@@ -1,19 +1,29 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import banner from '../assets/img/banner.png'
-import coca from '../assets/img/coca.png'
+import banner from '../assets/img/banner-full.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
+import { useSearchParams } from 'react-router-dom'
 
 function WelcomePage() {
+    const [searchParams] = useSearchParams()
+    const link = searchParams.get("invite")
     return (
         <div className="page welcome fl-col just-center align-center">
             <div className="container fl-col just-center align-center">
-                <img src={coca} alt="" className="main-coca" />
                 <img src={banner} alt="" className="main-banner" />
-                <h2 className="welcome__header family_text">FAMILY REUNION</h2>
-                <h2 className="welcome__header">Trivia Challenge</h2>
+                {link && (
+                    <>
+                    <p className="welcome__text">
+                        Welcome and Gong Xi Fa Cai! Your loved one XXX wants to play the Family
+                        Reunion Trivia Challenge with you.
+                    </p>
+                    <p className="welcome__text">
+                        Please answer the trivia for your loved one to play.
+                    </p>
+                    </>
+                )}
 
                 <Link to="/login" className="img-btn fl-row just-center align-center">
                     Start now
