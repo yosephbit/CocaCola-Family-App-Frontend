@@ -4,10 +4,10 @@ import link1 from '../assets/img/link-1.png'
 import link2 from '../assets/img/link-2.png'
 import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 function SocialLinkPage() {
-    let navigate = useNavigate()
+    // let navigate = useNavigate()
 
     return (
         <div className="page social fl-col align-center">
@@ -36,7 +36,7 @@ function SocialLinkPage() {
     )
 
     function tempRoute() {
-        navigate("/links")
+        // navigate("/links")
     }
 }
 

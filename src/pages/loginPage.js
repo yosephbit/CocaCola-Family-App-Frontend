@@ -11,14 +11,15 @@ const auth = getAuth(FirebaseApp);
 function LoginPage() {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
+    const [loading, setLoading] = useState(false)
     let navigate = useNavigate()
 
     useLayoutEffect(() => {
         const page = document.querySelector('.page');
-        page.style.minHeight = window.innerHeight+'px'
-      }, [])
+        page.style.minHeight = window.innerHeight + 'px'
+    }, [])
 
-      
+
     useEffect(() => {
         window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
             'size': 'invisible',
@@ -48,9 +49,9 @@ function LoginPage() {
                     <label htmlFor="" className="form__label">MOBILE NO:</label>
                     <input onChange={e => setPhone(e.target.value)} type="tel" value={phone} className="form__input" />
                 </div>
-                <button id="sign-in-button" type="submit" className="img-btn form__btn">
+                {!loading && (<button id="sign-in-button" type="submit" className="img-btn form__btn">
                     Send
-                </button>
+                </button>)}
             </form>
 
             <img src={flower} alt="" className="floating-img floating-img--1" />
@@ -69,6 +70,7 @@ function LoginPage() {
         if (!name || !phone) {
             return
         }
+        setLoading(true)
         // console.log("submitting")
         // signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
         //     .then((confirmationResult) => {
