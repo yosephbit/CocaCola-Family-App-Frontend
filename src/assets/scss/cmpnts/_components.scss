@@ -10,6 +10,7 @@
     font-weight: 900;
     text-decoration: none;
     text-transform: uppercase;
+    z-index: 2;
     transition: transform .2s ease-out;
 
     &:active {

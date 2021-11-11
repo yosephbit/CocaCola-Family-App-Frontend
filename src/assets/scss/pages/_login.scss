@@ -1,29 +1,32 @@
 .login {
     .img-container {
-        margin: -180px 0 20px;
+        margin: -30px 0 20px;
     }
     .main-banner {
         width: 370px;
+        z-index: 5;
     }
     &__header {
         color: white;
         font-size: 28px;
         margin-bottom: 25px;
+        text-align: center;
     }
 
     .form {
         width: 90%;
+        z-index: 5;
 
         &__header {
             text-transform: uppercase;
             color: transparent;
-            // #C99124, #F6DA67 
             background: linear-gradient(to right, #C99124 5%, #F6DA67 25%, #F6DA67 80%, #C99124 100%);
             background-clip: text;
             -webkit-background-clip: text;
             font-weight: 900;
             margin-bottom: 20px;
             font-size: 30px;
+            text-align: center;
         }
 
         &__group {
@@ -48,12 +51,17 @@
             padding: 0 5px;
             font-weight: 500;
         }
+        
+        &__error {
+            color: white;
+            font-size: 18px;
+        }
 
         &__btn {
             margin-top: 20px;
         }
-    }
-
+    }    
+    
     .floating-img {
         position: absolute;
     
@@ -72,25 +80,25 @@
         &--3 {
             top: 30px;
             right: 10px;
-            width: 58px;
+            width: 38px;
         }
     
         &--4 {
             bottom: 185px;
             left: 20px;
-            width: 58px;
+            width: 38px;
         }
     
         &--5 {
-            bottom: 140px;
-            right: 25px;
-            width: 90px;
+            bottom: 50px;
+            right: 15px;
+            width: 65px;
         }
     
         &--6 {
-            bottom: 100px;
+            bottom: 50px;
             left: 25px;
-            width: 150px;
+            width: 100px;
         }
     
         &--7 {
@@ -99,4 +107,30 @@
             width: 130px;
         }
     }
+}
+
+
+.popup-overlay .popup-content {
+    background-color: #292d3e;
+    border: 1px solid #464545;
+    color: #fff;
+    border-radius: 8px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.popup-overlay .modal {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    &__text {
+        font-size: 18px;
+    }
+}
+
+.Toastify__toast {
+    border-radius: 30px;
+    opacity: .85;
+    text-align: center;
 }

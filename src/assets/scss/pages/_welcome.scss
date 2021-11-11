@@ -5,6 +5,7 @@
     .main-banner {
         width: 370px;
         margin-bottom: 20px;
+        z-index: 5;
     }
 
     &__header {
@@ -27,49 +28,49 @@
         &--1 {
             top: 60px;
             left: 0;
-            width: 90px;
+            width: 65px;
         }
     
         &--2 {
-            top: 130px;
-            left: 120px;
+            top: 140px;
+            left: 150px;
             width: 30px;
         }
     
         &--3 {
             top: 35px;
             right: 60px;
-            width: 58px;
+            width: 38px;
         }
     
         &--4 {
             bottom: 55px;
             left: 70px;
-            width: 58px;
+            width: 38px;
         }
     
         &--5 {
-            bottom: 170px;
+            bottom: 150px;
             right: 30px;
-            width: 90px;
+            width: 55px;
         }
     
         &--6 {
-            bottom: 80px;
-            right: 30px;
+            bottom: 60px;
+            right: 80px;
             width: 40px;
         }
     
         &--7 {
-            bottom: 200px;
+            bottom: 150px;
             left: 5px;
-            width: 150px;
+            width: 115px;
         }
     
         &--8 {
-            top: 140px;
+            top: 110px;
             right: 5px;
-            width: 130px;
+            width: 100px;
         }
     }
 }

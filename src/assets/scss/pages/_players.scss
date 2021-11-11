@@ -2,15 +2,18 @@
 
     .coca-img {
         margin-top: 30px;
-        width: 200px;
+        width: 150px;
+        z-index: 5;
     }
 
     &__header {
         color: white;
         text-transform: uppercase;
         font-weight: 900;
-        font-size: 24px;
-        margin: 40px 0;
+        font-size: 22px;
+        margin: 30px 0;
+        text-align: center;
+        z-index: 5;
     }
 
     .round-table {
@@ -21,22 +24,23 @@
         justify-content: space-between;
 
         &--1 {
-            width: 68%;
+            width: 60%;
         }
         &--2 {
-            width: 100%;
+            width: 95%;
         }
         &--3 {
-            width: 68%;
+            width: 60%;
         }
     }
 
     .tiger {
         animation: toPosition .5s ease-out forwards;
         transition: .2s transform ease-out;
+        z-index: 5;
 
         &__img {
-            width: 130px;
+            width: 110px;
             transition: .2s transform ease-out;
             
             &:active {
@@ -84,7 +88,7 @@
         &--3 {
             bottom: 160px;
             right: 14px;
-            width: 58px;
+            width: 45px;
         }
     
         &--4 {
@@ -96,13 +100,13 @@
         &--5 {
             bottom: 65px;
             left: 10px;
-            width: 150px;
+            width: 100px;
         }
     
         &--6 {
             top: 176px;
-            right: 3px;
-            width: 90px;
+            right: 10px;
+            width: 65px;
         }
     }
 }
