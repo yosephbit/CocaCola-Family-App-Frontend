@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router'
+import UserContext from '../_helpers/userContext'
 
 function CodeVerification(props) {
     const [code, setCode] = useState("")
     const [errors, setErrors] = useState({})
+    const {user, storeUser} = useContext(UserContext)
     let navigate = useNavigate()
 
     return (
@@ -49,7 +51,7 @@ function CodeVerification(props) {
             .then((result) => {
                 // User signed in successfully.
                 const user = result.user;
-                console.log(result)
+                storeUser(user)
                 navigate("/players", {replace: true})
                 // ...
             }).catch((error) => {

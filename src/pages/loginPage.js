@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import FirebaseApp from '../Firebase'
+import FirebaseApp from '../_helpers/Firebase'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'

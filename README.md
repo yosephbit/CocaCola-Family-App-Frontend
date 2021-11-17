@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Family Reunion - Trivia Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is created using [create-React-App].
 
 ## Available Scripts
 
