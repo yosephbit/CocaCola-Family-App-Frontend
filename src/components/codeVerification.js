@@ -7,6 +7,7 @@ function CodeVerification(props) {
     const [errors, setErrors] = useState({})
     const {user, storeUser} = useContext(UserContext)
     let navigate = useNavigate()
+    console.log(user)
 
     return (
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">

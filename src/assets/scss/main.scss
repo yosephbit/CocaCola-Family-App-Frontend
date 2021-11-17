@@ -10,4 +10,10 @@
 @import "./pages/players";
 @import "./pages/social";
 
-@import "./cmpnts/components"
+@import "./cmpnts/components";
+
+.Toastify__toast {
+    border-radius: 30px;
+    opacity: .85;
+    text-align: center;
+}
