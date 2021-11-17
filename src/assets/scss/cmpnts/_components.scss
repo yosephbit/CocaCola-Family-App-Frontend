@@ -13,6 +13,12 @@
     z-index: 2;
     transition: transform .2s ease-out;
 
+    &--large {
+        font-size: 16px;
+        margin-bottom: 10px;
+        width: 205px;
+    }
+
     &:active {
         transform: scale(0.97)
     }

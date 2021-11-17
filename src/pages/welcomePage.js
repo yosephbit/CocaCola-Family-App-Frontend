@@ -15,19 +15,30 @@ function WelcomePage() {
                 <img src={banner} alt="" className="main-banner" />
                 {link && (
                     <>
-                    <p className="welcome__text">
-                        Welcome and Gong Xi Fa Cai! Your loved one XXX wants to play the Family
-                        Reunion Trivia Challenge with you.
-                    </p>
-                    <p className="welcome__text">
-                        Please answer the trivia for your loved one to play.
-                    </p>
+                        <p className="welcome__text">
+                            Welcome and Gong Xi Fa Cai! Your loved one XXX wants to play the Family
+                            Reunion Trivia Challenge with you.
+                        </p>
+                        <p className="welcome__text">
+                            Please answer the trivia for your loved one to play.
+                        </p>
                     </>
                 )}
 
-                <Link to="/login" className="img-btn fl-row just-center align-center">
-                    Start now
-                </Link>
+                {link ? (
+                    <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn fl-row just-center align-center">
+                        Start now
+                    </Link>
+                ) : (
+                    <>
+                        <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn img-btn--large fl-row just-center align-center">
+                            Test your knowledge
+                        </Link>
+                        <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn img-btn--large fl-row just-center align-center">
+                            Play together now
+                        </Link>
+                    </>
+                )}
             </div>
             <img src={flower} alt="" className="floating-img floating-img--1" />
             <img src={flower} alt="" className="floating-img floating-img--2" />

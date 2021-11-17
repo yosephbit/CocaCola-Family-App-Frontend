@@ -9,11 +9,14 @@ import brother from '../assets/img/tiger-6.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 // import { generateInviteLink } from '../_helpers/cloudFunctions'
 
 function PlayersPage() {
     let navigate = useNavigate()
+    let {pathname} = useLocation()
+    let pathArr = pathname.split('/')
+    let rootUrl = pathArr[pathArr.length - 2] || ''
 
     return (
         <div className="page players fl-col align-center">
@@ -65,7 +68,7 @@ function PlayersPage() {
         //     });
         const link = "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
 
-        navigate("/links", {
+        navigate(`/${rootUrl ? rootUrl+'/' : ''}links`, {
             state: {
                 link
             }

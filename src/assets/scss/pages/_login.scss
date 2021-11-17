@@ -42,6 +42,16 @@
             color: white;
             font-weight: 700;
             margin-right: 10px;
+
+            &--phone {
+                margin-right: -3px;
+                max-width: 94px;
+            }
+        }
+
+        &__container {
+            flex: 5;
+            background-color: white;
         }
         
         &__input {
@@ -50,6 +60,11 @@
             font-size: 18px;
             padding: 0 5px;
             font-weight: 500;
+
+            &--phone {
+                border: none;
+                outline: none;
+            }
         }
         
         &__error {
@@ -106,6 +121,16 @@
             right: 5px;
             width: 130px;
         }
+    }
+
+    .menu-flags {
+        padding-bottom: 0;
+        margin-right: 3px;
+        background-color: #eee;
+    }
+
+    .menu-flags-button {
+        padding: 2px 3px;
     }
 }
 

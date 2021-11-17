@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useLocation } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
 
@@ -8,6 +8,9 @@ function CodeVerification(props) {
     const [errors, setErrors] = useState({})
     const {user, storeUser} = useContext(UserContext)
     let navigate = useNavigate()
+    let {pathname} = useLocation()
+    let pathArr = pathname.split('/')
+    let rootUrl = pathArr[pathArr.length - 2] || ''
     console.log(user)
 
     return (
@@ -54,7 +57,7 @@ function CodeVerification(props) {
                 // User signed in successfully.
                 const user = result.user;
                 storeUser(user)
-                navigate("/players", {replace: true})
+                navigate(`/${rootUrl ? rootUrl+'/' : ''}players`, {replace: true})
                 // ...
             }).catch((error) => {
                 // User couldn't sign in (bad verification code?)

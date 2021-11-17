@@ -13,6 +13,14 @@ function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="players" element={<PlayersPage />} />
         <Route path="links" element={<SocialLinkPage />} />
+        <Route path="sg" element={<WelcomePage />} />
+        <Route path="sg/login" element={<LoginPage />} />
+        <Route path="sg/players" element={<PlayersPage />} />
+        <Route path="sg/links" element={<SocialLinkPage />} />
+        <Route path="my" element={<WelcomePage />} />
+        <Route path="my/login" element={<LoginPage />} />
+        <Route path="my/players" element={<PlayersPage />} />
+        <Route path="my/links" element={<SocialLinkPage />} />
       </Routes>
     </UserContext.Provider>
   );
