@@ -10,7 +10,7 @@ import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
 import { useNavigate } from 'react-router-dom'
-import { generateInviteLink } from '../_helpers/cloudFunctions'
+// import { generateInviteLink } from '../_helpers/cloudFunctions'
 
 function PlayersPage() {
     let navigate = useNavigate()
@@ -55,15 +55,21 @@ function PlayersPage() {
     )
 
     function tempRoute() {
-        generateInviteLink({ userId: "12" })
-            .then((result) => {
-                // Read result of the Cloud Function.
-                /** @type {any} */
-                const data = result.data;
-                const sanitizedMessage = data.text;
-            });
+        // generateInviteLink({ userId: "12" })
+        //     .then((result) => {
+        //         // Read result of the Cloud Function.
+        //         /** @type {any} */
+        //         const data = result.data;
+        //         const sanitizedMessage = data.text;
+        //         console.log(sanitizedMessage)
+        //     });
+        const link = "https://web.whatsapp.com"
 
-        navigate("/links")
+        navigate("/links", {
+            state: {
+                link
+            }
+        })
     }
 }
 
