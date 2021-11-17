@@ -289,7 +289,7 @@ function LoginPage() {
     )
 
     function onCountrySelect(code) {
-        const pre = code === "SG" ? '+251' : '+60'
+        const pre = code === "SG" ? '+65' : '+60'
         setPrefix(pre)
         setSelected(code)
         setPhone(pre)

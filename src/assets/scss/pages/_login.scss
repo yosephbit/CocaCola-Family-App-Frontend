@@ -44,7 +44,7 @@
             margin-right: 10px;
 
             &--phone {
-                margin-right: -3px;
+                margin-right: 13px;
                 max-width: 94px;
             }
         }
@@ -64,6 +64,10 @@
             &--phone {
                 border: none;
                 outline: none;
+                padding: 0 5px;
+                line-height: 1.6;
+                // font-size: 18px;
+                font-weight: 500;
             }
         }
         
