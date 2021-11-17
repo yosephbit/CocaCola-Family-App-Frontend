@@ -63,7 +63,7 @@ function PlayersPage() {
         //         const sanitizedMessage = data.text;
         //         console.log(sanitizedMessage)
         //     });
-        const link = "https://web.whatsapp.com"
+        const link = "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
 
         navigate("/links", {
             state: {
