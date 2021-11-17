@@ -12,8 +12,14 @@
 
 @import "./cmpnts/components";
 
-.Toastify__toast {
+.page .Toastify__toast {
     border-radius: 30px;
     opacity: .85;
     text-align: center;
+    font-size: 18px;
+}
+
+.page .Toastify__close-button {
+    align-self: center;
+    margin-right: 10px;
 }

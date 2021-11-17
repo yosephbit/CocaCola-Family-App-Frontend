@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router'
 import UserContext from '../_helpers/userContext'
+import { toast } from 'react-toastify';
 
 function CodeVerification(props) {
     const [code, setCode] = useState("")
@@ -60,6 +61,15 @@ function CodeVerification(props) {
                 error = new Error(error).toString().toLowerCase()
                 props.toggleModal(false)
                 console.log(error)
+                toast("could not verify code. Try again.", {
+                    position: "bottom-center",
+                    autoClose: 4500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                });
             });
     }
 }

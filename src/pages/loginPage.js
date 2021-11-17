@@ -134,7 +134,7 @@ export class LoginPage extends Component {
                     (<CodeVerification toggleModal={this.toggleModal} />)
                 }
     
-                <Popup open={this.state.open} closeOnDocumentClick onClose={() => this.toggleModal(false)}>
+                <Popup closeOnDocumentClick={false} closeOnEscape={false} open={this.state.open} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="TailSpin"

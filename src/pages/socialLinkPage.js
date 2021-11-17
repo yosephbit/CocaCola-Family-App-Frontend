@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom'
 function SocialLinkPage() {
     // let navigate = useNavigate()
     let {state} = useLocation()
-    const link = state?.link || "https://stackoverflow.com"
+    const link = state?.link || "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
 
     return (
         <div className="page social fl-col align-center">
