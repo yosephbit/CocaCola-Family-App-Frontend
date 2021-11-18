@@ -1,5 +1,5 @@
     .main-overlay {
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
         width: 100%;
@@ -16,12 +16,13 @@
             background-clip: text;
             -webkit-background-clip: text;
             font-weight: 900;
-            margin-bottom: 40px;
+            margin: 0 auto 40px;
             font-size: 30px;
             transform: rotate(-2deg);
             text-align: center;
             z-index: 20;
             position: relative;
+            // text-shadow: 0 0 27px $main-red;
         }
 
         .btn-group {
