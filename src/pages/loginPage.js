@@ -46,6 +46,7 @@ function LoginPage() {
             const {via} = state
             storePath(via)
         }
+        //eslint-disable-next-line
     }, [])
 
     useLayoutEffect(() => {
