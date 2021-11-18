@@ -2,16 +2,17 @@ import React, { useContext, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
+import RouteContext from '../_helpers/routeContext';
 
 function CodeVerification(props) {
     const [code, setCode] = useState("")
     const [errors, setErrors] = useState({})
-    const {user, storeUser} = useContext(UserContext)
+    const {storeUser} = useContext(UserContext)
     let navigate = useNavigate()
     let {pathname} = useLocation()
     let pathArr = pathname.split('/')
     let rootUrl = pathArr[pathArr.length - 2] || ''
-    console.log(user)
+    const {path} = useContext(RouteContext)
 
     return (
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
@@ -57,6 +58,10 @@ function CodeVerification(props) {
                 // User signed in successfully.
                 const user = result.user;
                 storeUser(user)
+                if(path === "LINK") {
+                    navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
+                    return;
+                }
                 navigate(`/${rootUrl ? rootUrl+'/' : ''}players`, {replace: true})
                 // ...
             }).catch((error) => {

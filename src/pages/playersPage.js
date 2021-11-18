@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import coca from '../assets/img/coca.png'
 import grandpa from '../assets/img/tiger-1.png'
 import grandma from '../assets/img/tiger-2.png'
@@ -10,6 +10,7 @@ import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
 import { useNavigate, useLocation } from 'react-router-dom'
+import RouteContext from '../_helpers/routeContext'
 // import { generateInviteLink } from '../_helpers/cloudFunctions'
 
 function PlayersPage() {
@@ -17,6 +18,7 @@ function PlayersPage() {
     let {pathname} = useLocation()
     let pathArr = pathname.split('/')
     let rootUrl = pathArr[pathArr.length - 2] || ''
+    const {path} = useContext(RouteContext)
 
     return (
         <div className="page players fl-col align-center">
@@ -67,6 +69,11 @@ function PlayersPage() {
         //         console.log(sanitizedMessage)
         //     });
         const link = "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
+        console.log(link)
+        if(path === 'TOGETHER') {
+            navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
+            return;    
+        }
 
         navigate(`/${rootUrl ? rootUrl+'/' : ''}links`, {
             state: {

@@ -26,15 +26,15 @@ function WelcomePage() {
                 )}
 
                 {link ? (
-                    <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn fl-row just-center align-center">
+                    <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'LINK'}} className="img-btn fl-row just-center align-center">
                         Start now
                     </Link>
                 ) : (
                     <>
-                        <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn img-btn--large fl-row just-center align-center">
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'NORMAL'}} className="img-btn img-btn--large fl-row just-center align-center">
                             Test your knowledge
                         </Link>
-                        <Link to={link ? `login?invite=${link}` : "login"}  className="img-btn img-btn--large fl-row just-center align-center">
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'TOGETHER'}} className="img-btn img-btn--large fl-row just-center align-center">
                             Play together now
                         </Link>
                     </>
