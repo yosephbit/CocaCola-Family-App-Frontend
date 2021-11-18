@@ -1,5 +1,5 @@
 import './assets/scss/main.scss';
-import { LoginPage, PlayersPage, SocialLinkPage, WelcomePage } from './pages';
+import { CameraPage, LoginPage, PlayersPage, SocialLinkPage, WelcomePage } from './pages';
 import { Routes, Route } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="players" element={<PlayersPage />} />
         <Route path="links" element={<SocialLinkPage />} />
+        <Route path="game" element={<CameraPage />} />
         <Route path="sg" element={<WelcomePage />} />
         <Route path="sg/login" element={<LoginPage />} />
         <Route path="sg/players" element={<PlayersPage />} />

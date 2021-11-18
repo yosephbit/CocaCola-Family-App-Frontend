@@ -13,10 +13,25 @@
     z-index: 2;
     transition: transform .2s ease-out;
 
+    &--small {
+        background: url(../../img/btn-img-small.png);
+        background-repeat: no-repeat;
+        font-size: 22px;
+        width: 150px;
+        margin-bottom: 5px;
+        min-height: 30px;
+        background-size: cover;
+        background-position: 50% 50%;
+    }
+
     &--large {
         font-size: 16px;
         margin-bottom: 10px;
         width: 205px;
+    }
+
+    &__text {
+
     }
 
     &:active {
