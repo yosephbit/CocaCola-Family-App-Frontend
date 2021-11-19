@@ -14,8 +14,14 @@ function App() {
   } catch (e) {
       userData = null
   }
+  let pathData;
+  try {
+      pathData = JSON.parse(pathStr)
+  } catch (e) {
+      pathData = null
+  }
   const [user, setUser] = useState(userData)
-  const [path, setPath] = useState(pathStr)
+  const [path, setPath] = useState(pathData)
   
   return (
     <UserContext.Provider value={{ user, storeUser }}>
@@ -49,7 +55,8 @@ function App() {
 
   function storePath(path) {
     setPath(path)
-    localStorage.setItem("_path", path)
+    const pathStr = JSON.stringify(path)
+    localStorage.setItem("_path", pathStr)
   }
 }
 

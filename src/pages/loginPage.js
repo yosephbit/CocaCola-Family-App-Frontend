@@ -43,8 +43,8 @@ function LoginPage() {
 
     useEffect(() => {
         if(state) {
-            const {via} = state
-            storePath(via)
+            const {via, linkId} = state
+            storePath({via, linkId})
         }
         //eslint-disable-next-line
     }, [])
@@ -92,10 +92,10 @@ function LoginPage() {
                         Send
                     </button>
                 </form>) :
-                (<CodeVerification nextPage={state} toggleModal={toggleModal} />)
+                (<CodeVerification userData={{name, phone}} nextPage={state} toggleModal={toggleModal} />)
             }
 
-            <Popup open={open} closeOnDocumentClick onClose={() => toggleModal(false)}>
+            <Popup open={open} closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
                 <div className="modal">
                     <Loader
                         type="TailSpin"

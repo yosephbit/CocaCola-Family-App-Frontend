@@ -3,14 +3,15 @@ import { useNavigate, useLocation } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
+import { onInvitationLink, signUpUser } from '../_helpers/cloudFunctions';
 
 function CodeVerification(props) {
     const [code, setCode] = useState("")
     const [errors, setErrors] = useState({})
-    const {storeUser} = useContext(UserContext)
-    const {path} = useContext(RouteContext)
+    const { storeUser } = useContext(UserContext)
+    const { path } = useContext(RouteContext)
     let navigate = useNavigate()
-    let {pathname} = useLocation()
+    let { pathname } = useLocation()
     let pathArr = pathname.split('/')
     let rootUrl = pathArr[pathArr.length - 2] || ''
 
@@ -18,8 +19,8 @@ function CodeVerification(props) {
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
             <h2 className="form__header">Enter verification code</h2>
             <div className="form__group">
-                <label htmlFor="" className="form__label">CODE:</label>
-                <input onChange={e => setCode(e.target.value)} type="number" value={code} className="form__input" />
+                <label htmlFor="" className="form__label form__label--code">CODE:</label>
+                <input onChange={e => setCode(e.target.value)} type="number" name="code" value={code} className="form__input" />
             </div>
             <span className="form__error">{errors["phone"]}</span>
             {/* {!loading && ()} */}
@@ -52,17 +53,50 @@ function CodeVerification(props) {
             return
         }
         props.toggleModal(true)
-        const phoneConfirmation =  window.confirmationResult 
+        const phoneConfirmation = window.confirmationResult
         phoneConfirmation.confirm(code)
             .then((result) => {
                 // User signed in successfully.
                 const user = result.user;
-                storeUser(user)
-                if(path === "LINK") {
-                    navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
-                    return;
-                }
-                navigate(`/${rootUrl ? rootUrl+'/' : ''}players`, {replace: true})
+                // await registerUser();
+                const { name, phone } = props.userData;
+                signUpUser(name, phone)
+                    .then(res => {
+                        storeUser({...user, ...res.data})
+                        if(path.via === "LINK") {
+                            onInvitationLink(path.linkId, res.data.uid)
+                                .then(() => {
+                                    navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
+                                })
+                                .catch(e => {
+                                    props.toggleModal(false)
+                                    toast(e.response?.data?.msg?.detail || 'Error has occured.', {
+                                        position: "bottom-center",
+                                        autoClose: 4500,
+                                        hideProgressBar: true,
+                                        closeOnClick: true,
+                                        pauseOnHover: false,
+                                        draggable: false,
+                                        progress: undefined,
+                                    });
+                                })
+                        } else {
+                            navigate(`/${rootUrl ? rootUrl+'/' : ''}players`, {replace: true})
+                        }
+                    })
+                    .catch(e => {
+                        props.toggleModal(false)
+                        toast("Error occured. Please try again.", {
+                            position: "bottom-center",
+                            autoClose: 4500,
+                            hideProgressBar: true,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: false,
+                            progress: undefined,
+                        });
+                    })
+
                 // ...
             }).catch((error) => {
                 // User couldn't sign in (bad verification code?)

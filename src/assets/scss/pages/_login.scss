@@ -43,16 +43,15 @@
             font-weight: 700;
             margin-right: 10px;
 
-            &--phone {
-                margin-right: 7px;
+            &--code {
+                margin-right: -40px;
             }
 
-            @media(max-width: 768px) {
-                &--phone {
-                    margin-right: -3px;
-                    max-width: 94px;
-                }
+            &--phone {
+                width: 94px;
+                margin-right: 7px;
             }
+            
         }
 
         &__container {

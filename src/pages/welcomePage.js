@@ -1,14 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import banner from '../assets/img/banner-full.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
-import { useSearchParams, Link } from 'react-router-dom'
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import { useSearchParams, Link, useNavigate, useLocation } from 'react-router-dom'
+import { getInviteDetails } from '../_helpers/cloudFunctions'
 
 function WelcomePage() {
     const [searchParams] = useSearchParams()
+    const navigate = useNavigate()
+    const {pathname} = useLocation()
     const link = searchParams.get("invite")
-    
+    const [name, setName] = useState('')
+
+    useEffect(() => {
+        if(link) {
+            getInviteDetails(link)
+            .then(res => {
+                setName(res.data?.from)
+            })
+            .catch(e => {
+                console.log(e)
+                toast("Invitation link is not valid", {
+                    position: "bottom-center",
+                    autoClose: 3500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    onClose: () => {
+                        navigate(pathname)
+                    }
+                });
+            })
+        }
+            // eslint-disable-next-line
+    }, [])
+
     return (
         <div className="page welcome fl-col just-center align-center">
             <div className="container fl-col just-center align-center">
@@ -16,7 +46,7 @@ function WelcomePage() {
                 {link && (
                     <>
                         <p className="welcome__text">
-                            Welcome and Gong Xi Fa Cai! Your loved one XXX wants to play the Family
+                            Welcome and Gong Xi Fa Cai! Your loved one {name} wants to play the Family
                             Reunion Trivia Challenge with you.
                         </p>
                         <p className="welcome__text">
@@ -26,20 +56,21 @@ function WelcomePage() {
                 )}
 
                 {link ? (
-                    <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'LINK'}} className="img-btn fl-row just-center align-center">
+                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
                         Start now
                     </Link>
                 ) : (
                     <>
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'NORMAL'}} className="img-btn img-btn--large fl-row just-center align-center">
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
                             Test your knowledge
                         </Link>
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{via: 'TOGETHER'}} className="img-btn img-btn--large fl-row just-center align-center">
-                            Play together now
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
+                            Play together now!
                         </Link>
                     </>
                 )}
             </div>
+            <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
             <img src={flower} alt="" className="floating-img floating-img--1" />
             <img src={flower} alt="" className="floating-img floating-img--2" />
             <img src={flower} alt="" className="floating-img floating-img--3" />
@@ -55,10 +86,10 @@ function WelcomePage() {
     // function toggleFullScreenAndNavigate() {
     //     var doc = window.document;
     //     var docEl = doc.documentElement;
-      
+
     //     var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
     //     var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-      
+
     //     if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
     //       requestFullScreen.call(docEl);
     //     }

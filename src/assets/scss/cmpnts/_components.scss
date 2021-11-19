@@ -25,14 +25,13 @@
     }
 
     &--large {
-        font-size: 16px;
-        margin-bottom: 10px;
-        width: 205px;
+        background: url(../../img/btn-img-large.png);
+        background-repeat: no-repeat;
+        font-size: 18px;
+        margin-bottom: 15px;
+        width: 290px;
     }
 
-    &__text {
-
-    }
 
     &:active {
         transform: scale(0.97)
