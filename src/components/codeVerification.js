@@ -8,11 +8,11 @@ function CodeVerification(props) {
     const [code, setCode] = useState("")
     const [errors, setErrors] = useState({})
     const {storeUser} = useContext(UserContext)
+    const {path} = useContext(RouteContext)
     let navigate = useNavigate()
     let {pathname} = useLocation()
     let pathArr = pathname.split('/')
     let rootUrl = pathArr[pathArr.length - 2] || ''
-    const {path} = useContext(RouteContext)
 
     return (
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">

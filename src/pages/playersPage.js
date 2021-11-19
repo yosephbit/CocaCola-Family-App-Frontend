@@ -69,7 +69,6 @@ function PlayersPage() {
         //         console.log(sanitizedMessage)
         //     });
         const link = "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
-        console.log(link)
         if(path === 'TOGETHER') {
             navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
             return;    

@@ -11,7 +11,7 @@ function SocialLinkPage() {
     // let navigate = useNavigate()
     let {state} = useLocation()
     let link = state?.link || "https://ar-filter-demo.netlify.app/?invite=AxreS35xs"
-    link = `Gong Xi Fa Chai! Your loved one wants to play the Coca-cola Family Reunion Trivia Challenge with you. Please, click this link to participate ${link}`
+    link = `Gong Xi Fa Chai! Your loved one wants to play the Coca-cola Family Reunion Trivia Challenge with you. Please click this link to participate ${link}`
     return (
         <div className="page social fl-col align-center">
             <div className="img-container fl-col just-center align-center">

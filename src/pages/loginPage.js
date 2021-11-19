@@ -13,7 +13,6 @@ import CodeVerification from '../components/codeVerification';
 import ReactFlagsSelect from 'react-flags-select';
 import { useLocation } from 'react-router-dom';
 import RouteContext from '../_helpers/routeContext';
-
 const auth = getAuth(FirebaseApp);
 
 function LoginPage() {
@@ -27,8 +26,9 @@ function LoginPage() {
     const [open, setOpen] = useState(false);
     let { pathname, state } = useLocation()
     const {storePath} = useContext(RouteContext)
-    const toggleModal = (state) => setOpen(state);
     const containerRef = useRef(null);
+    
+    const toggleModal = (state) => setOpen(state);
 
     useEffect(() => {
         if (pathname.includes('/my')) {

@@ -6,8 +6,17 @@ import RouteContext from './_helpers/routeContext';
 import { useState } from 'react';
 
 function App() {
-  const [user, setUser] = useState(null)
-  const [path, setPath] = useState(null)
+  const pathStr = localStorage.getItem('_path')
+  const userStr = localStorage.getItem('_user')
+  let userData;
+  try {
+      userData = JSON.parse(userStr)
+  } catch (e) {
+      userData = null
+  }
+  const [user, setUser] = useState(userData)
+  const [path, setPath] = useState(pathStr)
+  
   return (
     <UserContext.Provider value={{ user, storeUser }}>
       <RouteContext.Provider value={{ path, storePath }}>
