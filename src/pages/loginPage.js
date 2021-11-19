@@ -31,12 +31,12 @@ function LoginPage() {
     const toggleModal = (state) => setOpen(state);
 
     useEffect(() => {
-        if (pathname.includes('/my')) {
+        if (pathname.toLowerCase().includes('/my')) {
             setCountries(["MY"])
             setSelected('MY')
             setPrefix('+60')
             setPhone('+60')
-        } else if (pathname.includes('/sg')) {
+        } else if (pathname.toLowerCase().includes('/sg')) {
             setCountries(["SG"])
         }
     }, [pathname])
