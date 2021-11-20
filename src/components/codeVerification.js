@@ -18,7 +18,7 @@ function CodeVerification(props) {
     return (
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
             <h2 className="form__header">Enter verification code</h2>
-            <div className="form__group">
+            <div className="form__group form__group--code">
                 <label htmlFor="" className="form__label form__label--code">CODE:</label>
                 <input onChange={e => setCode(e.target.value)} type="number" name="code" value={code} className="form__input" />
             </div>
@@ -63,8 +63,8 @@ function CodeVerification(props) {
                 signUpUser(name, phone)
                     .then(res => {
                         storeUser({...user, ...res.data})
-                        if(path.via === "LINK") {
-                            onInvitationLink(path.linkId, res.data.uid)
+                        if(path?.via === "LINK") {
+                            onInvitationLink(path?.linkId, res.data.uid)
                                 .then(() => {
                                     navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
                                 })
@@ -85,6 +85,7 @@ function CodeVerification(props) {
                         }
                     })
                     .catch(e => {
+                        console.log(e)
                         props.toggleModal(false)
                         toast("Error occured. Please try again.", {
                             position: "bottom-center",

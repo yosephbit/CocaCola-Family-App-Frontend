@@ -35,6 +35,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            &--code {
+                width: 60%;
+                justify-content: center;
+            }
         }
         
         &__label {
@@ -44,7 +49,7 @@
             margin-right: 10px;
 
             &--code {
-                margin-right: -40px;
+                margin-right: 15px;
             }
 
             &--phone {

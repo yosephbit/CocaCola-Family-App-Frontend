@@ -1,9 +1,11 @@
 import './assets/scss/main.scss';
-import { CameraPage, LoginPage, PlayersPage, SocialLinkPage, WelcomePage } from './pages';
+import { LoginPage, WelcomePage } from './pages';
 import { Routes, Route } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
 import { useState } from 'react';
+import { ProtectedLinksPage, ProtectedPlayersPage } from './components';
+import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
 
 function App() {
   const pathStr = localStorage.getItem('_path')
@@ -18,7 +20,7 @@ function App() {
   try {
       pathData = JSON.parse(pathStr)
   } catch (e) {
-      pathData = null
+      pathData ={}
   }
   const [user, setUser] = useState(userData)
   const [path, setPath] = useState(pathData)
@@ -29,19 +31,19 @@ function App() {
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path="players" element={<PlayersPage />} />
-          <Route path="links" element={<SocialLinkPage />} />
-          <Route path="game" element={<CameraPage />} />
+          <Route path="players" element={<ProtectedPlayersPage />} />
+          <Route path="links" element={<ProtectedLinksPage />} />
+          <Route path="game" element={<ProtectedGamePlayPage />} />
           <Route path="sg" element={<WelcomePage />} />
           <Route path="sg/login" element={<LoginPage />} />
-          <Route path="sg/players" element={<PlayersPage />} />
-          <Route path="sg/links" element={<SocialLinkPage />} />
-          <Route path="sg/game" element={<CameraPage />} />
+          <Route path="sg/players" element={<ProtectedPlayersPage />} />
+          <Route path="sg/links" element={<ProtectedLinksPage />} />
+          <Route path="sg/game" element={<ProtectedGamePlayPage />} />
           <Route path="my" element={<WelcomePage />} />
           <Route path="my/login" element={<LoginPage />} />
-          <Route path="my/players" element={<PlayersPage />} />
-          <Route path="my/links" element={<SocialLinkPage />} />
-          <Route path="my/game" element={<CameraPage />} />
+          <Route path="my/players" element={<ProtectedPlayersPage />} />
+          <Route path="my/links" element={<ProtectedLinksPage />} />
+          <Route path="my/game" element={<ProtectedGamePlayPage />} />
         </Routes>
       </RouteContext.Provider>
     </UserContext.Provider>

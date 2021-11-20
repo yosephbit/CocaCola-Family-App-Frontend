@@ -1,7 +1,7 @@
 import React from 'react'
 import Webcam from 'react-webcam'
 
-function CameraPage() {
+function CameraComponent() {
     const videoContraints = {
         facingMode: "user",
         aspectRatio: window.innerHeight / window.innerWidth
@@ -20,4 +20,4 @@ function CameraPage() {
     }
 }
 
-export default CameraPage
+export default CameraComponent
