@@ -166,4 +166,35 @@
     &__text {
         font-size: 18px;
     }
+
+    &--audio {
+        flex-direction: column;
+    }
+
+    .content {
+        text-align: center;
+    }
+
+    .actions {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .button {
+        background-color: #fff;
+        color: #000;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 14px;
+        letter-spacing: 1.5px;
+        line-height: 2em;
+        outline: 0;
+        border-radius: 10px;
+        padding: 0 30px;
+        position: relative;
+        text-transform: uppercase;
+        transition: .3s;
+    }
 }
