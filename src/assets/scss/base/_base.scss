@@ -16,6 +16,10 @@ body {
 .page {
     position: relative;
     min-height: 100vh;
+}
+
+.app {
+    position: relative;
     min-width: 320px;
     max-width: 768px;
     margin: 0 auto;
