@@ -55,6 +55,35 @@
     }
 }
 
+.menu {
+    position: absolute;
+    top: 70px;
+    right: 35px;
+    z-index: 55;
+    background-color: #a8161c;
+    padding: 5px 0;
+    box-shadow: 0 2px 8px rgba(black, .3) ;
+    
+    &__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 50;
+    }
+    
+    &__item {
+        color: white;
+        padding: 5px 12px;
+        transition: all .2s;
+
+        &:hover, &:active {
+            color: #ccc;
+        }
+    }
+}
+
 .bounce {
     animation: bounce 2.5s ease-in-out;
 }

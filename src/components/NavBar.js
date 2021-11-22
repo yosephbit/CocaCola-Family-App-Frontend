@@ -12,7 +12,7 @@ function NavBar() {
     const [opened, setOpened] = useState(false)
     const [playing, setPlaying] = useState(false)
     const [volClass, setVolClass] = useState('icon-wrapper')
-    
+
     const handleInteract = () => {
         const wrapper = document.querySelector('.icon-wrapper')
         wrapper?.click()
@@ -22,7 +22,7 @@ function NavBar() {
     useEffect(() => {
         window.addEventListener("mousedown", handleInteract, false);
         setTimeout(() => {
-            setVolClass(volClass+' bounce')
+            setVolClass(volClass + ' bounce')
         }, 5000);
         //eslint-disable-next-line
     }, []);
@@ -40,13 +40,30 @@ function NavBar() {
         //eslint-disable-next-line
     }, [playing])
 
+    useEffect(() => {
+        if(opened) {
+            // document.addEventListener("click", function () {
+            //     document.getElementById("menu-btn").click()
+            // })
+        }
+    }, [opened])
+
     return (
         <div className="navbar fl-row just-between align-center">
             <img src={coca} alt="" className="navbar__logo" />
             <div className="navbar__actions fl-row align-center">
-                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} onClick={() => setPlaying(!playing)} strokeColor="white" />                
-                <UseAnimations animation={menu2} size={40} reverse={opened} style={{ animationDuration: '.1s' }} onClick={() => setOpened(!opened)} strokeColor="white" />
+                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} onClick={() => setPlaying(!playing)} strokeColor="white" />
+                <UseAnimations id="menu-btn" animation={menu2} size={40} reverse={opened} style={{ animationDuration: '.1s' }} onClick={() => setOpened(!opened)} strokeColor="white" />
             </div>
+            {opened && (
+                    <div className="menu fl-col just-start">
+                        <span className="menu__item">Home</span>
+                        <span className="menu__item">How to Participate</span>
+                        <span className="menu__item">Prizes</span>
+                        <span className="menu__item">Winner List</span>
+                        <span className="menu__item">Terms & Conditions</span>
+                    </div>
+            )}
         </div>
     )
 
