@@ -1,12 +1,12 @@
 import { useLayoutEffect, useState } from 'react';
 import './assets/scss/main.scss';
-import { LoginPage, WelcomePage } from './pages';
-import { Routes, Route } from 'react-router-dom';
+import { LoginPage, ParticipationPage, ScorePage, WelcomePage } from './pages';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
 import soundfile from './assets/audio/chinese_new_year.ogg'
 import Popup from 'reactjs-popup';
-import { NavBar, ProtectedLinksPage, ProtectedPlayersPage } from './components';
+import { Footer, NavBar, ProtectedLinksPage, ProtectedPlayersPage } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
 
 function App() {
@@ -37,14 +37,6 @@ function App() {
     // }, 4500);
   }, [])
 
-  // useEffect(() => {
-  //   if (interact) {
-  //     const audio = document.getElementById('audio')
-  //     audio.volume = 0.0
-  //     audio.play()
-  //   }
-  // }, [interact])
-
   return (
     <div className="app">
       <NavBar />
@@ -56,6 +48,8 @@ function App() {
             <Route path="players" element={<ProtectedPlayersPage />} />
             <Route path="links" element={<ProtectedLinksPage />} />
             <Route path="game" element={<ProtectedGamePlayPage />} />
+            <Route path="howto" element={<ParticipationPage />} />
+            <Route path="score" element={<ScorePage />} />
             <Route path="sg" element={<WelcomePage />} />
             <Route path="sg/login" element={<LoginPage />} />
             <Route path="sg/players" element={<ProtectedPlayersPage />} />
@@ -66,6 +60,7 @@ function App() {
             <Route path="my/players" element={<ProtectedPlayersPage />} />
             <Route path="my/links" element={<ProtectedLinksPage />} />
             <Route path="my/game" element={<ProtectedGamePlayPage />} />
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
         </RouteContext.Provider>
         {/* <Sound
@@ -92,6 +87,7 @@ function App() {
         </Popup>
         <audio id="audio" src={soundfile} loop={true}></audio>
       </UserContext.Provider>
+      <Footer />
     </div>
   );
 
