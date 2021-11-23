@@ -12,8 +12,8 @@ import ReactFlagsSelect from 'react-flags-select';
 import { useLocation, useNavigate } from 'react-router-dom';
 import RouteContext from '../_helpers/routeContext';
 import { sendCode } from '../_helpers/cloudFunctions';
-import UserContext from '../_helpers/userContext';
-import { onInvitationLink } from '../_helpers/cloudFunctions';
+
+const auth = getAuth(FirebaseApp);
 
 function LoginPage() {
     const [name, setName] = useState('')
@@ -24,15 +24,12 @@ function LoginPage() {
     const [errors, setErrors] = useState({})
     const [loginSuccess, setLoginSuccess] = useState(false)
     const [open, setOpen] = useState(false);
-    let { state } = useLocation()
-    const {storePath} = useContext(RouteContext)
-    const {user} = useContext(UserContext)
+    let { pathname, state } = useLocation()
+    const { storePath } = useContext(RouteContext)
     const containerRef = useRef(null);
     const toggleModal = (state) => setOpen(state);
     const [verificationId, setVerificationId] = useState('');
-    const [uid, setUid] = useState('');
-    const navigate = useNavigate()
-
+    const [uid, setUid]=useState('');
     useEffect(() => {
         const { hostname } = window.location
         const hostArr = hostname.split('.')
@@ -49,28 +46,8 @@ function LoginPage() {
 
     useEffect(() => {
         if (state) {
-            const { via, linkId, challengeId } = state
-            if (via === "LINK") {
-
-                storePath({ via, linkId })
-            }else if (via === "CHALLENGE"){
-                storePath({ via, challengeId})
-            } else if(via === "NORMAL") {
-                storePath({via})
-            }
-            //Auto Login if session exist 
-            if(user) {
-                if (via === "LINK") {
-                    onInvitationLink(linkId, user)
-                        .then(() => {})
-                        .catch(e => {})
-                    navigate(`/game`)
-                } else if (via === "CHALLENGE") {
-                    navigate(`/game`)
-                } else {
-                    navigate(`/players`, { replace: true })
-                }
-            }
+            const { via, linkId } = state
+            storePath({ via, linkId })
         }
         //eslint-disable-next-line
     }, [])
@@ -118,7 +95,7 @@ function LoginPage() {
                         SEND
                     </button>
                 </form>) :
-                (<CodeVerification userData={{ name, phone, verificationId, uid }} nextPage={state} toggleModal={toggleModal} />)
+                (<CodeVerification userData={{ name, phone, verificationId ,uid}} nextPage={state} toggleModal={toggleModal} />)
             }
 
             <Popup open={open} className="login-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
@@ -216,7 +193,7 @@ function LoginPage() {
             return
         }
         toggleModal(true)
-        //TODO: setup Recaptach
+        //TODO: setuo Recaptach
         //  const recaptchaVerifier = setupRecaptcha()
         // console.log(recaptchaVerifier);
 
@@ -238,7 +215,9 @@ function LoginPage() {
                 toggleModal(false)
                 console.error(error)
                 let errorMsg = "Couldn't log you in"
-               
+                if (error.includes('invalid Data')) {
+                    errorMsg = "Invalid phone number or name. Check your input."
+                }
                 toast(errorMsg, {
                     position: "bottom-center",
                     autoClose: 4500,

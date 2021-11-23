@@ -2,26 +2,10 @@
 // import { functions } from "./Firebase";
 import axios from "axios";
 
-const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
+const api = 'http://localhost:5001/family-ref-9b2fb/us-central1'
 
-
-export const getScore = (challangeId,respondentId ) => {
-   return axios.post(`${api}/getScore`, {challangeId, respondentId}); 
-}
-export const getChallenge = (challengeInstanceId) =>{
-    return axios.post(`${api}/getChallenge`, {challengeInstanceId});
-}
-export const onChallengeCreated = (challengeInstanceId) =>{
-    return axios.post(`${api}/onChallengeCreated`,{challengeInstanceId})
-}
-export const addChallenge = (questionId,challangeInstanceId,answerId) => {
-    return axios.post(`${api}/addChallange`,{questionId,challangeInstanceId,answerId});
-}
 export const sendCode = (name,phone_number) =>{
     return axios.post(`${api}/sendCode`,{name,phone_number},)
-}
-export const createChallengeInstance = (challangerId) =>{
-    return axios.post(`${api}/createChallangeInstance`,{challangerId})
 }
 
 export const verifyToken = (verificationId,sms_token) =>{

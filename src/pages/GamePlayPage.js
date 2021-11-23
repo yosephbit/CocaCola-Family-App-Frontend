@@ -9,34 +9,17 @@ import RouteContext from '../_helpers/routeContext';
 import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
 
+import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
+import { getQuiz } from '../_helpers/cloudFunctions';
+import { ToastContainer, toast, Slide } from 'react-toastify';
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
-    const [loading, setLoading] = useState(false)
-    const { path } = useContext(RouteContext)
-    const { user } = useContext(UserContext);
-    const { storePath } = useContext(RouteContext)
-    const [questoionsIndex, setQuestionsIndex] = useState(0)
-    const [currentQuestion, setCurrentQuestion] = useState({})
-    const [challengeAnswers, setChallengeAnswers] = useState([])
-    let navigate = useNavigate();
-
-    useEffect(() => {
-        if (questoionsIndex === questions.length && gameStared) {
-            if (path?.via === "CHALLENGE") {
-                uploadAnswerAndRedirectToScore(path?.challengeId)
-            } else {
-                uploadChallangeAndSendSms(challengeAnswers)
-            }
-        }
-        //eslint-disable-next-line
-    }, [challengeAnswers, questoionsIndex])
-
     return (
         <>
             <CameraComponent onChoiceMade={onChoiceMade} />
             {
-                gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />
+                gameStared ? <QuestionOverlay questions={{questions}}/> : <GameStartOverlay startGame={startGame} />
             }
 
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
@@ -51,6 +34,8 @@ function GamePlayPage() {
                     <span className="modal__text">Starting quiz...</span>
                 </div>
             </Popup>
+            <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+
         </>
     )
 
@@ -87,108 +72,23 @@ function GamePlayPage() {
     }
 
     function startGame() {
-        setLoading(true)
-        if (path?.via === "CHALLENGE") {
-            var challengeInstanceId = path?.challengeId;
-            getChallenge(challengeInstanceId)
-                .then(response => {
-                    setQuestions(response.data.questions)
-                    setCurrentQuestion(questions[0])
-                    setLoading(false)
-                    setGameStared(true);
-                }).catch(e => {
-                    console.log(e.response?.data?.msg?.detail)
-                    setLoading(false)
-                    toast(e.response?.data?.msg?.detail || 'Error has occured.', {
-                        position: "bottom-center",
-                        autoClose: 4500,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                    });
-                })
-        } else {
-            getQuiz(2)
-                .then(response => {
-                    setQuestions(response.data.questions)
-                    setCurrentQuestion(response.data.questions[0])
-                    setLoading(false)
-                    setGameStared(true);
-                }).catch(e => {
-                    console.log(e.response?.data?.msg?.detail)
-                    setLoading(false)
-                    toast(e.response?.data?.msg?.detail || 'Error has occured.', {
-                        position: "bottom-center",
-                        autoClose: 4500,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                    });
-                })
-        }
-    }
+        getQuiz(2)
+            .then(response => {
+                setQuestions(response.data.questions)
 
-    function uploadAnswerAndRedirectToScore(challengeInstanceId) {
-
-        for (const challenge of challengeAnswers) {
-            var singleAnswer = {
-                challangeId: challengeInstanceId,
-                respondentId: user,
-                questionId: challenge?.questionId,
-                questionChoiceId: challenge?.choiceId
-            }
-            answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
-                .then(res => {
-                    console.log(res)
-                }).catch(err => {
-                    console.error(err)
-                })
-        }
-
-        getScore(challengeInstanceId, user)
-            .then(res => {
-                storePath({ "SCORE": res?.data?.percentage })
-                navigate(`/score`)
-            }).catch(err => {
-                console.log(err)
+                setGameStared(true);
+            }).catch(e => {
+                console.log(e.response?.data?.msg?.detail)
+                toast(e.response?.data?.msg?.detail || 'Error has occured.', {
+                    position: "bottom-center",
+                    autoClose: 4500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                });
             })
-    }
-
-    function uploadChallangeAndSendSms(challengeAnswers) {
-        var challengerId = user;
-        createChallengeInstance(challengerId)
-            .then(res => {
-                var challangeInstanceId = res?.data?.challangeInstanceId
-
-                for (const challenge of challengeAnswers) {
-                    var singleChallenge = {
-                        questionId: challenge?.questionId,
-                        challangeInstanceId: challangeInstanceId,
-                        answerId: challenge?.choiceId
-                    }
-                    addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
-                        .then(res => {
-                            console.log(res.data)
-                        }).catch(err => {
-                            console.log(err)
-                        })
-                }
-                onChallengeCreated(challangeInstanceId)
-                    .then(res => {
-                    }).catch(err => {
-                        console.log(err)
-                    })
-
-            }).catch(err => {
-                console.log(err)
-
-            })
-
-
     }
 }
 

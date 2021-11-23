@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import React, { useContext, useState ,useEffect} from 'react'
+import { useNavigate, useLocation } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -11,10 +11,13 @@ function CodeVerification(props) {
     const { storeUser } = useContext(UserContext)
     const { path } = useContext(RouteContext)
     let navigate = useNavigate()
+    let { pathname } = useLocation()
+    let pathArr = pathname.split('/')
+    let rootUrl = pathArr[pathArr.length - 2] || '';
 
     
     useEffect(() => {
-        const { uid } = props.userData;
+        const { name, phone, verificationId, uid } = props.userData;
         if (uid !== '') {
             saveUserAndNavigate(uid);
             return;
@@ -56,13 +59,11 @@ function CodeVerification(props) {
         if (path?.via === "LINK") {
             onInvitationLink(path?.linkId, user)
                 .then(() => {
-                    //storePath({})
-                    navigate(`/game`)
+                    navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
                 })
                 .catch(e => {
                     props.toggleModal(false)
                     console.log(e)
-                    //storePath({})
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -73,13 +74,10 @@ function CodeVerification(props) {
                         progress: undefined,
                     });
                 })
-        }else if (path?.via === "CHALLENGE"){
-            navigate(`/game`)
-        }else {
-            navigate(`/players`, { replace: true })
+        } else {
+            navigate(`/${rootUrl ? rootUrl + '/' : ''}players`, { replace: true })
         }
     }
-
     function onSubmitHandler(e) {
         e.preventDefault()
         // navigate("/players")
@@ -88,7 +86,7 @@ function CodeVerification(props) {
             return
         }
         props.toggleModal(true)
-        const { verificationId } = props.userData;
+        const { name, phone, verificationId, uid } = props.userData;
 
         //checking if user is already signed and verfied 
         
