@@ -37,6 +37,7 @@ function WelcomePage() {
                     });
                 })
         }
+
         // eslint-disable-next-line
     }, [])
 
@@ -55,31 +56,29 @@ function WelcomePage() {
                         </p>
                     </>
                 )}
-                <div className="fl-col">
-                    {challengeLink ? (
+                {challengeLink ? (
 
-                        <Link to={challengeLink ? `login?challenge=${challengeLink}` : "login"} state={{ via: 'CHALLENGE', challengeId: challengeLink }} className="img-btn img-btn--large fl-row just-center align-center">
+                    <Link to={challengeLink ? `login?challenge=${challengeLink}` : "login"} state={{ via: 'CHALLENGE', challengeId: challengeLink }} className="img-btn img-btn--large fl-row just-center align-center">
+                        Start challenge
+                    </Link>) : (
+
+                    link ? (
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
                             Start now
-                        </Link>) : (
-
-                        link ? (
-                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
-                                Start now
+                        </Link>
+                    ) : (
+                        <>
+                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                Test your knowledge
                             </Link>
-                        ) : (
-                            <>
-                                <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
-                                    Test your knowledge
-                                </Link>
-                                <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
-                                    Play together now!
-                                </Link>
-                            </>
-                        )
-
+                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                Play together now!
+                            </Link>
+                        </>
                     )
-                    }
-                </div>
+
+                )
+                }
 
             </div>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />

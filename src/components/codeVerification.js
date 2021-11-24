@@ -10,6 +10,7 @@ function CodeVerification(props) {
     const [errors, setErrors] = useState({})
     const { storeUser } = useContext(UserContext)
     const { path } = useContext(RouteContext)
+    const { storePath } = useContext(RouteContext)
     let navigate = useNavigate()
     let { pathname } = useLocation()
     let pathArr = pathname.split('/')
@@ -59,11 +60,13 @@ function CodeVerification(props) {
         if (path?.via === "LINK") {
             onInvitationLink(path?.linkId, user)
                 .then(() => {
+                    storePath({})
                     navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
                 })
                 .catch(e => {
                     props.toggleModal(false)
                     console.log(e)
+                    storePath({})
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -74,7 +77,9 @@ function CodeVerification(props) {
                         progress: undefined,
                     });
                 })
-        } else {
+        }else if (path?.via === "CHALLENGE"){
+            navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
+        }else {
             navigate(`/${rootUrl ? rootUrl + '/' : ''}players`, { replace: true })
         }
     }
