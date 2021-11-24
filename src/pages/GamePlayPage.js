@@ -8,7 +8,6 @@ import RouteContext from '../_helpers/routeContext';
 import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
 
-import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
