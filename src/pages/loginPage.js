@@ -95,7 +95,7 @@ function LoginPage() {
                 (<CodeVerification userData={{name, phone}} nextPage={state} toggleModal={toggleModal} />)
             }
 
-            <Popup open={open} closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
+            <Popup open={open} className="login-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
                 <div className="modal">
                     <Loader
                         type="TailSpin"

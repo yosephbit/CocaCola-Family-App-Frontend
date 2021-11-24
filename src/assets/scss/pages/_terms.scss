@@ -1,0 +1,32 @@
+.terms {
+    padding: 100px 30px;
+    color: white;
+
+    &__header {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    &__sub-header {
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+    
+    .list {
+        margin-bottom: 20px;
+        list-style-position: inside;
+
+        &__item {
+            margin-bottom: 15px;
+            font-weight: 400;
+            font-size: 18px;
+
+            &::marker {
+                display: inline-block;
+            }
+        }
+    }
+}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
+import Popup from 'reactjs-popup';
+import { Acknowledge, CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
@@ -9,6 +10,10 @@ function GamePlayPage() {
             {
                 gameStared ? <QuestionOverlay /> : <GameStartOverlay startGame={startGame} />
             }
+            
+            <Popup lockScroll={true} open={true} className="ackno-popup" closeOnDocumentClick>
+                <Acknowledge />
+            </Popup>
         </>
     )
 

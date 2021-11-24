@@ -1,0 +1,76 @@
+.prizes {
+    padding: 0 14px;
+
+    &__header {
+        // display: flex;
+        color: white;
+
+        .dropcap {
+            float: left;
+            font-size: 75px;
+            line-height: 60px;
+            padding-top: 4px;
+            padding-right: 8px;
+            padding-left: 3px;
+        }
+
+        .text {
+            font-weight: 600;
+            font-size: 18px;
+        }
+    }
+
+    &__sub-header {
+        margin: 25px 0;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+    }
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    &__row {
+        display: flex;
+        border: 1px solid rgba(white, 0.7);
+        color: white;
+
+        &:not(:first-child) {
+            border-top: none;
+            // border-bottom-color: rgba(white, 0.9);
+        }
+
+        // &:last-child {
+        //     border-bottom-color: rgba(white, 0.4);
+        // }
+    }
+
+    &__header {
+        background-color: white;
+        color: $main-red;
+        font-weight: 500;
+        border-bottom: none;
+
+        .table__cell {
+            font-size: 14px;
+        }
+        & > div:first-child {
+            border-right-color: $main-red;
+        }
+    }
+
+    &__cell {
+        flex: 1;
+        text-align: center;
+        padding: 10px 8px;
+        font-size: 12px;
+        font-weight: 600;
+
+        &:first-child {
+            border-right: 1px solid rgba(white, 0.7);
+        }
+    }
+}

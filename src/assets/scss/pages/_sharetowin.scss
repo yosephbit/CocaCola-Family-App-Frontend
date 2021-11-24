@@ -1,0 +1,22 @@
+.sharetowin {
+    padding: 8px 0;
+
+    &__header {
+        color: white;
+        text-transform: uppercase;
+        font-weight: 900;
+        font-size: 35px;
+        margin-bottom: 8px;
+    }
+
+    &__group {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    &__text {
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+    }
+}

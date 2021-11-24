@@ -13,7 +13,6 @@ function NavBar() {
     const [volClass, setVolClass] = useState('icon-wrapper')
 
     const handleInteract = () => {
-        console.log("hello")
         const wrapper = document.querySelector('.icon-wrapper')
         wrapper?.click()
         window.removeEventListener("mousedown", handleInteract);
@@ -50,9 +49,10 @@ function NavBar() {
                         <div className="menu fl-col just-start">
                             <Link onClick={close} to="/" className="menu__item">Home</Link>
                             <Link onClick={close} to="howto" className="menu__item">How to Participate</Link>
-                            <Link onClick={close} to="score" className="menu__item">Prizes</Link>
-                            <Link onClick={close} to="score" className="menu__item">Winner List</Link>
-                            <Link onClick={close} to="score" className="menu__item">Terms & Conditions</Link>
+                            <Link onClick={close} to="prizes" className="menu__item">Prizes</Link>
+                            <Link onClick={close} to="winners" className="menu__item">Winner List</Link>
+                            <Link onClick={close} to="sharetowin" className="menu__item">Share to win</Link>
+                            <Link onClick={close} to="terms" className="menu__item">Terms & Conditions</Link>
                         </div>
                     )}
                 </Popup>

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 import './assets/scss/main.scss';
-import { LoginPage, ParticipationPage, ScorePage, WelcomePage } from './pages';
+import { LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
@@ -49,6 +49,10 @@ function App() {
             <Route path="links" element={<ProtectedLinksPage />} />
             <Route path="game" element={<ProtectedGamePlayPage />} />
             <Route path="howto" element={<ParticipationPage />} />
+            <Route path="sharetowin" element={<ShareToWinPage />} />
+            <Route path="winners" element={<WinnersPage />} />
+            <Route path="prizes" element={<PrizesPage />} />
+            <Route path="terms" element={<TermsPage />} />
             <Route path="score" element={<ScorePage />} />
             <Route path="sg" element={<WelcomePage />} />
             <Route path="sg/login" element={<LoginPage />} />
