@@ -9,7 +9,7 @@ import brother from '../assets/img/tiger-6.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import RouteContext from '../_helpers/routeContext'
 import { generateInviteLink } from '../_helpers/cloudFunctions'
 import UserContext from '../_helpers/userContext'
@@ -19,9 +19,6 @@ import Loader from 'react-loader-spinner'
 
 function PlayersPage() {
     let navigate = useNavigate()
-    let { pathname } = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || ''
     const { path } = useContext(RouteContext)
     const { user } = useContext(UserContext)
     const [open, setOpen] = useState(false)
@@ -83,23 +80,21 @@ function PlayersPage() {
 
     function generateLink(relation) {
         if (path.via === 'TOGETHER') {
-            navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
+            navigate(`/game`)
             return;
         }
         toggleModal(true)
         generateInviteLink(user.uid, relation)
             .then(res => {
-                console.log(res.data)
                 let { linkId } = res.data;
                 // TODO
                 // link url has to be changed to utilily file url
-                const link = `https://ar-filter-demo.netlify.app/${rootUrl ? rootUrl+'/' : ''}?invite=${linkId}`
-                navigate(`/${rootUrl ? rootUrl+'/' : ''}links`, {
+                const link = `https://ar-filter-demo.netlify.app/?invite=${linkId}`
+                navigate(`/links`, {
                     state: {
                         link
                     }
                 })
-                console.log(link)
             })
             .catch(e => {
                 toggleModal(false)

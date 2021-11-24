@@ -24,22 +24,25 @@ function LoginPage() {
     const [errors, setErrors] = useState({})
     const [loginSuccess, setLoginSuccess] = useState(false)
     const [open, setOpen] = useState(false);
-    let { pathname, state } = useLocation()
+    let { state } = useLocation()
     const {storePath} = useContext(RouteContext)
     const containerRef = useRef(null);
     
     const toggleModal = (state) => setOpen(state);
 
     useEffect(() => {
-        if (pathname.toLowerCase().includes('/my')) {
+        const { hostname } = window.location
+        const hostArr = hostname.split('.')
+        const countryCode = hostArr[hostArr.length -1]?.toLowerCase()
+        if (countryCode === 'my') {
             setCountries(["MY"])
             setSelected('MY')
             setPrefix('+60')
             setPhone('+60')
-        } else if (pathname.toLowerCase().includes('/sg')) {
+        } else if (countryCode === 'sg') {
             setCountries(["SG"])
         }
-    }, [pathname])
+    }, [])
 
     useEffect(() => {
         if(state) {

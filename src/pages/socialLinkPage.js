@@ -9,15 +9,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 function SocialLinkPage() {
     let navigate = useNavigate()
-    let {state, pathname} = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || ''
+    let {state} = useLocation()
     
     let link = state?.link
 
     useEffect(() => {
         if(!link) {
-            navigate(`/${rootUrl ? rootUrl + '/' : ''}players`)
+            navigate(`/players`)
         }
         // eslint-disable-next-line
     }, [])

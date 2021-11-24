@@ -9,6 +9,7 @@
     background-color: rgba(black, .15);
 
     .header {
+        position: relative;
         color: $main-red;
         max-width: 600px;
         text-align: center;
@@ -45,8 +46,8 @@
         position: absolute;
     
         &--1 {
-            top: 35px;
-            left: 50px;
+            top: 95px;
+            left: 20px;
             width: 30px;
         }
     
@@ -82,8 +83,8 @@
         }
     
         &--7 {
-            top: 20px;
-            right: 60px;
+            top: 100px;
+            right: 15px;
             width: 40px;
         }
     }

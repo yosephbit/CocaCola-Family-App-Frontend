@@ -19,7 +19,7 @@ function NavBar() {
     };
 
     useEffect(() => {
-        window.addEventListener("mouse", handleInteract);
+        document.addEventListener("mousedown", handleInteract, false);
         setTimeout(() => {
             setVolClass(volClass + ' bounce')
         }, 5000);
@@ -42,8 +42,11 @@ function NavBar() {
         <div className="navbar fl-row just-between align-center">
             <img src={coca} alt="" className="navbar__logo" />
             <div className="navbar__actions fl-row align-center">
-                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} onClick={() => setPlaying(!playing)} strokeColor="white" />
-                <Popup className="menu-popup" trigger={open => open ? (<div><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>) : (<div><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
+                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} 
+                    onClick={() => setPlaying(!playing)} strokeColor="white" />
+                <Popup className="menu-popup" trigger={open => open 
+                    ? (<div><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>) 
+                    : (<div><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
                     position="bottom right">
                     {close => (
                         <div className="menu fl-col just-start">
@@ -56,7 +59,6 @@ function NavBar() {
                         </div>
                     )}
                 </Popup>
-                <div className="menu-btn"></div>
             </div>
         </div>
     )

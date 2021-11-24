@@ -1,13 +1,12 @@
 import { useLayoutEffect, useState } from 'react';
 import './assets/scss/main.scss';
-import { LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
+import { LoginPage, ParticipationPage, PrizesPage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
-import soundfile from './assets/audio/chinese_new_year.ogg'
-import Popup from 'reactjs-popup';
 import { Footer, NavBar, ProtectedLinksPage, ProtectedPlayersPage } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
+import ProtectedScorePage from './components/ProtectedScorePage';
 
 function App() {
   const pathStr = localStorage.getItem('_path')
@@ -27,9 +26,6 @@ function App() {
 
   const [user, setUser] = useState(userData)
   const [path, setPath] = useState(pathData)
-  // const [interact, setInteract] = useState(false)
-  const [open, setOpen] = useState(false);
-  const toggleModal = (state) => setOpen(state);
 
   useLayoutEffect(() => {
     // setTimeout(() => {
@@ -53,43 +49,10 @@ function App() {
             <Route path="winners" element={<WinnersPage />} />
             <Route path="prizes" element={<PrizesPage />} />
             <Route path="terms" element={<TermsPage />} />
-            <Route path="score" element={<ScorePage />} />
-            <Route path="sg" element={<WelcomePage />} />
-            <Route path="sg/login" element={<LoginPage />} />
-            <Route path="sg/players" element={<ProtectedPlayersPage />} />
-            <Route path="sg/links" element={<ProtectedLinksPage />} />
-            <Route path="sg/game" element={<ProtectedGamePlayPage />} />
-            <Route path="my" element={<WelcomePage />} />
-            <Route path="my/login" element={<LoginPage />} />
-            <Route path="my/players" element={<ProtectedPlayersPage />} />
-            <Route path="my/links" element={<ProtectedLinksPage />} />
-            <Route path="my/game" element={<ProtectedGamePlayPage />} />
+            <Route path="score" element={<ProtectedScorePage />} />
             <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
-        </RouteContext.Provider>
-        {/* <Sound
-        url={soundfile}
-        playStatus={Sound.status.PLAYING}
-        autoLoad={true}
-        loop={true}
-      /> */}
-        <Popup contentStyle={{ width: '70%' }} open={open} closeOnDocumentClick={false} onClose={() => toggleModal(false)} position="bottom center">
-          <div className="modal modal--audio">
-            <div className="content">
-              {' '}
-              How about a music as you play?
-            </div>
-            <div className="actions">
-              <button className="button" onClick={() => toggleModal(false)}>
-                No
-              </button>
-              <button className="button" onClick={playSound}>
-                Yes
-              </button>
-            </div>
-          </div>
-        </Popup>
-        <audio id="audio" src={soundfile} loop={true}></audio>
+        </RouteContext.Provider>        
       </UserContext.Provider>
       <Footer />
     </div>
@@ -105,13 +68,6 @@ function App() {
     setPath(path)
     const pathStr = JSON.stringify(path)
     localStorage.setItem("_path", pathStr)
-  }
-
-  function playSound() {
-    toggleModal(false)
-    const audio = document.getElementById('audio')
-    audio.volume = 0.5
-    audio.play()
   }
 }
 

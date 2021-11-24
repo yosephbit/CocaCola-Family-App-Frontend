@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router'
+import { useNavigate } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -11,9 +11,6 @@ function CodeVerification(props) {
     const { storeUser } = useContext(UserContext)
     const { path } = useContext(RouteContext)
     let navigate = useNavigate()
-    let { pathname } = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || ''
 
     return (
         <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
@@ -66,7 +63,7 @@ function CodeVerification(props) {
                         if(path?.via === "LINK") {
                             onInvitationLink(path?.linkId, res.data.uid)
                                 .then(() => {
-                                    navigate(`/${rootUrl ? rootUrl+'/' : ''}game`)
+                                    navigate(`/game`)
                                 })
                                 .catch(e => {
                                     props.toggleModal(false)
@@ -81,7 +78,7 @@ function CodeVerification(props) {
                                     });
                                 })
                         } else {
-                            navigate(`/${rootUrl ? rootUrl+'/' : ''}players`, {replace: true})
+                            navigate(`/players`, {replace: true})
                         }
                     })
                     .catch(e => {
