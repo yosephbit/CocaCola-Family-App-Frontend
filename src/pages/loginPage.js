@@ -57,11 +57,11 @@ function LoginPage() {
         }
         //Auto Login if session exist 
         
-        if(user!==null) {
-            setUid(user)
-            toggleModal(false)
-            setLoginSuccess(true)
-        }
+        // if(user!==null) {
+        //     setUid(user)
+        //     toggleModal(false)
+        //     setLoginSuccess(true)
+        // }
         //eslint-disable-next-line
     }, [])
 

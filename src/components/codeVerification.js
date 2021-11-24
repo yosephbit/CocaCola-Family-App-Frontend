@@ -60,13 +60,13 @@ function CodeVerification(props) {
         if (path?.via === "LINK") {
             onInvitationLink(path?.linkId, user)
                 .then(() => {
-                    storePath({})
+                    //storePath({})
                     navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
                 })
                 .catch(e => {
                     props.toggleModal(false)
                     console.log(e)
-                    storePath({})
+                    //storePath({})
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,

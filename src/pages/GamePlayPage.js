@@ -1,12 +1,6 @@
 import React, { useState, useContext } from 'react'
 import Popup from 'reactjs-popup';
-import Loader from "react-loader-spinner";
-import { useNavigate } from 'react-router-dom'
-import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
-import { ToastContainer, toast, Slide } from 'react-toastify';
-import RouteContext from '../_helpers/routeContext';
-import UserContext from '../_helpers/userContext';
-import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
+import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
@@ -21,19 +15,7 @@ function GamePlayPage() {
             {
                 gameStared ? <QuestionOverlay questions={{ questions }} /> : <GameStartOverlay startGame={startGame} />
             }
-
-            <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-            <Popup open={loading} lockScroll={true} className="login-popup" closeOnDocumentClick={false}>
-                <div className="modal">
-                    <Loader
-                        type="TailSpin"
-                        color="#FEFEFE"
-                        height={40}
-                        width={40}
-                    />
-                    <span className="modal__text">Starting quiz...</span>
-                </div>
-            </Popup>
+            
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
         </>

@@ -8,14 +8,25 @@ import Popup from 'reactjs-popup';
 import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
 import RouteContext from '../_helpers/routeContext';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Acknowledge } from '.'
+
 
 function QuestionOverlay(props) {
     const [questoionsIndex, setQuestionsIndex] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [challengeAnswers, setChallengeAnswers] = useState([])
     const [open, setOpen] = useState(false);
+    const [ackOpen, setAckOpen] = useState(false);
     const { user } = useContext(UserContext);
     const { path } = useContext(RouteContext)
+    const { storePath } = useContext(RouteContext)
+
+    let navigate = useNavigate()
+    let { pathname } = useLocation()
+    let pathArr = pathname.split('/')
+    let rootUrl = pathArr[pathArr.length - 2] || '';
+    
     const toggleModal = (state) => setOpen(state);
 
     useEffect(() => {
@@ -27,7 +38,6 @@ function QuestionOverlay(props) {
             if (path?.via === "CHALLENGE") {
                 uploadAnswerAndRedirectToScore(path?.challengeId)
             } else {
-                console.log("it is")
                 uploadChallangeAndSendSms(challengeAnswers)
             }
         }
@@ -67,6 +77,10 @@ function QuestionOverlay(props) {
                     />
                     <span className="modal__text">Loading...</span>
                 </div>
+            </Popup>
+
+            <Popup lockScroll={true} open={ackOpen} className="ackno-popup" closeOnDocumentClick>
+                <Acknowledge />
             </Popup>
         </div>
 
@@ -114,10 +128,13 @@ function QuestionOverlay(props) {
 
         getScore(challengeInstanceId, user)
             .then(res => {
-                console.log(res.data)
+                storePath({"SCORE":res?.data?.percentage})
+                console.log("Here")
+                navigate(`/${rootUrl ? rootUrl + '/' : ''}score`)
             }).catch(err => {
                 console.log(err)
             })
+
 
 
 
@@ -143,11 +160,11 @@ function QuestionOverlay(props) {
                 }
                 onChallengeCreated(challangeInstanceId)
                     .then(res => {
-                        console.log(res.data)
+                        setAckOpen(true)
+                        setOpen(false)
                     }).catch(err => {
                         console.log(err)
                     })
-                setOpen(false)
 
             }).catch(err => {
                 console.log(err)
