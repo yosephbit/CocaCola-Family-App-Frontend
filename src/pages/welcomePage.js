@@ -56,18 +56,18 @@ function WelcomePage() {
                 )}
 
                 {link ? (
-                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
+                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn">
                         Start now
                     </Link>
                 ) : (
-                    <>
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
+                    <div className="fl-col">
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large">
                             Test your knowledge
                         </Link>
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large">
                             Play together now!
                         </Link>
-                    </>
+                    </div>
                 )}
             </div>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />

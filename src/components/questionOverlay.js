@@ -9,12 +9,12 @@ function QuestionOverlay() {
         <div className="main-overlay ">
             <h2 className="question">What was her first pet's name?</h2>
             <div className="btn-group">
-                <button className="img-btn img-btn--small">
+                <button className="img-btn">
                 <span className="img-btn__text">
                         Greg
                     </span>
                 </button>
-                <button className="img-btn img-btn--small">
+                <button className="img-btn">
                     <span className="img-btn__text">
                         Coco
                     </span>

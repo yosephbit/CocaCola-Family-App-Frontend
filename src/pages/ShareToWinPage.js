@@ -1,5 +1,6 @@
 import React from 'react'
-import banner from '../assets/img/banner-full.png'
+import cocacan from '../assets/img/coca-can.png'
+import cocashade from '../assets/img/coca-shade.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import { useNavigate } from 'react-router'
@@ -27,7 +28,7 @@ function ShareToWinPage() {
                 </p>
             </div>
             <div className="sharetowin__group score__can-img">
-                <img src={banner} alt="" className="img" />
+                <img src={cocacan} alt="" className="img" />
                 <img src={flame1} alt="" className="flame flame-1" />
                 <img src={flame1} alt="" className="flame flame-2" />
                 <div className="vouchers vouchers--1">
@@ -58,7 +59,7 @@ function ShareToWinPage() {
                 </div>
             </div>
             <div className="sharetowin__group" style={{marginTop: '20px'}}>
-                <button onClick={() => navigate('/winners')} className="img-btn">WINNER LIST</button>
+                <button onClick={() => navigate('/winners')} className="img-btn img-btn--medium">WINNER LIST</button>
             </div>
 
         </div>

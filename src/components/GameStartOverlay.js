@@ -14,12 +14,12 @@ function GameStartOverlay(props) {
                 <p>Left or Right to answer.</p>
             </h2>
             <div className="btn-group">
-                <button onClick={() => onClickHandler('BACK')} className="img-btn img-btn--small">
+                <button onClick={() => onClickHandler('BACK')} className="img-btn">
                     <span className="img-btn__text">
                         Back
                     </span>
                 </button>
-                <button onClick={() => onClickHandler('START')} className="img-btn img-btn--small">
+                <button onClick={() => onClickHandler('START')} className="img-btn">
                     <span className="img-btn__text">
                         Start
                     </span>

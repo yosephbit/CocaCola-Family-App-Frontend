@@ -1,40 +1,51 @@
 .img-btn {
-    background: url(../../img/btn-img.png);
-    background-size: cover;
-    border: none;
-    width: 200px;
-    min-height: 40px;
-    background-repeat: no-repeat;
-    color: $main-red;
-    font-size: 24px;
-    font-weight: 900;
-    text-decoration: none;
-    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
     z-index: 2;
     transition: transform 0.2s ease-out;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 24px;
+    min-width: 150px;
+    background: linear-gradient(to right, #C99124 5%, #F6DA67 25%, #F6DA67 80%, #C99124 100%);
+    color: $main-red;
+    font-weight: 900;
+    text-decoration: none;
+    text-align: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 1px solid rgba($second-red, .6);
+        width: calc(100% - 10px);
+        height: calc(100% - 8px);
+        border-radius: 8px;
+        transform: translate(-50%, -50%);
+    }
 
     &--small {
-        background: url(../../img/btn-img-small.png);
-        background-repeat: no-repeat;
-        font-size: 22px;
-        width: 150px;
-        margin-bottom: 5px;
-        min-height: 30px;
-        background-size: cover;
-        background-position: 50% 50%;
+        min-width: unset;
+        font-size: 14px;
+        padding: 8px 16px;
+
+        &::before {
+            width: calc(100% - 6px);
+            height: calc(100% - 6px);
+        }
     }
 
-    &--large {
-        background: url(../../img/btn-img-large.png);
-        background-repeat: no-repeat;
-        font-size: 18px;
-        margin-bottom: 15px;
-        width: 290px;
+    &--medium {
+        font-size: 20px;
     }
 
-    &:active {
-        transform: scale(0.97);
+    &__text {
+        word-break: break-word;
     }
+
 }
 
 .navbar {
@@ -136,7 +147,7 @@
         position: relative;
         margin: 55px 0;
         padding: 5px 0 55px;
-        max-width: 260px;
+        max-width: 280px;
 
         .img {
             position: relative;

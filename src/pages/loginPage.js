@@ -92,7 +92,7 @@ function LoginPage() {
                     </div>
                     <span className="form__error">{errors["phone"]}</span>
                     <button id="sign-in-button" type="submit" className="img-btn form__btn">
-                        Send
+                        SEND
                     </button>
                 </form>) :
                 (<CodeVerification userData={{name, phone}} nextPage={state} toggleModal={toggleModal} />)

@@ -1,5 +1,7 @@
 import React from 'react'
 import banner from '../assets/img/banner-full.png'
+import cocacan from '../assets/img/coca-can.png'
+import cocashade from '../assets/img/coca-shade.png'
 import flower from '../assets/img/flower.png'
 import split from '../assets/img/people.jpg'
 import bottle from '../assets/img/bottle.png'
@@ -31,7 +33,7 @@ function ScorePage() {
                 <p className="grad text med">Most creative entries will stand to win weekly prizes!</p>
                 
                 <div className="score__can-img">
-                    <img src={banner} alt="" className="img" />
+                    <img src={cocacan} alt="" className="img" />
                     <img src={flame1} alt="" className="flame flame-1" />
                     <img src={flame1} alt="" className="flame flame-2" />
                     <div className="vouchers vouchers--1">
@@ -65,7 +67,6 @@ function ScorePage() {
                 
                 <img src={flame1} alt="" className="floating-img floating-img--5" />
                 <img src={flower} alt="" className="floating-img floating-img--6" />
-                <img src={flower} alt="" className="floating-img floating-img--7" />
             </div>
         </div>
     )

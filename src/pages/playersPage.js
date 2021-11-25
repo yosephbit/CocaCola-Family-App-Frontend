@@ -24,7 +24,6 @@ function PlayersPage() {
     const [open, setOpen] = useState(false)
     const toggleModal = (state) => setOpen(state);
 
-
     return (
         <div className="page players fl-col align-center">
             <img src={coca} alt="" className="coca-img" />
@@ -79,7 +78,7 @@ function PlayersPage() {
     )
 
     function generateLink(relation) {
-        if (path.via === 'TOGETHER') {
+        if (path?.via === 'TOGETHER') {
             navigate(`/game`)
             return;
         }
@@ -87,9 +86,10 @@ function PlayersPage() {
         generateInviteLink(user.uid, relation)
             .then(res => {
                 let { linkId } = res.data;
+                const {host: url} = window.location
                 // TODO
                 // link url has to be changed to utilily file url
-                const link = `https://ar-filter-demo.netlify.app/?invite=${linkId}`
+                const link = `${url}/?invite=${linkId}`
                 navigate(`/links`, {
                     state: {
                         link
