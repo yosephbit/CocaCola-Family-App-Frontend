@@ -54,7 +54,7 @@ function NavBar() {
                             <Link onClick={close} to="howto" className="menu__item">How to Participate</Link>
                             <Link onClick={close} to="prizes" className="menu__item">Prizes</Link>
                             <Link onClick={close} to="winners" className="menu__item">Winner List</Link>
-                            <Link onClick={close} to="sharetowin" className="menu__item">Share to win</Link>
+                            {/* <Link onClick={close} to="sharetowin" className="menu__item">Share to win</Link> */}
                             <Link onClick={close} to="terms" className="menu__item">Terms & Conditions</Link>
                         </div>
                     )}

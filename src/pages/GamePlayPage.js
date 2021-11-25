@@ -11,9 +11,9 @@ function GamePlayPage() {
                 gameStared ? <QuestionOverlay /> : <GameStartOverlay startGame={startGame} />
             }
             
-            <Popup lockScroll={true} open={true} className="ackno-popup" closeOnDocumentClick>
+            {/* <Popup lockScroll={true} open={true} className="ackno-popup" closeOnDocumentClick>
                 <Acknowledge />
-            </Popup>
+            </Popup> */}
         </>
     )
 
