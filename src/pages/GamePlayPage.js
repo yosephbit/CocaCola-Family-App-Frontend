@@ -1,29 +1,74 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect,useRef } from 'react'
 import Popup from 'reactjs-popup';
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
+import UserContext from '../_helpers/userContext';
+import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
+import { Acknowledge } from '../components/Acknowledge'
+
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
     const { path } = useContext(RouteContext)
+    const { user } = useContext(UserContext);
+
+
+    const { storePath } = useContext(RouteContext)
+    const [open, setOpen] = useState(false);
+    const [ackOpen, setAckOpen] = useState(false);
+
+    const [questoionsIndex, setQuestionsIndex] = useState(0)
+    const [currentQuestion, setCurrentQuestion] = useState({})
+    const [challengeAnswers, setChallengeAnswers] = useState([])
+    const webcamRef=useRef(null)
+    let navigate = useNavigate();
+
+    let { pathname } = useLocation()
+    let pathArr = pathname.split('/')
+    let rootUrl = pathArr[pathArr.length - 2] || '';
+
+
+    const toggleModal = (state) => setOpen(state);
+
+    useEffect(() => {
+        console.log(questoionsIndex)
+        console.log(questions.length)
+        if (questoionsIndex === questions.length) {
+            if (path?.via === "CHALLENGE") {
+                uploadAnswerAndRedirectToScore(path?.challengeId)
+            } else {
+                uploadChallangeAndSendSms(challengeAnswers)
+            }
+        }
+
+        //eslint-disable-next-line
+    }, [challengeAnswers, questoionsIndex])
+    useEffect(() =>{
+        console.log(gameStared+" fgfgg")
+    },[gameStared])
+
     return (
         <>
             <CameraComponent onChoiceMade={onChoiceMade} />
             {
-                gameStared ? <QuestionOverlay questions={{ questions }} /> : <GameStartOverlay startGame={startGame} />
+                gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />
             }
-            
+
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
         </>
     )
-
     function onChoiceMade(result) {
+
+        console.log(gameStared)
         if (result === -1) {
+            console.log("wentForRightButton")
             if (gameStared === false) {
+                
                 startGame()
                 return
             }
@@ -33,10 +78,10 @@ function GamePlayPage() {
             }
         } else if (result === 1) {
             if (gameStared === false) {
-                navigate(-1)
+                //navigate(-1)
                 return
             }
-            singleChallenge = {
+            var singleChallenge = {
                 "questionId": currentQuestion?.question?.questionId,
                 "choiceId": currentQuestion?.answers?.choice2?.choiceId
             }
@@ -50,19 +95,21 @@ function GamePlayPage() {
 
         } else {
             setQuestionsIndex(questoionsIndex + 1);
+            setOpen(true)
+
         }
     }
-
     function startGame() {
+        setGameStared(true);
         if (path?.via === "CHALLENGE") {
-            var challengeInstanceId=path?.challengeId;
+            var challengeInstanceId = path?.challengeId;
             getChallenge(challengeInstanceId)
-                .then(response =>{
+                .then(response => {
 
                     setQuestions(response.data.questions)
-
+                    setCurrentQuestion(questions[0])
                     setGameStared(true);
-                }).catch(e =>{
+                }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
@@ -79,7 +126,7 @@ function GamePlayPage() {
             getQuiz(2)
                 .then(response => {
                     setQuestions(response.data.questions)
-
+                    setCurrentQuestion(response.data.questions[0])
                     setGameStared(true);
                 }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
@@ -94,6 +141,70 @@ function GamePlayPage() {
                     });
                 })
         }
+    }
+    function uploadAnswerAndRedirectToScore(challengeInstanceId) {
+
+        for (const challenge of challengeAnswers) {
+            var singleAnswer = {
+                challangeId: challengeInstanceId,
+                respondentId: user,
+                questionId: challenge?.questionId,
+                questionChoiceId: challenge?.choiceId
+            }
+            answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
+                .then(res => {
+                    console.log(res)
+                }).catch(err => {
+                    console.error(err)
+                })
+        }
+
+        getScore(challengeInstanceId, user)
+            .then(res => {
+                storePath({ "SCORE": res?.data?.percentage })
+                console.log("Here")
+                navigate(`/${rootUrl ? rootUrl + '/' : ''}score`)
+            }).catch(err => {
+                console.log(err)
+            })
+
+
+
+
+    }
+    function uploadChallangeAndSendSms(challengeAnswers) {
+        var challengerId = user;
+        createChallengeInstance(challengerId)
+            .then(res => {
+                var challangeInstanceId = res?.data?.challangeInstanceId
+
+                for (const challenge of challengeAnswers) {
+                    var singleChallenge = {
+                        questionId: challenge?.questionId,
+                        challangeInstanceId: challangeInstanceId,
+                        answerId: challenge?.choiceId
+                    }
+                    addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
+                        .then(res => {
+                            console.log(res.data)
+                        }).catch(err => {
+                            console.log(err)
+                        })
+                }
+                onChallengeCreated(challangeInstanceId)
+                    .then(res => {
+                        setAckOpen(true)
+                        setOpen(false)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+
+            }).catch(err => {
+                console.log(err)
+
+            })
+
+
     }
 }
 
