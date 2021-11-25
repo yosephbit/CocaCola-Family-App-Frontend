@@ -1,6 +1,4 @@
 import React, { useState, useLayoutEffect, useEffect, useRef, useContext } from 'react'
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import FirebaseApp from '../_helpers/Firebase'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'
@@ -13,7 +11,7 @@ import CodeVerification from '../components/codeVerification';
 import ReactFlagsSelect from 'react-flags-select';
 import { useLocation } from 'react-router-dom';
 import RouteContext from '../_helpers/routeContext';
-const auth = getAuth(FirebaseApp);
+import { sendCode } from '../_helpers/cloudFunctions';
 
 function LoginPage() {
     const [name, setName] = useState('')
@@ -27,9 +25,9 @@ function LoginPage() {
     let { state } = useLocation()
     const {storePath} = useContext(RouteContext)
     const containerRef = useRef(null);
-    
     const toggleModal = (state) => setOpen(state);
-
+    const [verificationId, setVerificationId] = useState('');
+    const [uid, setUid] = useState('');
     useEffect(() => {
         const { hostname } = window.location
         const hostArr = hostname.split('.')
@@ -45,10 +43,22 @@ function LoginPage() {
     }, [])
 
     useEffect(() => {
-        if(state) {
-            const {via, linkId} = state
-            storePath({via, linkId})
+        if (state) {
+            const { via, linkId, challengeId } = state
+            if (via === "LINK") {
+
+                storePath({ via, linkId })
+            }else if (via === "CHALLENGE"){
+                storePath({ via, challengeId})
+            }
         }
+        //Auto Login if session exist 
+        
+        // if(user!==null) {
+        //     setUid(user)
+        //     toggleModal(false)
+        //     setLoginSuccess(true)
+        // }
         //eslint-disable-next-line
     }, [])
 
@@ -95,7 +105,7 @@ function LoginPage() {
                         SEND
                     </button>
                 </form>) :
-                (<CodeVerification userData={{name, phone}} nextPage={state} toggleModal={toggleModal} />)
+                (<CodeVerification userData={{ name, phone, verificationId, uid }} nextPage={state} toggleModal={toggleModal} />)
             }
 
             <Popup open={open} className="login-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
@@ -153,30 +163,30 @@ function LoginPage() {
         return formIsValid;
     }
 
-    function setupRecaptcha() {
-        const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-                onSubmitHandler()
-            },
-            'expired-callback': () => {
-                // Response expired. Ask user to solve reCAPTCHA again.
-                recaptchaVerifier.clear()
-                containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
-                toast("Recaptcha expired. Try again", {
-                    position: "bottom-center",
-                    autoClose: 4500,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                });
-            }
-        }, auth);
-        return recaptchaVerifier
-    }
+    // function setupRecaptcha() {
+    //     const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    //         'size': 'invisible',
+    //         'callback': (response) => {
+    //             // reCAPTCHA solved, allow signInWithPhoneNumber.
+    //             onSubmitHandler()
+    //         },
+    //         'expired-callback': () => {
+    //             // Response expired. Ask user to solve reCAPTCHA again.
+    //             recaptchaVerifier.clear()
+    //             containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
+    //             toast("Recaptcha expired. Try again", {
+    //                 position: "bottom-center",
+    //                 autoClose: 4500,
+    //                 hideProgressBar: true,
+    //                 closeOnClick: true,
+    //                 pauseOnHover: false,
+    //                 draggable: false,
+    //                 progress: undefined,
+    //             });
+    //         }
+    //     }, auth);
+    //     return recaptchaVerifier
+    // }
 
     function updatePhone(val) {
         if (val.length > 14) return
@@ -193,25 +203,29 @@ function LoginPage() {
             return
         }
         toggleModal(true)
-        const recaptchaVerifier = setupRecaptcha()
+        //TODO: setup Recaptach
+        //  const recaptchaVerifier = setupRecaptcha()
+        // console.log(recaptchaVerifier);
 
-        signInWithPhoneNumber(auth, phone, recaptchaVerifier)
-            .then((confirmationResult) => {
-                toggleModal(false)
-                setLoginSuccess(true)
-                window.confirmationResult = confirmationResult
-                containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
-                // ...
+        sendCode(name, phone)
+            .then(response => {
+                console.log(response.data)
+                if (response.data.user !== undefined) {
+                    var uid = Object.keys(response.data.user)[0]
+                    setUid(uid)
+                    toggleModal(false)
+                    setLoginSuccess(true)
+                } else {
+                    var verificationId = response.data.result;
+                    setVerificationId(verificationId)
+                    toggleModal(false)
+                    setLoginSuccess(true)
+                }
             }).catch((error) => {
                 toggleModal(false)
-                console.log(error)
-                recaptchaVerifier.clear()
-                containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
-                error = new Error(error).toString().toLowerCase()
+                console.error(error)
                 let errorMsg = "Couldn't log you in"
-                if (error.includes('invalid format')) {
-                    errorMsg = "Invalid phone number. Check your input."
-                }
+               
                 toast(errorMsg, {
                     position: "bottom-center",
                     autoClose: 4500,
@@ -221,9 +235,37 @@ function LoginPage() {
                     draggable: false,
                     progress: undefined,
                 });
+            })
 
-                // ...
-            });
+        // signInWithPhoneNumber(auth, phone, recaptchaVerifier)
+        //     .then((confirmationResult) => {
+        //         toggleModal(false)
+        //         setLoginSuccess(true)
+        //         window.confirmationResult = confirmationResult
+        //         containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
+        //         // ...
+        //     }).catch((error) => {
+        //         toggleModal(false)
+        //         console.log(error)
+        //         recaptchaVerifier.clear()
+        //         containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
+        //         error = new Error(error).toString().toLowerCase()
+        //         let errorMsg = "Couldn't log you in"
+        //         if (error.includes('invalid format')) {
+        //             errorMsg = "Invalid phone number. Check your input."
+        //         }
+        //         toast(errorMsg, {
+        //             position: "bottom-center",
+        //             autoClose: 4500,
+        //             hideProgressBar: true,
+        //             closeOnClick: true,
+        //             pauseOnHover: false,
+        //             draggable: false,
+        //             progress: undefined,
+        //         });
+
+        //         // ...
+        //     });
 
     }
 

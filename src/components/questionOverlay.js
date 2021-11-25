@@ -4,19 +4,20 @@ import bottle from '../assets/img/bottle.png'
 import cork from '../assets/img/cork.png'
 import flame1 from '../assets/img/flame-1.png'
 
-function QuestionOverlay() {
+function QuestionOverlay(props) {
+    
     return (
         <div className="main-overlay ">
-            <h2 className="question">What was her first pet's name?</h2>
+            <h2 className="question">{(props?.currentQuestion?.question?.questionText?.toString())}</h2>
             <div className="btn-group">
-                <button className="img-btn">
-                <span className="img-btn__text">
-                        Greg
+                <button className="img-btn img-btn--small" >
+                    <span className="img-btn__text" >
+                        {(props.currentQuestion?.answers?.choice1?.choiceText?.toString())}
                     </span>
                 </button>
-                <button className="img-btn">
-                    <span className="img-btn__text">
-                        Coco
+                <button className="img-btn img-btn--small">
+                    <span className="img-btn__text" >
+                        {(props?.currentQuestion?.answers?.choice2?.choiceText?.toString())}
                     </span>
                 </button>
             </div>
@@ -27,8 +28,11 @@ function QuestionOverlay() {
             <img src={bottle} alt="" className="floating-img floating-img--5" />
             <img src={flower} alt="" className="floating-img floating-img--6" />
             <img src={cork} alt="" className="floating-img floating-img--7" />
+
         </div>
+
     )
-}
+    }
+
 
 export default QuestionOverlay

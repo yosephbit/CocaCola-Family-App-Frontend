@@ -4,8 +4,28 @@ import axios from "axios";
 
 const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
 
-export const signUpUser = (name, phone_number) => {
-    return axios.post(`${api}/signUp`, {name, phone_number})
+
+export const getScore = (challangeId,respondentId ) => {
+   return axios.post(`${api}/getScore`, {challangeId, respondentId}); 
+}
+export const getChallenge = (challengeInstanceId) =>{
+    return axios.post(`${api}/getChallenge`, {challengeInstanceId});
+}
+export const onChallengeCreated = (challengeInstanceId) =>{
+    return axios.post(`${api}/onChallengeCreated`,{challengeInstanceId})
+}
+export const addChallenge = (questionId,challangeInstanceId,answerId) => {
+    return axios.post(`${api}/addChallange`,{questionId,challangeInstanceId,answerId});
+}
+export const sendCode = (name,phone_number) =>{
+    return axios.post(`${api}/sendCode`,{name,phone_number},)
+}
+export const createChallengeInstance = (challangerId) =>{
+    return axios.post(`${api}/createChallangeInstance`,{challangerId})
+}
+
+export const verifyToken = (verificationId,sms_token) =>{
+    return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
 }
 
 export const generateInviteLink = (uid, relation) => {
@@ -32,8 +52,8 @@ export const addChoiceToQuestion = (qid, answersText) => {
     return axios.post(`${api}/addChoiceToQuestion`, {qid, answersText})
 }
 
-export const answerQuestion = (respondentId, subjectId, questionId, questionChoiceId) => {
-    return axios.post(`${api}/addAnswers`, {respondentId, subjectId, questionId, questionChoiceId})
+export const answerQuestion = (respondentId, challangeId, questionId, questionChoiceId) => {
+    return axios.post(`${api}/answerQuestion`, {respondentId, challangeId, questionId, questionChoiceId})
 }
 
 export const getQuiz = (numberOfQuestions) => {

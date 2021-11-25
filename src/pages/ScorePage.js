@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import banner from '../assets/img/banner-full.png'
 import cocacan from '../assets/img/coca-can.png'
 import cocashade from '../assets/img/coca-shade.png'
@@ -7,12 +7,16 @@ import split from '../assets/img/people.jpg'
 import bottle from '../assets/img/bottle.png'
 import flame1 from '../assets/img/flame-1.png'
 import { FaFacebook } from 'react-icons/fa'
+import RouteContext from '../_helpers/routeContext';
+
 
 function ScorePage() {
+    const { path } = useContext(RouteContext)
+
     return (
         <div className="page score">
             <h2 className="score__header">
-                WE SCORED <span className="score__value">80%</span> IN
+                WE SCORED <span className="score__value">{path?.SCORE}%</span> IN
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />

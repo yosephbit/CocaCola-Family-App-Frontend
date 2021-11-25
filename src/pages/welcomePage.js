@@ -10,32 +10,34 @@ import { getInviteDetails } from '../_helpers/cloudFunctions'
 function WelcomePage() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
-    const {pathname} = useLocation()
+    const { pathname } = useLocation()
     const link = searchParams.get("invite")
+    const challengeLink = searchParams.get("challenge");
     const [name, setName] = useState('')
 
     useEffect(() => {
-        if(link) {
+        if (link) {
             getInviteDetails(link)
-            .then(res => {
-                setName(res.data?.from)
-            })
-            .catch(e => {
-                console.log(e)
-                toast("Invitation link is not valid", {
-                    position: "bottom-center",
-                    autoClose: 3500,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    onClose: () => {
-                        navigate(pathname)
-                    }
-                });
-            })
+                .then(res => {
+                    setName(res.data?.from)
+                })
+                .catch(e => {
+                    console.log(e)
+                    toast("Invitation link is not valid", {
+                        position: "bottom-center",
+                        autoClose: 3500,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                        onClose: () => {
+                            navigate(pathname)
+                        }
+                    });
+                })
         }
+
         // eslint-disable-next-line
     }, [])
 
@@ -54,21 +56,30 @@ function WelcomePage() {
                         </p>
                     </>
                 )}
+                {challengeLink ? (
 
-                {link ? (
-                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn">
+                    <Link to={challengeLink ? `login?challenge=${challengeLink}` : "login"} state={{ via: 'CHALLENGE', challengeId: challengeLink }} className="img-btn img-btn--large fl-row just-center align-center">
                         Start now
-                    </Link>
-                ) : (
-                    <div className="fl-col">
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large">
-                            Test your knowledge
+                    </Link>) : (
+
+                    link ? (
+                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
+                            Start now
                         </Link>
-                        <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large">
-                            Play together now!
-                        </Link>
-                    </div>
-                )}
+                    ) : (
+                        <>
+                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                Test your knowledge
+                            </Link>
+                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                Play together now!
+                            </Link>
+                        </>
+                    )
+
+                )
+                }
+
             </div>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
             {/* <img src={flower} alt="" className="floating-img floating-img--1" /> */}
