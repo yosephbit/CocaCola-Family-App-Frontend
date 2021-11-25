@@ -37,7 +37,7 @@ function GamePlayPage() {
     useEffect(() => {
         console.log(questoionsIndex)
         console.log(questions.length)
-        if (questoionsIndex === questions.length) {
+        if (questoionsIndex === questions.length && gameStared) {
             if (path?.via === "CHALLENGE") {
                 uploadAnswerAndRedirectToScore(path?.challengeId)
             } else {
@@ -66,7 +66,6 @@ function GamePlayPage() {
 
         console.log(gameStared)
         if (result === -1) {
-            console.log("wentForRightButton")
             if (gameStared === false) {
                 
                 startGame()
@@ -78,7 +77,7 @@ function GamePlayPage() {
             }
         } else if (result === 1) {
             if (gameStared === false) {
-                //navigate(-1)
+                navigate(-1)
                 return
             }
             var singleChallenge = {

@@ -3,7 +3,9 @@ import { FaceMesh } from "@mediapipe/face_mesh";
 import React, { useRef, useEffect, useState } from "react";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
-
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import Popup from 'reactjs-popup';
+import Loader from "react-loader-spinner";
 var readForAnswer = true;
 var i = 1, len = 10;
 var answerBuffer = [];
@@ -14,22 +16,37 @@ var elem =
         ? document.documentElement
         : document.body;
 
-function CameraComponent(props) {
-    useEffect(() => {
-        readAngle();
-    }, []);
-    const webcamRef = useRef(null);
-    const canvasRef = useRef(null);
-    var camera = null;
-    function onResults(results) {
+class CameraComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: true
+        }
+        this.webcamRef = React.createRef(null);
+        this.canvasRef = React.createRef(null);
+        this.camera = null;
+        this.videoContraints = {
+            facingMode: "user",
+            aspectRatio: window.innerHeight / window.innerWidth
+        }
+    }
+    componentDidMount() {
+        console.log(this.webcamRef);
+        this.readAngle();
+    }
+
+
+    onResults = (results) => {
+
+        if(this.state.open) this.toggleModal(false);
         if (readForAnswer) {
-            const videoWidth = webcamRef.current.video.videoWidth;
-            const videoHeight = webcamRef.current.video.videoHeight;
+            const videoWidth = this.webcamRef.current.video.videoWidth;
+            const videoHeight = this.webcamRef.current.video.videoHeight;
 
-            canvasRef.current.width = videoWidth;
-            canvasRef.current.height = videoHeight;
+            this.canvasRef.current.width = videoWidth;
+            this.canvasRef.current.height = videoHeight;
 
-            const canvasElement = canvasRef.current;
+            const canvasElement = this.canvasRef.current;
             const canvasCtx = canvasElement.getContext("2d");
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -57,7 +74,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("Yes");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if (angle > -70 && angle < 0 && angle1 > -70 && angle1 < 0) {
                     if (answerBuffer.length < len) {
@@ -67,7 +84,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("Yes");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if (angle > -70 && angle < 0 && angle1 < 70 && angle1 > 0) {
                     if (answerBuffer.length < len) {
@@ -77,7 +94,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("No");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if (angle < 70 && angle > 0 && angle1 > -70 && angle1 < 0) {
                     if (answerBuffer.length < len) {
@@ -87,7 +104,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("No");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle < 70 && angle > 0) || (angle > -70 && angle < 0)) {
                     if (answerBuffer.length < len) {
@@ -97,7 +114,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("No");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle1 < 70 && angle1 > 0) || (angle1 > -70 && angle1 < 0)) {
                     if (answerBuffer.length < len) {
@@ -107,7 +124,7 @@ function CameraComponent(props) {
                         answerBuffer.shift();
                         answerBuffer.push("No");
                     }
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
             }
             else if (results.multiFaceLandmarks.length === 1) {
@@ -124,11 +141,11 @@ function CameraComponent(props) {
                 }
                 if (angle < 70 && angle > 0) {
                     answerBuffer.push("No");
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 } else if (angle > -70 && angle < 0) {
                     answerBuffer.push("Yes");
 
-                    checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
                 }
             }
@@ -142,84 +159,95 @@ function CameraComponent(props) {
     }
 
 
-    function readAngle() {
+    readAngle() {
         const faceMesh = new FaceMesh({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
             },
         });
+
         faceMesh.setOptions({
             maxNumFaces: 2,
             minDetectionConfidence: 0.7,
             minTrackingConfidence: 0.7,
         });
 
-        faceMesh.onResults(onResults);
+        faceMesh.onResults(this.onResults);
 
         if (
-            typeof webcamRef.current !== "undefined" &&
-            webcamRef.current !== null
+            typeof this.webcamRef.current !== "undefined" &&
+            this.webcamRef.current !== null
         ) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
-            camera = new cam.Camera(webcamRef.current.video, {
+            this.camera = new cam.Camera(this.webcamRef.current.video, {
                 onFrame: async () => {
-                    await faceMesh.send({ image: webcamRef.current.video });
+                    await faceMesh.send({ image: this.webcamRef.current.video });
                 },
                 width: 1000,
-                height: 1000,
+                height: this.screenHeight,
             });
-            camera.start();
+            this.camera.start();
         }
+    }
+    toggleModal(toggle){
+        this.setState({open: toggle});
     }
 
 
-
-    function checkAnswer(buffer, canvasCtx, canvasElement) {
+    checkAnswer(buffer, canvasCtx, canvasElement) {
         if (buffer.length === len) {
             var ans = buffer.join("-");
             if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
                 readForAnswer = true;
                 answerBuffer = [];
-                props.onChoiceMade(1)
+                this.props.onChoiceMade(1)
 
             }
             else if (ans === "No-No-No-No-No-No-No-No-No-No") {
                 readForAnswer = true;
                 answerBuffer = [];
-                props.onChoiceMade(-1)
+                this.props.onChoiceMade(-1)
             }
             answerBuffer = [];
         }
     }
 
-    useEffect(() => {
-        readAngle();
-    }, []);
+    render() {
+        return (
+            <div className="camera">
+                <Webcam
+                    ref={this.webcamRef}
 
-    const videoContraints = {
-        facingMode: "user",
-        aspectRatio: window.innerHeight / window.innerWidth
+                    videoConstraints={this.videoContraints} mirrored={true}
+                    audio={false} onUserMediaError={this.onMediaError}
+                    className="video-tag"
+                />{" "}
+                <canvas
+                    ref={this.canvasRef}
+                    className="output_canvas"
+                ></canvas>
+                <Popup open={this.state.open} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                    <div className="modal">
+                        <Loader
+                            type="TailSpin"
+                            color="#FEFEFE"
+                            height={40}
+                            width={40}
+                        />
+                        <span className="modal__text">Loading...</span>
+                    </div>
+                </Popup>
+                <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+
+            </div>
+
+
+        );
     }
-    return (
-        <div className="camera">
-            <Webcam
-                ref={webcamRef}
-
-                videoConstraints={videoContraints} mirrored={true}
-                audio={false} onUserMediaError={onMediaError}
-                className="video-tag"
-            />{" "}
-            <canvas
-                ref={canvasRef}
-                className="output_canvas"
-            ></canvas>
-        </div>
 
 
-    );
 
-
-    function onMediaError(e) {
+    onMediaError(e) {
         alert("could not start camera")
     }
 }
