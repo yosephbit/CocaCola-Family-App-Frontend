@@ -29,6 +29,7 @@ function ShareToWinPage() {
             </div>
             <div className="sharetowin__group score__can-img">
                 <img src={cocacan} alt="" className="img" />
+                <img src={cocashade} alt="" className="shade" />
                 <img src={flame1} alt="" className="flame flame-1" />
                 <img src={flame1} alt="" className="flame flame-2" />
                 <div className="vouchers vouchers--1">
