@@ -13,3 +13,10 @@
         object-fit: fill;
     }
 }
+.popup-overlay.next-popup-overlay {
+    background: rgba(black, 0);
+}
+.popup-content.next-popup-content {
+    background-color: transparent;
+    border: none;
+}

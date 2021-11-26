@@ -2,7 +2,7 @@
 // import { functions } from "./Firebase";
 import axios from "axios";
 
-const api = 'http://localhost:5001/family-ref-9b2fb/us-central1'
+const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
 
 
 export const getScore = (challangeId,respondentId ) => {
