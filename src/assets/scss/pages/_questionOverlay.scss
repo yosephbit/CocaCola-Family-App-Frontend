@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
     z-index: 10;
-    padding: 80px 10px;
+    padding: 140px 10px 80px;
     background-color: rgba(black, .15);
 
     .header {
@@ -19,12 +19,14 @@
     }
 
     .question {
-        max-width: 600px;
+        position: relative;
+        max-width: 400px;
         text-transform: uppercase;
-        color: transparent;
-        background: linear-gradient(to right, #C99124 5%, #F6DA67 25%, #F6DA67 80%, #C99124 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
+        color: #f3cb1a;
+        background: transparent;
+        // background: linear-gradient(to right, #C99124 5%, #F6DA67 25%, #F6DA67 80%, #C99124 100%);
+        // background-clip: text;
+        // -webkit-background-clip: text;
         font-weight: 900;
         margin: 0 auto 40px;
         font-size: 30px;
@@ -32,7 +34,14 @@
         text-align: center;
         z-index: 20;
         position: relative;
-        // text-shadow: 10px 0 7px $main-red;
+        
+        &::before {
+            content: attr(title);
+            position: absolute;
+            -webkit-text-stroke: 7px $main-red; /* Chris Coyier's favorite color! */
+            left: 0;
+            z-index: -1;
+        }
     }
 
     .btn-group {
@@ -88,7 +97,7 @@
         }
     
         &--7 {
-            top: 100px;
+            top: 190px;
             right: 15px;
             width: 40px;
         }

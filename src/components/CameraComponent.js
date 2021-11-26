@@ -1,6 +1,5 @@
-
-import { FaceMesh } from "@mediapipe/face_mesh";
 import React from "react";
+import { FaceMesh } from "@mediapipe/face_mesh";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import { ToastContainer, Slide } from 'react-toastify';
@@ -9,7 +8,6 @@ import Loader from "react-loader-spinner";
 var readForAnswer = true;
 var len = 10;
 var answerBuffer = [];
-
 
 var elem =
     document.compatMode === 'CSS1Compat'
@@ -31,13 +29,10 @@ class CameraComponent extends React.Component {
         }
     }
     componentDidMount() {
-        console.log(this.webcamRef);
         this.readAngle();
     }
 
-
     onResults = (results) => {
-
         if(this.state.open) this.toggleModal(false);
         if (readForAnswer) {
             const videoWidth = this.webcamRef.current.video.videoWidth;
@@ -180,7 +175,7 @@ class CameraComponent extends React.Component {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             this.camera = new cam.Camera(this.webcamRef.current.video, {
                 onFrame: async () => {
-                    await faceMesh.send({ image: this.webcamRef.current.video });
+                    await faceMesh.send({ image: this.webcamRef.current?.video });
                 },
                 width: 1000,
                 height: this.screenHeight,
@@ -225,7 +220,7 @@ class CameraComponent extends React.Component {
                     ref={this.canvasRef}
                     className="output_canvas"
                 ></canvas>
-                <Popup open={this.state.open} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={this.state.open} lockScroll={true} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="TailSpin"
@@ -243,8 +238,6 @@ class CameraComponent extends React.Component {
 
         );
     }
-
-
 
     onMediaError(e) {
         alert("could not start camera")

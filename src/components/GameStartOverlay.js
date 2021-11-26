@@ -14,13 +14,13 @@ function GameStartOverlay(props) {
                 <p>Left or Right to answer.</p>
             </h2>
             <div className="btn-group">
-                <button onClick={() => onClickHandler('BACK')} className="img-btn">
-                    <span className="img-btn__text">
+                <button onClick={() => onClickHandler('BACK')} className="img-btn img-btn--fixed">
+                    <span style={{fontSize: 'larger'}} className="img-btn__text">
                         Back
                     </span>
                 </button>
-                <button onClick={() => onClickHandler('START')} className="img-btn">
-                    <span className="img-btn__text">
+                <button onClick={() => onClickHandler('START')} className="img-btn img-btn--fixed">
+                    <span style={{fontSize: 'larger'}} className="img-btn__text">
                         Start
                     </span>
                 </button>
@@ -37,7 +37,7 @@ function GameStartOverlay(props) {
 
     function onClickHandler(btn) {
         if(btn === "BACK") {
-            navigate(-1)
+            navigate("/players")
         } else if(btn === "START") {
             props.startGame()
         }

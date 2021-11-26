@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
-
-import { useNavigate, useLocation } from 'react-router-dom'
+import Popup from 'reactjs-popup';
+import Loader from "react-loader-spinner";
+import { useNavigate } from 'react-router-dom'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -11,6 +12,7 @@ import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuesti
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
+    const [loading, setLoading] = useState(false)
     const { path } = useContext(RouteContext)
     const { user } = useContext(UserContext);
     const { storePath } = useContext(RouteContext)
@@ -19,14 +21,7 @@ function GamePlayPage() {
     const [challengeAnswers, setChallengeAnswers] = useState([])
     let navigate = useNavigate();
 
-    let { pathname } = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || '';
-
-
     useEffect(() => {
-        console.log(questoionsIndex)
-        console.log(questions.length)
         if (questoionsIndex === questions.length && gameStared) {
             if (path?.via === "CHALLENGE") {
                 uploadAnswerAndRedirectToScore(path?.challengeId)
@@ -34,12 +29,8 @@ function GamePlayPage() {
                 uploadChallangeAndSendSms(challengeAnswers)
             }
         }
-
         //eslint-disable-next-line
     }, [challengeAnswers, questoionsIndex])
-    useEffect(() =>{
-        console.log(gameStared+" fgfgg")
-    },[gameStared])
 
     return (
         <>
@@ -49,15 +40,23 @@ function GamePlayPage() {
             }
 
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-
+            <Popup open={loading} lockScroll={true} className="login-popup" closeOnDocumentClick={false}>
+                <div className="modal">
+                    <Loader
+                        type="TailSpin"
+                        color="#FEFEFE"
+                        height={40}
+                        width={40}
+                    />
+                    <span className="modal__text">Starting quiz...</span>
+                </div>
+            </Popup>
         </>
     )
-    function onChoiceMade(result) {
 
-        console.log(gameStared)
+    function onChoiceMade(result) {
         if (result === -1) {
             if (gameStared === false) {
-                
                 startGame()
                 return
             }
@@ -86,18 +85,20 @@ function GamePlayPage() {
             setQuestionsIndex(questoionsIndex + 1);
         }
     }
+
     function startGame() {
-        setGameStared(true);
+        setLoading(true)
         if (path?.via === "CHALLENGE") {
             var challengeInstanceId = path?.challengeId;
             getChallenge(challengeInstanceId)
                 .then(response => {
-
                     setQuestions(response.data.questions)
                     setCurrentQuestion(questions[0])
+                    setLoading(false)
                     setGameStared(true);
                 }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
+                    setLoading(false)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -109,14 +110,15 @@ function GamePlayPage() {
                     });
                 })
         } else {
-
             getQuiz(2)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])
+                    setLoading(false)
                     setGameStared(true);
                 }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
+                    setLoading(false)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -129,6 +131,7 @@ function GamePlayPage() {
                 })
         }
     }
+
     function uploadAnswerAndRedirectToScore(challengeInstanceId) {
 
         for (const challenge of challengeAnswers) {
@@ -149,16 +152,12 @@ function GamePlayPage() {
         getScore(challengeInstanceId, user)
             .then(res => {
                 storePath({ "SCORE": res?.data?.percentage })
-                console.log("Here")
-                navigate(`/${rootUrl ? rootUrl + '/' : ''}score`)
+                navigate(`/score`)
             }).catch(err => {
                 console.log(err)
             })
-
-
-
-
     }
+
     function uploadChallangeAndSendSms(challengeAnswers) {
         var challengerId = user;
         createChallengeInstance(challengerId)
