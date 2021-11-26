@@ -37,7 +37,6 @@ function WelcomePage() {
                     });
                 })
         }
-
         // eslint-disable-next-line
     }, [])
 

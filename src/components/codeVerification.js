@@ -26,7 +26,8 @@ function CodeVerification(props) {
             <h2 className="form__header">Enter verification code</h2>
             <div className="form__group form__group--code">
                 <label htmlFor="" className="form__label form__label--code">CODE:</label>
-                <input onChange={e => setCode(e.target.value)} type="number" name="code" value={code} className="form__input" />
+                <input onChange={e => setCode(e.target.value)} type="number"
+                    name="code" value={code} className="form__input" autoFocus />
             </div>
             <span className="form__error">{errors["phone"]}</span>
             {/* {!loading && ()} */}
@@ -78,6 +79,7 @@ function CodeVerification(props) {
             navigate(`/players`, { replace: true })
         }
     }
+
     function onSubmitHandler(e) {
         e.preventDefault()
         // navigate("/players")

@@ -9,9 +9,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'reactjs-popup/dist/index.css';
 import CodeVerification from '../components/codeVerification';
 import ReactFlagsSelect from 'react-flags-select';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import RouteContext from '../_helpers/routeContext';
 import { sendCode } from '../_helpers/cloudFunctions';
+import UserContext from '../_helpers/userContext';
+import { onInvitationLink } from '../_helpers/cloudFunctions';
 
 function LoginPage() {
     const [name, setName] = useState('')
@@ -24,10 +26,13 @@ function LoginPage() {
     const [open, setOpen] = useState(false);
     let { state } = useLocation()
     const {storePath} = useContext(RouteContext)
+    const {user} = useContext(UserContext)
     const containerRef = useRef(null);
     const toggleModal = (state) => setOpen(state);
     const [verificationId, setVerificationId] = useState('');
     const [uid, setUid] = useState('');
+    const navigate = useNavigate()
+
     useEffect(() => {
         const { hostname } = window.location
         const hostArr = hostname.split('.')
@@ -50,15 +55,23 @@ function LoginPage() {
                 storePath({ via, linkId })
             }else if (via === "CHALLENGE"){
                 storePath({ via, challengeId})
+            } else if(via === "NORMAL") {
+                storePath({via})
+            }
+            //Auto Login if session exist 
+            if(user) {
+                if (via === "LINK") {
+                    onInvitationLink(linkId, user)
+                        .then(() => {})
+                        .catch(e => {})
+                    navigate(`/game`)
+                } else if (via === "CHALLENGE") {
+                    navigate(`/game`)
+                } else {
+                    navigate(`/players`, { replace: true })
+                }
             }
         }
-        //Auto Login if session exist 
-        
-        // if(user!==null) {
-        //     setUid(user)
-        //     toggleModal(false)
-        //     setLoginSuccess(true)
-        // }
         //eslint-disable-next-line
     }, [])
 
