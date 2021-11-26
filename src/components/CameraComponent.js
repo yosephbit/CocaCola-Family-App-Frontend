@@ -179,9 +179,9 @@ class CameraComponent extends React.Component {
             this.webcamRef.current !== null
         ) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
-            this.camera = new cam.Camera(this.webcamRef.current.video, {
+            this.camera = new cam.Camera(this.webcamRef?.current?.video, {
                 onFrame: async () => {
-                    await faceMesh.send({ image: this.webcamRef.current.video });
+                    await faceMesh.send({ image: this.webcamRef?.current?.video });
                 },
                 width: 1000,
                 height: this.screenHeight,

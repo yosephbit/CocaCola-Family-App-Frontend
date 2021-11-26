@@ -12,8 +12,8 @@ import ReactFlagsSelect from 'react-flags-select';
 import { useLocation, useNavigate } from 'react-router-dom';
 import RouteContext from '../_helpers/routeContext';
 import { sendCode } from '../_helpers/cloudFunctions';
-import  UserContext  from '../_helpers/userContext';
-const auth = getAuth(FirebaseApp);
+import UserContext from '../_helpers/userContext';
+// import { onInvitationLink } from '../_helpers/cloudFunctions';
 
 function LoginPage() {
     const [name, setName] = useState('')
@@ -53,15 +53,24 @@ function LoginPage() {
                 storePath({ via, linkId })
             }else if (via === "CHALLENGE"){
                 storePath({ via, challengeId})
+            } else if(via === "NORMAL") {
+                storePath({via})
+            }
+            //Auto Login if session exist 
+        }
+        if(user) {
+            const { via } = state || {}
+            if (via === "LINK") {
+                // onInvitationLink(linkId, user)
+                //     .then(() => {})
+                //     .catch(e => {})
+                navigate(`/game`)
+            } else if (via === "CHALLENGE") {
+                navigate(`/game`)
+            } else {
+                navigate(`/players`, { replace: true })
             }
         }
-        //Auto Login if session exist 
-        
-        // if(user!==null) {
-        //     setUid(user)
-        //     toggleModal(false)
-        //     setLoginSuccess(true)
-        // }
         //eslint-disable-next-line
     }, [])
 

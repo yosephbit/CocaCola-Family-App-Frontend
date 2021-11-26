@@ -97,7 +97,6 @@ function CodeVerification(props) {
         
         verifyToken(verificationId, code)
             .then(response => {
-                props.toggleModal(false);
                 var user = response.data.uid;
                 saveUserAndNavigate(user)
             }).catch(error => {

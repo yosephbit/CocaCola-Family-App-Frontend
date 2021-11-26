@@ -11,21 +11,25 @@ import RouteContext from '../_helpers/routeContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Acknowledge } from '.'
 
+function QuestionOverlay(props) {
+    console.log(props)
+    // const { choice1, choice2 } = props?.currentQuestion?.answers
+    // const { questionText } = props?.currentQuestion?.question
 
 function QuestionOverlay(props) {
     
     return (
         <div className="main-overlay ">
-            <h2 className="question">{(props?.currentQuestion?.question?.questionText?.toString())}</h2>
+            <h2 className="question" title={props?.currentQuestion?.question?.questionText?.toString()}>{props?.currentQuestion?.question?.questionText?.toString()}</h2>
             <div className="btn-group">
-                <button className="img-btn img-btn--small" >
-                    <span className="img-btn__text" >
-                        {(props.currentQuestion?.answers?.choice1?.choiceText?.toString())}
+                <button className="img-btn img-btn--fixed" >
+                    <span style={{fontSize: getFontSize(props?.currentQuestion?.answers?.choice1?.choiceText)}} className="img-btn__text" >
+                        {props?.currentQuestion?.answers?.choice1?.choiceText}
                     </span>
                 </button>
-                <button className="img-btn img-btn--small">
-                    <span className="img-btn__text" >
-                        {(props?.currentQuestion?.answers?.choice2?.choiceText?.toString())}
+                <button className="img-btn img-btn--fixed">
+                    <span style={{fontSize: getFontSize(props?.currentQuestion?.answers?.choice2?.choiceText)}} className="img-btn__text" >
+                        {props?.currentQuestion?.answers?.choice2?.choiceText}
                     </span>
                 </button>
             </div>
@@ -40,6 +44,25 @@ function QuestionOverlay(props) {
         </div>
 
     )
+
+    function getFontSize(txt) {
+        if(!txt) {
+            return '16px'
+        }
+        let len = txt.length
+        if(len < 9) {
+            return 'larger'
+        }
+        if(len < 12) {
+            return '24px'
+        }
+        if(len < 19) {
+            return '20px'
+        }
+        if(len < 32) {
+            return '16px'
+        }
+        return '14px'
     }
 
 

@@ -87,7 +87,7 @@ function GamePlayPage() {
                 setReadyToAnswer(true);
             }, 1000)
     
-
+        // eslint-disable-next-line
     }, [readyToAnswer, choice])
 
     return (
@@ -101,7 +101,7 @@ function GamePlayPage() {
             }
 
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-            <Popup lockScroll={true} open={quizEnd} className="ackno-popup" >
+            <Popup closeOnDocumentClick={false} lockScroll={true} open={quizEnd} className="ackno-popup" >
                 <Acknowledge />
             </Popup>
         </>
@@ -119,7 +119,7 @@ function GamePlayPage() {
             var challengeInstanceId = path?.challengeId;
             getChallenge(challengeInstanceId)
                 .then(response => {
-
+                    console.log(response.data)
                     setQuestions(response.data.questions)
 
                     setCurrentQuestion(response.data.questions[0])

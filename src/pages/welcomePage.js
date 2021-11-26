@@ -11,7 +11,7 @@ function WelcomePage() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const { pathname } = useLocation()
-    const link = searchParams.get("invite")
+    const [link, setLink] = useState(searchParams.get("invite"))
     const challengeLink = searchParams.get("challenge");
     const [name, setName] = useState('')
 
@@ -23,6 +23,7 @@ function WelcomePage() {
                 })
                 .catch(e => {
                     console.log(e)
+                    setLink("")
                     toast("Invitation link is not valid", {
                         position: "bottom-center",
                         autoClose: 3500,
