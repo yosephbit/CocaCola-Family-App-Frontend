@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect,useRef } from 'react'
-import Popup from 'reactjs-popup';
+import React, { useState, useContext, useEffect } from 'react'
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -16,12 +15,7 @@ function GamePlayPage() {
     const [questions, setQuestions] = useState([])
     const { path } = useContext(RouteContext)
     const { user } = useContext(UserContext);
-
-
     const { storePath } = useContext(RouteContext)
-    const [open, setOpen] = useState(false);
-    const [ackOpen, setAckOpen] = useState(false);
-
     const [questoionsIndex, setQuestionsIndex] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [challengeAnswers, setChallengeAnswers] = useState([])
@@ -138,7 +132,6 @@ function GamePlayPage() {
                     });
                 })
         } else {
-
             getQuiz(2)
                 .then(response => {
                     setQuestions(response.data.questions)
@@ -209,8 +202,6 @@ function GamePlayPage() {
                 }
                 onChallengeCreated(challangeInstanceId)
                     .then(res => {
-                        setAckOpen(true)
-                        setOpen(false)
                     }).catch(err => {
                         console.log(err)
                     })

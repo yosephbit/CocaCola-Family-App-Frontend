@@ -24,13 +24,15 @@ function LoginPage() {
     const [errors, setErrors] = useState({})
     const [loginSuccess, setLoginSuccess] = useState(false)
     const [open, setOpen] = useState(false);
-    let { pathname, state } = useLocation()
-    const { storePath } = useContext(RouteContext)
+    let { state } = useLocation()
+    const {storePath} = useContext(RouteContext)
+    const {user} = useContext(UserContext)
     const containerRef = useRef(null);
     const toggleModal = (state) => setOpen(state);
     const [verificationId, setVerificationId] = useState('');
     const [uid, setUid] = useState('');
-    const { user } = useContext(UserContext);
+    const navigate = useNavigate()
+
     useEffect(() => {
         const { hostname } = window.location
         const hostArr = hostname.split('.')

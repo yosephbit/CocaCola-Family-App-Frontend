@@ -16,7 +16,7 @@ function ScorePage() {
     return (
         <div className="page score">
             <h2 className="score__header">
-                WE SCORED <span className="score__value">{path?.SCORE}%</span> IN
+                WE SCORED <span className="score__value" title={path?.SCORE ? path?.SCORE+'%' : '0'} >{path?.SCORE ? path?.SCORE+'%' : '0'}</span> IN
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />

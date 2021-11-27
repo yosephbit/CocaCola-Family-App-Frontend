@@ -1,5 +1,5 @@
-import React, { useContext, useState ,useEffect} from 'react'
-import { useNavigate, useLocation } from 'react-router'
+import React, { useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import UserContext from '../_helpers/userContext'
 import { toast } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -10,15 +10,11 @@ function CodeVerification(props) {
     const [errors, setErrors] = useState({})
     const { storeUser } = useContext(UserContext)
     const { path } = useContext(RouteContext)
-    const { storePath } = useContext(RouteContext)
     let navigate = useNavigate()
-    let { pathname } = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || '';
 
     
     useEffect(() => {
-        const { name, phone, verificationId, uid } = props.userData;
+        const { uid } = props.userData;
         if (uid !== '') {
             saveUserAndNavigate(uid);
             return;
@@ -61,7 +57,7 @@ function CodeVerification(props) {
             onInvitationLink(path?.linkId, user)
                 .then(() => {
                     //storePath({})
-                    navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
+                    navigate(`/game`)
                 })
                 .catch(e => {
                     props.toggleModal(false)
@@ -78,9 +74,9 @@ function CodeVerification(props) {
                     });
                 })
         }else if (path?.via === "CHALLENGE"){
-            navigate(`/${rootUrl ? rootUrl + '/' : ''}game`)
+            navigate(`/game`)
         }else {
-            navigate(`/${rootUrl ? rootUrl + '/' : ''}players`, { replace: true })
+            navigate(`/players`, { replace: true })
         }
     }
     function onSubmitHandler(e) {
@@ -91,7 +87,7 @@ function CodeVerification(props) {
             return
         }
         props.toggleModal(true)
-        const { name, phone, verificationId, uid } = props.userData;
+        const { verificationId } = props.userData;
 
         //checking if user is already signed and verfied 
         

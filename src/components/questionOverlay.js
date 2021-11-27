@@ -1,23 +1,14 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
 import flower from '../assets/img/flower.png'
 import bottle from '../assets/img/bottle.png'
 import cork from '../assets/img/cork.png'
 import flame1 from '../assets/img/flame-1.png'
-import Loader from "react-loader-spinner";
-import Popup from 'reactjs-popup';
-import UserContext from '../_helpers/userContext';
-import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
-import RouteContext from '../_helpers/routeContext';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Acknowledge } from '.'
 
 function QuestionOverlay(props) {
     console.log(props)
     // const { choice1, choice2 } = props?.currentQuestion?.answers
     // const { questionText } = props?.currentQuestion?.question
 
-function QuestionOverlay(props) {
-    
     return (
         <div className="main-overlay ">
             <h2 className="question" title={props?.currentQuestion?.question?.questionText?.toString()}>{props?.currentQuestion?.question?.questionText?.toString()}</h2>
@@ -64,6 +55,6 @@ function QuestionOverlay(props) {
         }
         return '14px'
     }
-
+}
 
 export default QuestionOverlay

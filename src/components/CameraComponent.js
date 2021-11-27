@@ -1,9 +1,8 @@
-
+import React from "react";
 import { FaceMesh } from "@mediapipe/face_mesh";
-import React, { useRef, useEffect, useState } from "react";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
-import { ToastContainer, toast, Slide } from 'react-toastify';
+import { ToastContainer, Slide } from 'react-toastify';
 import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 
@@ -129,12 +128,11 @@ class CameraComponent extends React.Component {
             }
             else if (results.multiFaceLandmarks.length === 1) {
 
-                var angle
                 for (let x in results.multiFaceLandmarks) {
                     // eslint-disable-next-line eqeqeq
 
                     if (x === "0" && results.multiFaceLandmarks[0].length === 468) {
-                        var slope = (results.multiFaceLandmarks[x][152].y * canvasElement.height - results.multiFaceLandmarks[x][10].y * canvasElement.height) / (results.multiFaceLandmarks[x][152].x * canvasElement.width - results.multiFaceLandmarks[x][10].x * canvasElement.width)
+                        slope = (results.multiFaceLandmarks[x][152].y * canvasElement.height - results.multiFaceLandmarks[x][10].y * canvasElement.height) / (results.multiFaceLandmarks[x][152].x * canvasElement.width - results.multiFaceLandmarks[x][10].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
 
@@ -224,7 +222,7 @@ class CameraComponent extends React.Component {
                     ref={this.canvasRef}
                     className="output_canvas"
                 ></canvas>
-                <Popup open={this.state.open } className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={this.state.open} lockScroll={true} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="TailSpin"
@@ -253,8 +251,6 @@ class CameraComponent extends React.Component {
 
         );
     }
-
-
 
     onMediaError(e) {
         alert("could not start camera")
