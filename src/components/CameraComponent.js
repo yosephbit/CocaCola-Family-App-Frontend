@@ -2,19 +2,21 @@ import React from "react";
 import { FaceMesh } from "@mediapipe/face_mesh";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
-import { ToastContainer, Slide } from 'react-toastify';
+import { ToastContainer, Slide, toast } from 'react-toastify';
 import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
+import RouteContext from '../_helpers/routeContext'
 
 var len = 10;
 var answerBuffer = [];
 
-var elem =
-    document.compatMode === 'CSS1Compat'
-        ? document.documentElement
-        : document.body;
 
+var promiseResolve;
+var promise = new Promise(function (resolve) {
+    promiseResolve = resolve;
+})
 class CameraComponent extends React.Component {
+    static contextType = RouteContext
     constructor(props) {
         super(props);
         this.state = {
@@ -27,15 +29,23 @@ class CameraComponent extends React.Component {
             facingMode: "user",
             // aspectRatio: window.innerHeight / window.innerWidth
         }
+        this.displayError = 0;
+        this.wentBackToUpRight = true;
+
+
+        //   this.path=useContext(RouteContext)
     }
     componentDidMount() {
         this.readAngle();
+
+
     }
 
 
     onResults = (results) => {
+        const path = this.context?.path;
+        if (this.state.open) this.toggleModal(false);
 
-        if(this.state.open) this.toggleModal(false);
         if (this.props?.readyToAnswer) {
             const videoWidth = this.webcamRef.current.video.videoWidth;
             const videoHeight = this.webcamRef.current.video.videoHeight;
@@ -49,7 +59,10 @@ class CameraComponent extends React.Component {
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
             if (results.multiFaceLandmarks.length === 2) {
-
+                if (this.displayError === 1) {
+                    promiseResolve();
+                }
+                this.displayError = 2;
                 var angle, angle1
                 for (let x in results.multiFaceLandmarks) {
                     // eslint-disable-next-line eqeqeq
@@ -124,7 +137,8 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
             }
-            else if (results.multiFaceLandmarks.length === 1) {
+            else if (results.multiFaceLandmarks.length === 1 && path.via !== 'TOGETHER') {
+
 
                 for (let x in results.multiFaceLandmarks) {
                     // eslint-disable-next-line eqeqeq
@@ -135,20 +149,40 @@ class CameraComponent extends React.Component {
                     }
 
                 }
-                if (angle < 70 && angle > 0) {
+                if (angle < 70 && angle > 0 && this.wentBackToUpRight) {
                     answerBuffer.push("No");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
-                } else if (angle > -70 && angle < 0) {
+                } else if (angle > -70 && angle < 0 && this.wentBackToUpRight) {
                     answerBuffer.push("Yes");
-
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
+                } else if (angle > 70 || angle < -70) {
+                    this.wentBackToUpRight = true
                 }
             }
 
             else {
-                canvasCtx.font = '25px serif';
-                canvasCtx.fillText('Need 2 person to answer this Questions.', (elem.clientWidth / 2) - 150, 90);
+
+                if(this.displayError===2){
+                    this.displayError=0;
+                }
+                if (this.displayError === 0) {
+
+                    toast.promise(
+                        promise,
+                        {
+                            pending: 'Waiting for second player',
+                            success: 'Second player Detected 👌',
+                            error: 'Something went wrong 🤯'
+                        },
+                        {
+                          position: toast.POSITION.TOP_CENTER,
+                        }
+                    );
+                    this.displayError = 1
+                }
+
+
             }
             canvasCtx.restore();
         }
@@ -184,21 +218,54 @@ class CameraComponent extends React.Component {
             this.camera.start();
         }
     }
-    toggleModal(toggle){
-        this.setState({open: toggle});
+
+    toggleModal(toggle) {
+        this.setState({ open: toggle });
+    }
+
+    Deferred() {
+        var self = this;
+        this.promise = new Promise(function (resolve, reject) {
+            self.resolve = resolve;
+            self.reject = reject;
+        })
+
     }
 
     checkAnswer(buffer, canvasCtx, canvasElement) {
-        if (buffer.length === len && !this.props.quizEnd) {
+        let msg = "Please go back to up right position to answer next question."
+
+        if (buffer.length === len) {
             var ans = buffer.join("-");
             if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
                 answerBuffer = [];
+                this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
 
+                toast(msg, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                });
             }
             else if (ans === "No-No-No-No-No-No-No-No-No-No") {
                 answerBuffer = [];
+                this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)
+
+                toast(msg, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                });
             }
             answerBuffer = [];
         }
@@ -217,7 +284,7 @@ class CameraComponent extends React.Component {
                     ref={this.canvasRef}
                     className="output_canvas"
                 ></canvas>
-                <Popup open={this.state.open} lockScroll={true} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={this.state.open} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="TailSpin"
@@ -230,7 +297,7 @@ class CameraComponent extends React.Component {
                 </Popup>
                 <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
-                <Popup open={!this.state.open && (!this.props?.readyToAnswer)}  className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={!this.state.open && (!this.props?.readyToAnswer || this.props?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="ThreeDots"
@@ -240,7 +307,7 @@ class CameraComponent extends React.Component {
                         />
                     </div>
                 </Popup>
-                <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+                <ToastContainer autoClose={false} theme="dark" transition={Slide} />
             </div>
 
 

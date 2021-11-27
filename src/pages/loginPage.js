@@ -52,10 +52,11 @@ function LoginPage() {
         if (state) {
             const { via, linkId, challengeId } = state
             if (via === "LINK") {
-
                 storePath({ via, linkId })
             } else if (via === "CHALLENGE") {
                 storePath({ via, challengeId })
+            } else if(via === "TOGETHER"){
+                storePath({ via })
             } else if (via === "NORMAL") {
                 storePath({ via })
             }
@@ -63,12 +64,7 @@ function LoginPage() {
         }
         if (user) {
             const { via } = state || {}
-            if (via === "LINK") {
-                // onInvitationLink(linkId, user)
-                //     .then(() => {})
-                //     .catch(e => {})
-                navigate(`/game`)
-            } else if (via === "CHALLENGE" || via === "TOGETHER") {
+            if (via === "LINK" || via === "CHALLENGE" || via === "TOGETHER") {
                 navigate(`/game`)
             } else {
                 navigate(`/players`, { replace: true })
