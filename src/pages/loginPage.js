@@ -67,7 +67,7 @@ function LoginPage() {
                 //     .then(() => {})
                 //     .catch(e => {})
                 navigate(`/game`)
-            } else if (via === "CHALLENGE") {
+            } else if (via === "CHALLENGE" || via === "TOGETHER") {
                 navigate(`/game`)
             } else {
                 navigate(`/players`, { replace: true })

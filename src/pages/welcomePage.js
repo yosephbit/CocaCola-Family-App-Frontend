@@ -78,7 +78,6 @@ function WelcomePage() {
                                 </Link>
                             </>
                         )
-
                     )
                     }
                 </div>

@@ -86,10 +86,10 @@ function PlayersPage() {
         generateInviteLink(user, relation)
             .then(res => {
                 let { linkId } = res.data;
-                const {host: url} = window.location
+                const {host: url, protocol} = window.location
                 // TODO
                 // link url has to be changed to utilily file url
-                const link = `${url}/?invite=${linkId}`
+                const link = `${protocol}//${url}/?invite=${linkId}`
                 navigate(`/links`, {
                     state: {
                         link
