@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import './assets/scss/main.scss';
 import { AdminLogin, AdminPage, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -27,12 +27,6 @@ function App() {
   const [user, setUser] = useState(userData)
   const [path, setPath] = useState(pathData)
 
-  useLayoutEffect(() => {
-    // setTimeout(() => {
-    //   toggleModal(true)
-    // }, 4500);
-  }, [])
-
   return (
     <div className="app">
       <NavBar />
@@ -53,6 +47,7 @@ function App() {
             <Route path="admin" element={<AdminPage />}>
               <Route path="login" element={<AdminLogin />} />
               <Route path="users" element={<AdminUsers />} />
+              <Route path="scores" element={<AdminUsers />} />
               <Route path="*" element={<Navigate to="/admin" />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace={true} />} />

@@ -76,11 +76,9 @@ function GamePlayPage() {
                 setQuestionsIndex(questoionsIndex + 1);
             }
         }
-    
-            setTimeout(() => {
-                setReadyToAnswer(true);
-            }, 1000)
-    
+        setTimeout(() => {
+            if(!quizEnd) setReadyToAnswer(true);
+        }, 1000)
         // eslint-disable-next-line
     }, [readyToAnswer, choice])
 
@@ -88,10 +86,7 @@ function GamePlayPage() {
         <>
             <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} quizEnd={quizEnd} />
             {
-
                 gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />
-
-
             }
 
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
@@ -101,12 +96,10 @@ function GamePlayPage() {
         </>
     )
     function onChoiceMade(result) {
-
         setReadyToAnswer(false)
         setChoice(result);
-
-
     }
+
     function startGame() {
         setGameStared(true);
         if (path?.via === "CHALLENGE") {

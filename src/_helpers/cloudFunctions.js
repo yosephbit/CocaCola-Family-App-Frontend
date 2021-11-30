@@ -4,6 +4,15 @@ import axios from "axios";
 
 const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
 
+axios.interceptors.response.use(function (response) {
+    return response;
+  }, function (error) {
+    if(error.response?.status === 401) {
+        localStorage.removeItem("_user")
+        window.location.reload()
+    }
+    return Promise.reject(error);
+});
 
 export const getScore = (challangeId,respondentId ) => {
    return axios.post(`${api}/getScore`, {challangeId, respondentId}); 
@@ -23,13 +32,11 @@ export const sendCode = (name,phone_number) =>{
 export const createChallengeInstance = (challangerId) =>{
     return axios.post(`${api}/createChallangeInstance`,{challangerId})
 }
-
 export const verifyToken = (verificationId,sms_token) =>{
     return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
 }
-
 export const generateInviteLink = (uid, relation) => {
-    return axios.post(`${api}/generateInviteLink`, {uid, relation})
+    return axios.post(`${api}/generateInviteLink`, {uid: uid+'fsef', relation})
 }
 
 export const onInvitationLink = (invitationId, invitedId) => {
@@ -60,12 +67,7 @@ export const getQuiz = (numberOfQuestions) => {
     return axios.post(`${api}/getQuiz`, {numberOfQuestions})
 }
 
-// export const generateInviteLink = httpsCallable(functions, 'generateInviteLink');
-// export const signUpUser = httpsCallable(functions, 'signUpUsers')
-// generateInviteLink({ userId: messageText })
-//   .then((result) => {
-//     // Read result of the Cloud Function.
-//     /** @type {any} */
-//     const data = result.data;
-//     const sanitizedMessage = data.text;
-//   });
+// admin apis
+export const getUsers = () => {
+    return axios.get(`${api}/admin/users`)
+}

@@ -9,7 +9,6 @@ import Loader from "react-loader-spinner";
 var len = 10;
 var answerBuffer = [];
 
-
 var elem =
     document.compatMode === 'CSS1Compat'
         ? document.documentElement
@@ -26,11 +25,10 @@ class CameraComponent extends React.Component {
         this.camera = null;
         this.videoContraints = {
             facingMode: "user",
-            aspectRatio: window.innerHeight / window.innerWidth
+            // aspectRatio: window.innerHeight / window.innerWidth
         }
     }
     componentDidMount() {
-        console.log(this.webcamRef);
         this.readAngle();
     }
 
@@ -156,7 +154,6 @@ class CameraComponent extends React.Component {
         }
     }
 
-
     readAngle() {
         const faceMesh = new FaceMesh({
             locateFile: (file) => {
@@ -181,8 +178,8 @@ class CameraComponent extends React.Component {
                 onFrame: async () => {
                     await faceMesh.send({ image: this.webcamRef?.current?.video });
                 },
-                width: 1000,
-                height: this.screenHeight,
+                // width: 1000,
+                // height: this.screenHeight,
             });
             this.camera.start();
         }
@@ -193,7 +190,7 @@ class CameraComponent extends React.Component {
 
 
     checkAnswer(buffer, canvasCtx, canvasElement) {
-        if (buffer.length === len) {
+        if (buffer.length === len && !this.props.quizEnd) {
             var ans = buffer.join("-");
             if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
                 answerBuffer = [];
@@ -213,7 +210,6 @@ class CameraComponent extends React.Component {
             <div className="camera">
                 <Webcam
                     ref={this.webcamRef}
-
                     videoConstraints={this.videoContraints} mirrored={true}
                     audio={false} onUserMediaError={this.onMediaError}
                     className="video-tag"
@@ -235,7 +231,7 @@ class CameraComponent extends React.Component {
                 </Popup>
                 <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
-                <Popup open={!this.state.open && (!this.props?.readyToAnswer || this.props?.quizEnd)}  className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={!this.state.open && (!this.props?.readyToAnswer)}  className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="ThreeDots"
