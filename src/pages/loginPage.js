@@ -17,6 +17,7 @@ import UserContext from '../_helpers/userContext';
 
 function LoginPage() {
     const [name, setName] = useState('')
+    const [toLogin, setToLogin] = useState(false)
     const [prefix, setPrefix] = useState('+65')
     const [countries, setCountries] = useState(["SG", "MY"])
     const [phone, setPhone] = useState('+65')
@@ -25,8 +26,8 @@ function LoginPage() {
     const [loginSuccess, setLoginSuccess] = useState(false)
     const [open, setOpen] = useState(false);
     let { state } = useLocation()
-    const {storePath} = useContext(RouteContext)
-    const {user} = useContext(UserContext)
+    const { storePath } = useContext(RouteContext)
+    const { user } = useContext(UserContext)
     const containerRef = useRef(null);
     const toggleModal = (state) => setOpen(state);
     const [verificationId, setVerificationId] = useState('');
@@ -36,7 +37,7 @@ function LoginPage() {
     useEffect(() => {
         const { hostname } = window.location
         const hostArr = hostname.split('.')
-        const countryCode = hostArr[hostArr.length -1]?.toLowerCase()
+        const countryCode = hostArr[hostArr.length - 1]?.toLowerCase()
         if (countryCode === 'my') {
             setCountries(["MY"])
             setSelected('MY')
@@ -53,14 +54,14 @@ function LoginPage() {
             if (via === "LINK") {
 
                 storePath({ via, linkId })
-            }else if (via === "CHALLENGE"){
-                storePath({ via, challengeId})
-            } else if(via === "NORMAL") {
-                storePath({via})
+            } else if (via === "CHALLENGE") {
+                storePath({ via, challengeId })
+            } else if (via === "NORMAL") {
+                storePath({ via })
             }
             //Auto Login if session exist 
         }
-        if(user) {
+        if (user) {
             const { via } = state || {}
             if (via === "LINK") {
                 // onInvitationLink(linkId, user)
@@ -72,6 +73,8 @@ function LoginPage() {
             } else {
                 navigate(`/players`, { replace: true })
             }
+        } else {
+            setToLogin(true)
         }
         //eslint-disable-next-line
     }, [])
@@ -87,60 +90,66 @@ function LoginPage() {
 
     return (
         <div className="page login fl-col just-center align-center">
-            <div className="img-container fl-col just-center align-center">
-                <img src={banner} alt="" className="main-banner" />
-            </div>
-            <div ref={containerRef}>
-                <div id="recaptcha-container"></div>
-            </div>
-            {!loginSuccess ?
-                (<form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
-                    <h2 className="form__header">Enter your details</h2>
-                    <div className="form__group">
-                        <label htmlFor="" className="form__label">NAME:</label>
-                        <input onChange={e => setName(e.target.value)} name="name" type="text" value={name} className="form__input" />
-                    </div>
-                    <span className="form__error">{errors["name"]}</span>
-                    <div className="form__group">
-                        <label htmlFor="" className="form__label form__label--phone">MOBILE NO:</label>
-                        <div className="form__container fl-row align-center">
-                            <ReactFlagsSelect
-                                fullWidth={false}
-                                showSelectedLabel={false}
-                                className="menu-flags"
-                                selectButtonClassName="menu-flags-button"
-                                selected={selected} countries={countries}
-                                onSelect={onCountrySelect} />
-                            <input onChange={e => updatePhone(e.target.value)} name="phone" type="tel" value={phone} className="form__input--phone" />
+            {
+                toLogin && (
+                    <>
+                        <div className="img-container fl-col just-center align-center">
+                            <img src={banner} alt="" className="main-banner" />
                         </div>
-                    </div>
-                    <span className="form__error">{errors["phone"]}</span>
-                    <button id="sign-in-button" type="submit" className="img-btn form__btn">
-                        SEND
-                    </button>
-                </form>) :
-                (<CodeVerification userData={{ name, phone, verificationId, uid }} nextPage={state} toggleModal={toggleModal} />)
+                        <div ref={containerRef}>
+                            <div id="recaptcha-container"></div>
+                        </div>
+                        {!loginSuccess ?
+                            (<form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
+                                <h2 className="form__header">Enter your details</h2>
+                                <div className="form__group">
+                                    <label htmlFor="" className="form__label">NAME:</label>
+                                    <input onChange={e => setName(e.target.value)} name="name" type="text" value={name} className="form__input" />
+                                </div>
+                                <span className="form__error">{errors["name"]}</span>
+                                <div className="form__group">
+                                    <label htmlFor="" className="form__label form__label--phone">MOBILE NO:</label>
+                                    <div className="form__container fl-row align-center">
+                                        <ReactFlagsSelect
+                                            fullWidth={false}
+                                            showSelectedLabel={false}
+                                            className="menu-flags"
+                                            selectButtonClassName="menu-flags-button"
+                                            selected={selected} countries={countries}
+                                            onSelect={onCountrySelect} />
+                                        <input onChange={e => updatePhone(e.target.value)} name="phone" type="tel" value={phone} className="form__input--phone" />
+                                    </div>
+                                </div>
+                                <span className="form__error">{errors["phone"]}</span>
+                                <button id="sign-in-button" type="submit" className="img-btn form__btn">
+                                    SEND
+                                </button>
+                            </form>) :
+                            (<CodeVerification userData={{ name, phone, verificationId, uid }} nextPage={state} toggleModal={toggleModal} />)
+                        }
+
+                        <Popup open={open} className="login-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
+                            <div className="modal">
+                                <Loader
+                                    type="TailSpin"
+                                    color="#FEFEFE"
+                                    height={40}
+                                    width={40}
+                                />
+                                <span className="modal__text">Logging in</span>
+                            </div>
+                        </Popup>
+                        <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+
+                        <img src={flower} alt="" className="floating-img floating-img--1" />
+                        <img src={flower} alt="" className="floating-img floating-img--2" />
+                        <img src={flower} alt="" className="floating-img floating-img--3" />
+                        <img src={flower} alt="" className="floating-img floating-img--4" />
+                        <img src={flower} alt="" className="floating-img floating-img--5" />
+                        <img src={flame1} alt="" className="floating-img floating-img--6" />
+                    </>
+                )
             }
-
-            <Popup open={open} className="login-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
-                <div className="modal">
-                    <Loader
-                        type="TailSpin"
-                        color="#FEFEFE"
-                        height={40}
-                        width={40}
-                    />
-                    <span className="modal__text">Logging in</span>
-                </div>
-            </Popup>
-            <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-
-            <img src={flower} alt="" className="floating-img floating-img--1" />
-            <img src={flower} alt="" className="floating-img floating-img--2" />
-            <img src={flower} alt="" className="floating-img floating-img--3" />
-            <img src={flower} alt="" className="floating-img floating-img--4" />
-            <img src={flower} alt="" className="floating-img floating-img--5" />
-            <img src={flame1} alt="" className="floating-img floating-img--6" />
         </div>
     )
 
@@ -239,7 +248,7 @@ function LoginPage() {
                 toggleModal(false)
                 console.error(error)
                 let errorMsg = "Couldn't log you in"
-               
+
                 toast(errorMsg, {
                     position: "bottom-center",
                     autoClose: 4500,

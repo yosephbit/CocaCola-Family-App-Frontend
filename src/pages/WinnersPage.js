@@ -30,12 +30,12 @@ function WinnersPage() {
                         <div className="table__cell">Participation Code</div>
                     </div>
                     <div className="table__row">
-                        <div className="table__cell">Nicholas</div>
-                        <div className="table__cell">12344</div>
+                        <div className="table__cell">To be announced</div>
+                        <div className="table__cell">To be announced</div>
                     </div>
                     <div className="table__row">
-                        <div className="table__cell">Cayden</div>
-                        <div className="table__cell">12346</div>
+                        <div className="table__cell">to be announced</div>
+                        <div className="table__cell">To be announced</div>
                     </div>
                 </div>
 
@@ -46,12 +46,12 @@ function WinnersPage() {
                         <div className="table__cell">Participation Code</div>
                     </div>
                     <div className="table__row">
-                        <div className="table__cell">Cayden</div>
-                        <div className="table__cell">12346</div>
+                        <div className="table__cell">To be announced</div>
+                        <div className="table__cell">To be announced</div>
                     </div>
                     <div className="table__row">
-                        <div className="table__cell">Cayden</div>
-                        <div className="table__cell">12346</div>
+                        <div className="table__cell">To be announced</div>
+                        <div className="table__cell">To be announced</div>
                     </div>
                 </div>
             </div>
