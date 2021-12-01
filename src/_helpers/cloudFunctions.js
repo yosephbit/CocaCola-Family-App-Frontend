@@ -36,7 +36,7 @@ export const verifyToken = (verificationId,sms_token) =>{
     return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
 }
 export const generateInviteLink = (uid, relation) => {
-    return axios.post(`${api}/generateInviteLink`, {uid: uid+'fsef', relation})
+    return axios.post(`${api}/generateInviteLink`, {uid: uid.uid, relation})
 }
 
 export const onInvitationLink = (invitationId, invitedId) => {
