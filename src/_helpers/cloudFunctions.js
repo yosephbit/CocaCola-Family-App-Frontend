@@ -77,3 +77,11 @@ export const getUsers = (uid, itemsPerPage, page, token) => {
 export const adminLogin = (username, password) => {
     return axios.post(`${api}/adminLogin`, {username, password})
 }
+
+export const editQuestion = (questionId, questionText, uid, token) => {
+    return axios.post(`${api}/editQuestion`, {questionId, questionText, uid, token})
+}
+
+export const editChoice = (choiceId, answersText, uid, token) => {
+    return axios.post(`${api}/editQuestionChoice`, {choiceId, answersText, uid, token})
+}

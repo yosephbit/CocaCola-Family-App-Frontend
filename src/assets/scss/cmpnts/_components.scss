@@ -3,7 +3,6 @@
     display: inline-block;
     margin-bottom: 15px;
     z-index: 2;
-    transition: transform 0.2s ease-out;
     padding: 8px 20px;
     border-radius: 8px;
     border: none;
@@ -14,6 +13,8 @@
     font-weight: 900;
     text-decoration: none;
     text-align: center;
+    transition: transform 0.3s ease-out;
+    cursor: pointer;
 
     &::before {
         content: '';
@@ -25,6 +26,10 @@
         height: calc(100% - 8px);
         border-radius: 8px;
         transform: translate(-50%, -50%);
+    }
+
+    &:active {
+        transform: scale(.97);
     }
 
     &--fixed {

@@ -25,17 +25,58 @@
     &__content {
         color: white;
         width: 100%;
-        
+
         .header {
             text-decoration: underline;
             font-size: 18px;
-            font-size: 500;   
-            margin-bottom: 10px; 
+            font-size: 500;
+            margin-bottom: 10px;
         }
 
         .sub-header {
             font-size: 16px;
             margin-bottom: 3px;
+        }
+    }
+}
+
+.popup-overlay .ques-popup-content {
+    max-width: 600px;
+    padding: 15px 20px; 
+}
+
+.popup-overlay .ques-modal {
+    .input {
+        padding: 3px 5px;
+        line-height: 1.4;
+        outline: none;
+        // font-size: 18px; \      
+    }
+
+    .que-input {
+        text-align: center;
+        padding: 3px 5px;
+        line-height: 1.6;
+        font-size: 18px;
+        padding: 0 5px;
+        font-weight: 500;
+    }
+
+    .choices {
+        margin: 10px 0 15px;
+    }
+
+    .actions {
+        &__btn {
+            background: white;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            
+            &:first-child {
+                margin-right: 8px;
+            }
         }
     }
 }

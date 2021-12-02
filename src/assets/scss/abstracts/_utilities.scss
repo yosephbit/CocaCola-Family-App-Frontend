@@ -19,12 +19,28 @@
     justify-content: flex-start;
 }
 
+.just-end {
+    justify-content: flex-end;
+}
+
 .align-center {
     align-items: center;
 }
 
 .align-start {
     align-items: flex-start;
+}
+
+.align-end {
+    align-items: flex-end;
+}
+
+.self-start {
+    align-self: flex-start;
+}
+
+.self-end {
+    align-self: flex-end;
 }
 
 .w-full {

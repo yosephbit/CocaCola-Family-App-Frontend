@@ -181,9 +181,6 @@ function GamePlayPage() {
                 console.log(err)
             })
 
-
-
-
     }
     function uploadChallangeAndSendSms(challengeAnswers) {
         var challengerId = user;

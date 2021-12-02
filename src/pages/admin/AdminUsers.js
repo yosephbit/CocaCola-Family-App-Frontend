@@ -36,8 +36,9 @@ function AdminUsers() {
         getUsers(user?.user, 8, 1, user?.token).then(res => {
             let data = res.data;
             data = data.map(usrArr => {
-                return { ...usrArr[1], uid: usrArr[0] }
+                return { ...usrArr[1], created_at: new Date(usrArr[1].created_at), uid: usrArr[0] }
             })
+            console.log(data)
             setDataSource(data)
             setLoading(false)
         }).catch(e => {
@@ -63,7 +64,13 @@ function AdminUsers() {
                     columns={[
                         { title: 'NAME', field: 'name' },
                         { title: 'PHONE', field: 'phone_number' },
-                        { title: 'DATE', field: 'createdAt' },
+                        {
+                            title: 'DATE', field: 'created_at', type: 'date',
+                            dateSetting: {
+                                locale: "en-GB",
+                                // format: 'dd, M yyyy'
+                            },
+                        },
                     ]}
                     data={dataSource}
                 />
