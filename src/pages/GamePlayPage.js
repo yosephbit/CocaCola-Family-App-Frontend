@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
-
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -23,10 +22,6 @@ function GamePlayPage() {
     const [choice, setChoice] = useState(null);
     const [quizEnd, setQuizEnd] = useState(false)
     let navigate = useNavigate();
-
-    let { pathname } = useLocation()
-    let pathArr = pathname.split('/')
-    let rootUrl = pathArr[pathArr.length - 2] || '';
 
     useEffect(() => {
         if (questoionsIndex === questions.length && gameStared && questoionsIndex !== 0 && !quizEnd) {
@@ -181,7 +176,7 @@ function GamePlayPage() {
         getScore(challengeInstanceId, user)
             .then(res => {
                 storePath({ "SCORE": res?.data?.percentage })
-                navigate(`/${rootUrl ? rootUrl + '/' : ''}score`)
+                navigate(`/score`)
             }).catch(err => {
                 console.log(err)
             })
@@ -233,7 +228,7 @@ function GamePlayPage() {
         percentage=(score/totalQuestions)*100;
         //TODO: add endpoint to score for challenge
         storePath({ "SCORE": percentage })
-        navigate(`/${rootUrl ? rootUrl + '/' : ''}score`)
+        navigate(`/score`)
     }
 }
 

@@ -28,7 +28,7 @@ function ScorePage() {
             </div>
 
             <div className="score__footer fl-col align-center">
-                <p className="grad text large">Your Participation Code: 12345</p>
+                <p className="grad text large">Your Participation Code: </p>
                 <FaFacebook size={28} color="white" />
                 <p className="grad text x-large">SHARE YOUR RESULTS NOW</p>
                 <p className="text small">include hashtag #CokeReunionSG and your participation code (eg. #12345)</p>
