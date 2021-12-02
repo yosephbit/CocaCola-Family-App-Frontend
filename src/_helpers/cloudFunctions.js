@@ -3,6 +3,7 @@
 import axios from "axios";
 
 const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
+// const api = 'https://us-central1-macallan-ecf92.cloudfunctions.net/verifyToken'
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -32,9 +33,10 @@ export const sendCode = (name,phone_number) =>{
 export const createChallengeInstance = (challangerId) =>{
     return axios.post(`${api}/createChallangeInstance`,{challangerId})
 }
-export const verifyToken = (verificationId,sms_token) =>{
+export const verifyToken = (verificationId,sms_token) => {
     return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
 }
+
 export const generateInviteLink = (uid, relation) => {
     return axios.post(`${api}/generateInviteLink`, {uid: uid, relation})
 }
@@ -68,6 +70,10 @@ export const getQuiz = (numberOfQuestions) => {
 }
 
 // admin apis
-export const getUsers = () => {
-    return axios.get(`${api}/admin/users`)
+export const getUsers = (uid, itemsPerPage, page, token) => {
+    return axios.post(`${api}/getUsersList`, {uid, itemsPerPage, page, token})
+}
+
+export const adminLogin = (username, password) => {
+    return axios.post(`${api}/adminLogin`, {username, password})
 }

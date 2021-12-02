@@ -125,7 +125,7 @@ function GamePlayPage() {
                     });
                 })
         } else {
-            getQuiz(2)
+            getQuiz(8)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])

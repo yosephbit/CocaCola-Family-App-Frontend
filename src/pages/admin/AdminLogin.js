@@ -1,10 +1,13 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useContext } from 'react'
 import flower from '../../assets/img/flower.png'
 import flame1 from '../../assets/img/flame-1.png'
 import banner from '../../assets/img/banner-full.png'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
 import { ToastContainer, Slide } from 'react-toastify';
+import { adminLogin } from '../../_helpers/cloudFunctions';
+import { useNavigate } from 'react-router-dom';
+import UserContext from '../../_helpers/userContext';
 
 function AdminLogin() {
     const [email, setEmail] = useState('')
@@ -12,6 +15,8 @@ function AdminLogin() {
     const [errors, setErrors] = useState({})
     const [open, setOpen] = useState(false)
     const toggleModal = (state) => setOpen(state);
+    const navigate = useNavigate();
+    const { storeUser } = useContext(UserContext)
 
     useLayoutEffect(() => {
         const page = document.querySelector('.page');
@@ -31,7 +36,7 @@ function AdminLogin() {
                 <h2 className="form__header">Admin Login</h2>
                 <div className="form__group">
                     <label htmlFor="" className="form__label">Email</label>
-                    <input onChange={e => setEmail(e.target.value)} name="email" type="email" value={email} className="form__input" />
+                    <input onChange={e => setEmail(e.target.value)} name="email" type="text" value={email} className="form__input" />
                 </div>
                 <span className="form__error">{errors["email"]}</span>
                 <div className="form__group">
@@ -93,6 +98,21 @@ function AdminLogin() {
             return
         }
         toggleModal(true)
+
+        adminLogin(email, password)
+            .then(res => {
+                console.log(res.data)
+                toggleModal(false)
+                const uid = res.data
+                if (uid) {
+                    storeUser(uid)
+                    navigate("/admin")
+                }
+            })
+            .catch(e => {
+                console.log(e)
+                toggleModal(false)
+            })
     }
 }
 

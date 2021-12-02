@@ -1,13 +1,16 @@
-import React, { useEffect, useState, forwardRef } from 'react'
+import React, { useEffect, useState, forwardRef, useContext } from 'react'
 import { MdViewColumn, MdRemove,MdArrowDownward, MdSearch, MdChevronLeft,
     MdChevronRight, MdLastPage, MdFirstPage, MdFilterList, MdSaveAlt, MdEdit, MdDeleteOutline,
     MdClear, MdCheck, MdAddBox } from "react-icons/md";
 import MaterialTable from 'material-table'
+import { alpha } from '@material-ui/core/styles'
 import { getUsers } from '../../_helpers/cloudFunctions';
+import UserContext from '../../_helpers/userContext'
 
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
+    const {user} = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <MdCheck {...props} ref={ref} />),
@@ -40,7 +43,7 @@ function AdminUsers() {
         //     { name: 'Mehmet', phone: '+6512345678', createdAt: "2nd Jan, 2022" },
         //     { name: 'Kaleb', phone: '+6512345678', createdAt: "2nd Jan, 2022" },
         // ]
-        getUsers().then(res => {
+        getUsers(user,8,1,'').then(res => {
             setDataSource(res.data)
             setLoading(false)
         }).catch(e => {

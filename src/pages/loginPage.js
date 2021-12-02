@@ -259,37 +259,6 @@ function LoginPage() {
                     progress: undefined,
                 });
             })
-
-        // signInWithPhoneNumber(auth, phone, recaptchaVerifier)
-        //     .then((confirmationResult) => {
-        //         toggleModal(false)
-        //         setLoginSuccess(true)
-        //         window.confirmationResult = confirmationResult
-        //         containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
-        //         // ...
-        //     }).catch((error) => {
-        //         toggleModal(false)
-        //         console.log(error)
-        //         recaptchaVerifier.clear()
-        //         containerRef.current.innerHTML = `<div id="recaptcha-container"></div>`
-        //         error = new Error(error).toString().toLowerCase()
-        //         let errorMsg = "Couldn't log you in"
-        //         if (error.includes('invalid format')) {
-        //             errorMsg = "Invalid phone number. Check your input."
-        //         }
-        //         toast(errorMsg, {
-        //             position: "bottom-center",
-        //             autoClose: 4500,
-        //             hideProgressBar: true,
-        //             closeOnClick: true,
-        //             pauseOnHover: false,
-        //             draggable: false,
-        //             progress: undefined,
-        //         });
-
-        //         // ...
-        //     });
-
     }
 
 }
