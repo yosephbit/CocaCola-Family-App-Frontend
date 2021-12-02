@@ -4,10 +4,10 @@ import Webcam from 'react-webcam'
 function CameraPage() {
     const videoContraints = {
         facingMode: "user",
-        aspectRatio: 19 / 9
+        aspectRatio: 9 / 16
     }
     return (
-        <div className="">
+        <div className="simple-camera">
             <Webcam className="video-tag"
                 videoConstraints={videoContraints} mirrored={true}
                 audio={false} onUserMediaError={onMediaError} />
