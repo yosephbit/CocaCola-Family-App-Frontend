@@ -10,11 +10,10 @@ import RouteContext from '../_helpers/routeContext'
 var len = 10;
 var answerBuffer = [];
 
+const toastList = new Set();
+const msgToastList = new Set();
 
 var promiseResolve;
-var promise = new Promise(function (resolve) {
-    promiseResolve = resolve;
-})
 class CameraComponent extends React.Component {
     static contextType = RouteContext
     constructor(props) {
@@ -44,7 +43,7 @@ class CameraComponent extends React.Component {
 
     onResults = (results) => {
         const path = this.context?.path;
-        if(this?.props?.quizEnd === true) return;
+        if (this?.props?.quizEnd === true) return;
         if (this.state.open) this.toggleModal(false);
 
         if (this.props?.readyToAnswer) {
@@ -143,7 +142,7 @@ class CameraComponent extends React.Component {
                     promiseResolve();
                 }
                 this.displayError = 2;
-                
+
                 for (let x in results.multiFaceLandmarks) {
                     // eslint-disable-next-line eqeqeq
 
@@ -166,12 +165,14 @@ class CameraComponent extends React.Component {
             }
 
             else {
-                console.log("Herere")
+
                 if (path?.via === "TOGETHER") {
                     if (this.displayError === 0) {
 
                         toast.promise(
-                            promise,
+                            new Promise((resolve, reject) => {
+                                promiseResolve = resolve;
+                            }),
                             {
                                 pending: 'Waiting for second player',
                                 success: 'Second player Detected 👌',
@@ -184,35 +185,53 @@ class CameraComponent extends React.Component {
                         );
                         this.displayError = 1
                     }
-                }else if(results.multiFaceLandmarks.length === 2){
-                    if (this.displayError===2){
-                        toast.clearWaitingQueue();
+                } else if (results.multiFaceLandmarks.length === 2) {
+                    if (this.displayError === 2) {
                         this.displayError = 0
                     }
                     if (this.displayError != null && this.displayError === 0) {
+                        if (toastList.size < 1) {
+                            const id = toast.promise(
+                                new Promise((resolve, reject) => {
+                                    promiseResolve = resolve;
+                                }),
+                                {
+                                    pending: 'More than one player detected, only one player is allowed',
+                                    success: 'You can continue now 👌',
+                                    error: 'Something went wrong 🤯'
+                                },
+                                {
+                                    position: toast.POSITION.TOP_CENTER,
+                                    autoClose: 1000,
+                                    onClose: () => { toastList.delete(id) }
+                                }
+                            );
+                            toastList.add(id);
+                        }
 
-                        toast.promise(
-                            new Promise(function (resolve) {
-                                promiseResolve = resolve;
-                            
-                            }),
-                            {
-                                pending: 'More than one player detected, only one player is allowed',
-                                success: 'You can continue now 👌',
-                                error: 'Something went wrong 🤯'
-                            },
-                            {
-                                position: toast.POSITION.TOP_CENTER,
-                                autoClose: 1000,
-                                
-                            }
-                        );
                         this.displayError = 1
                     }
                 }
 
             }
             canvasCtx.restore();
+        }
+    }
+
+    toastMessage(msg) {
+        if (msgToastList.size < 1) {
+            
+           const id= toast(msg, {
+                position: "bottom-center",
+                autoClose: 1000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                onClose: ()=>{msgToastList.delete(id)}
+            });
+            msgToastList.add(id);
         }
     }
 
@@ -250,16 +269,7 @@ class CameraComponent extends React.Component {
     toggleModal(toggle) {
         this.setState({ open: toggle });
     }
-
-    Deferred() {
-        var self = this;
-        this.promise = new Promise(function (resolve, reject) {
-            self.resolve = resolve;
-            self.reject = reject;
-        })
-
-    }
-
+ 
     checkAnswer(buffer, canvasCtx, canvasElement) {
         let msg = "Please go back to up right position to answer next question."
 
@@ -269,31 +279,14 @@ class CameraComponent extends React.Component {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
+                this.toastMessage(msg)
 
-                toast(msg, {
-                    position: "bottom-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                });
             }
             else if (ans === "No-No-No-No-No-No-No-No-No-No") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)
-
-                toast(msg, {
-                    position: "bottom-center",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                });
+                this.toastMessage(msg)
             }
             answerBuffer = [];
         }

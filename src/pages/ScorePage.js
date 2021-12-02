@@ -16,7 +16,7 @@ function ScorePage() {
     return (
         <div className="page score">
             <h2 className="score__header">
-                WE SCORED <span className="score__value" title={path?.SCORE ? path?.SCORE+'%' : '0%'} >{path?.SCORE ? path?.SCORE+'%' : '0%'}</span> IN
+                WE SCORED <span className="score__value">{path?.SCORE?.percentage}%</span> IN
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />
@@ -28,8 +28,12 @@ function ScorePage() {
             </div>
 
             <div className="score__footer fl-col align-center">
-                <p className="grad text large">Your Participation Code: </p>
-                <FaFacebook size={28} color="white" />
+                <p className="grad text large">Your Participation Code: {path?.SCORE?.shareCode}</p>
+                <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=`+encodeURIComponent(`My ${'family'} and I scored ${path?.SCORE?.percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} \n #CokeReunionSG #${path?.SCORE?.shareCode}`)} data-action="share/whatsapp/share" target="_blank" 
+
+                    rel="noreferrer" className="link">
+                    <FaFacebook size={28} color="white" />
+                </a>
                 <p className="grad text x-large">SHARE YOUR RESULTS NOW</p>
                 <p className="text small">include hashtag #CokeReunionSG and your participation code (eg. #12345)</p>
                 <p className="grad text med">Share the video and tell us who do you want to share a Coke with this CNY and why.</p>

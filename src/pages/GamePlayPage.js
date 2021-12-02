@@ -7,7 +7,6 @@ import RouteContext from '../_helpers/routeContext';
 import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
 import Acknowledge from '../components/Acknowledge'
-import Popup from 'reactjs-popup';
 
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
