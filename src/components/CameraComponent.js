@@ -44,6 +44,7 @@ class CameraComponent extends React.Component {
 
     onResults = (results) => {
         const path = this.context?.path;
+        if(this?.props?.quizEnd === true) return;
         if (this.state.open) this.toggleModal(false);
 
         if (this.props?.readyToAnswer) {
@@ -324,7 +325,7 @@ class CameraComponent extends React.Component {
                 </Popup>
                 <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
-                <Popup open={!this.state.open && (!this.props?.readyToAnswer || this.props?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.props?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="ThreeDots"

@@ -131,12 +131,18 @@
 }
 
 .ackno {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 3px;
     background-color: #c99124;
     background: linear-gradient(to right, #c99124 5%, #f6da67 25%, #f6da67 80%, #c99124 100%);
     opacity: 0.9;
+    max-width: 270px;
+    z-index: 20;
 
-    &__inner {
+     &__inner {
         padding: 30px 10px;
         background-image: url(../../img/bg.png);
     }
