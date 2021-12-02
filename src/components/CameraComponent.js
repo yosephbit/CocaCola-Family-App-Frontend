@@ -188,7 +188,6 @@ class CameraComponent extends React.Component {
         this.setState({open: toggle});
     }
 
-
     checkAnswer(buffer, canvasCtx, canvasElement) {
         if (buffer.length === len && !this.props.quizEnd) {
             var ans = buffer.join("-");

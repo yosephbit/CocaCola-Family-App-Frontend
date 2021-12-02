@@ -35,7 +35,7 @@ function AdminLogin() {
             <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
                 <h2 className="form__header">Admin Login</h2>
                 <div className="form__group">
-                    <label htmlFor="" className="form__label">Email</label>
+                    <label htmlFor="" className="form__label">UserName</label>
                     <input onChange={e => setEmail(e.target.value)} name="email" type="text" value={email} className="form__input" />
                 </div>
                 <span className="form__error">{errors["email"]}</span>
@@ -102,7 +102,6 @@ function AdminLogin() {
         adminLogin(email, password)
             .then(res => {
                 console.log(res.data)
-                toggleModal(false)
                 const uid = res.data
                 if (uid) {
                     storeUser(uid)
