@@ -58,7 +58,7 @@ class CameraComponent extends React.Component {
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-            if (results.multiFaceLandmarks.length === 2) {
+            if (results.multiFaceLandmarks.length === 2 && path.via === 'TOGETHER') {
                 if (this.displayError === 1) {
                     promiseResolve();
                 }
@@ -138,8 +138,11 @@ class CameraComponent extends React.Component {
                 }
             }
             else if (results.multiFaceLandmarks.length === 1 && path.via !== 'TOGETHER') {
-
-
+                if (this.displayError === 1) {
+                    promiseResolve();
+                }
+                this.displayError = 2;
+                
                 for (let x in results.multiFaceLandmarks) {
                     // eslint-disable-next-line eqeqeq
 
@@ -162,26 +165,50 @@ class CameraComponent extends React.Component {
             }
 
             else {
+                console.log("Herere")
+                if (path?.via === "TOGETHER") {
+                    if (this.displayError === 0) {
 
-                if(this.displayError===2){
-                    this.displayError=0;
+                        toast.promise(
+                            promise,
+                            {
+                                pending: 'Waiting for second player',
+                                success: 'Second player Detected 👌',
+                                error: 'Something went wrong 🤯'
+                            },
+                            {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 1000,
+                            }
+                        );
+                        this.displayError = 1
+                    }
+                }else if(results.multiFaceLandmarks.length === 2){
+                    if (this.displayError===2){
+                        toast.clearWaitingQueue();
+                        this.displayError = 0
+                    }
+                    if (this.displayError != null && this.displayError === 0) {
+
+                        toast.promise(
+                            new Promise(function (resolve) {
+                                promiseResolve = resolve;
+                            
+                            }),
+                            {
+                                pending: 'More than one player detected, only one player is allowed',
+                                success: 'You can continue now 👌',
+                                error: 'Something went wrong 🤯'
+                            },
+                            {
+                                position: toast.POSITION.TOP_CENTER,
+                                autoClose: 1000,
+                                
+                            }
+                        );
+                        this.displayError = 1
+                    }
                 }
-                if (this.displayError === 0) {
-
-                    toast.promise(
-                        promise,
-                        {
-                            pending: 'Waiting for second player',
-                            success: 'Second player Detected 👌',
-                            error: 'Something went wrong 🤯'
-                        },
-                        {
-                          position: toast.POSITION.TOP_CENTER,
-                        }
-                    );
-                    this.displayError = 1
-                }
-
 
             }
             canvasCtx.restore();
@@ -307,7 +334,7 @@ class CameraComponent extends React.Component {
                         />
                     </div>
                 </Popup>
-                <ToastContainer autoClose={false} theme="dark" transition={Slide} />
+                <ToastContainer limit={1} theme="dark" transition={Slide} />
             </div>
 
 
