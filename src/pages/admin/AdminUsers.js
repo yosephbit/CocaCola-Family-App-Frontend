@@ -36,9 +36,7 @@ function AdminUsers() {
         getUsers(user?.user, 8, 1, user?.token).then(res => {
             let data = res.data;
             data = data.map(usrArr => {
-                if (usrArr) {
-                    return { ...usrArr[1], uid: usrArr[0] }
-                }
+                return { ...usrArr[1], uid: usrArr[0] }
             })
             setDataSource(data)
             setLoading(false)
