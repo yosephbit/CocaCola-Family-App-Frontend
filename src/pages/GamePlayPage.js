@@ -28,7 +28,8 @@ function GamePlayPage() {
             setReadyToAnswer(false)
             if (path?.via === "CHALLENGE") {
                 uploadAnswerAndRedirectToScore(path?.challengeId)
-            } if (path?.via === "TOGETHER") {
+            }
+            else if (path?.via === "TOGETHER") {
                 calculateAndUploadScore()
             }
             else {
@@ -173,7 +174,7 @@ function GamePlayPage() {
 
         getScore(challengeInstanceId, user)
             .then(res => {
-                storePath({ "SCORE": res?.data?.percentage })
+                storePath({ "SCORE": res?.data })
                 navigate(`/score`)
             }).catch(err => {
                 console.log(err)
