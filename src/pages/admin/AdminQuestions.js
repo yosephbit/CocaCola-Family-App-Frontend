@@ -5,7 +5,7 @@ import {
     MdClear, MdCheck, MdAddBox
 } from "react-icons/md";
 import MaterialTable from 'material-table'
-import { adminGetQuestions } from '../../_helpers/cloudFunctions';
+import { getQuiz } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
 import UserContext from '../../_helpers/userContext';
@@ -44,7 +44,7 @@ function AdminQuestions() {
     };
 
     useEffect(() => {
-        adminGetQuestions(user?.user, user?.token, 8, 1)
+        getQuiz(50, user?.user, user?.token, 8, 1)
             .then((res) => {
                 setLoading(false)
                 let { questions } = res.data

@@ -29,8 +29,8 @@ function App() {
 
   return (
     <div className="app">
-      <NavBar />
       <UserContext.Provider value={{ user, storeUser }}>
+      <NavBar />
         <RouteContext.Provider value={{ path, storePath }}>
           <Routes>
             <Route path="/" element={<WelcomePage />} />

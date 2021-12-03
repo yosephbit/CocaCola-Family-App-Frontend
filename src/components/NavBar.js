@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import coca from '../assets/img/coca.png'
 import UseAnimations from 'react-useanimations'
 import volume from 'react-useanimations/lib/volume'
@@ -6,11 +6,13 @@ import soundfile from '../assets/audio/chinese_new_year.ogg'
 import Popup from 'reactjs-popup'
 import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from "react-icons/fa";
+import UserContext from '../_helpers/userContext'
 
 function NavBar() {
     const [audio] = useState(new Audio(soundfile));
     const [playing, setPlaying] = useState(false)
     const [volClass, setVolClass] = useState('icon-wrapper')
+    const { user } = useContext(UserContext)
 
     const handleInteract = () => {
         const wrapper = document.querySelector('.icon-wrapper')
@@ -49,13 +51,21 @@ function NavBar() {
                     : (<div style={{cursor: "pointer"}}><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
                     position="bottom right">
                     {close => (
-                        <div className="menu fl-col just-start">
+                        user?.token ? (
+                            <div className="menu fl-col just-start">
+                            <Link onClick={close} to="/" className="menu__item">Home</Link>
+                            <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
+                            <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
+                        </div>
+                        ) : (
+                            <div className="menu fl-col just-start">
                             <Link onClick={close} to="/" className="menu__item">Home</Link>
                             <Link onClick={close} to="howto" className="menu__item">How to Participate</Link>
                             <Link onClick={close} to="prizes" className="menu__item">Prizes</Link>
                             <Link onClick={close} to="winners" className="menu__item">Winner List</Link>
                             <Link onClick={close} to="terms" className="menu__item">Terms & Conditions</Link>
                         </div>
+                        )
                     )}
                 </Popup>
             </div>
