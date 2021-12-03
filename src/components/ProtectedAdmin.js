@@ -2,14 +2,12 @@ import React, { useContext } from 'react'
 import { Navigate } from 'react-router-dom'
 import UserContext from '../_helpers/userContext'
 
-function ProtectedRoute({ children, role }) {  
+function ProtectedAdmin({ children }) {
   const { user } = useContext(UserContext)
-  if(role) {
-    if(user && user.role !== role) {
-        return <Navigate to="/admin/login" />
-    }
+  if (!user || !user.token) {
+    return <Navigate to="/admin/login" />
   }
-  return user ? children : <Navigate to={`/login`} />
+  return children
 }
 
-export default ProtectedRoute
+export default ProtectedAdmin

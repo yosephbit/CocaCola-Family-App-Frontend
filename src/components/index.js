@@ -1,5 +1,6 @@
 export { default as CodeVerification } from "./codeVerification"
 export { default as ProtectedRoute } from "./protectedRoute"
+export { default as ProtectedAdmin } from "./ProtectedAdmin"
 export { default as QuestionOverlay } from "./questionOverlay"
 export { default as ProtectedPlayersPage } from "./ProtectedPlayersPage"
 export { default as ProtectedLinksPage } from "./ProtectedLinksPage"

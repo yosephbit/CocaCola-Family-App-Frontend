@@ -105,7 +105,7 @@ function AdminLogin() {
                 const uid = res.data
                 if (uid) {
                     storeUser(uid)
-                    navigate("/admin")
+                    navigate("/admin/dashboard")
                 }
             })
             .catch(e => {

@@ -1,26 +1,12 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, Navigate, useLocation } from 'react-router-dom'
 
 function AdminPage() {
-
+    const { pathname } = useLocation()
+    
     return (
-        <div className="page">
-            {/* {pathname !== '/admin/login' && (
-                <div className="fl-row just-center" style={{ marginBottom: '15px' }}>
-                    <Link to="login">
-                        <button>Login</button>
-                    </Link>
-                    <Link to="links">
-                        <button>Links</button>
-                    </Link>
-                    <Link to="scores">
-                        <button>Scores</button>
-                    </Link>
-                    <Link to="users">
-                        <button>Users</button>
-                    </Link>
-                </div>
-            )} */}
+        <div className="page admin">
+            { pathname === '/admin/' && (<Navigate to="/admin/dashboard" />) }
             <Outlet />
         </div>
     )

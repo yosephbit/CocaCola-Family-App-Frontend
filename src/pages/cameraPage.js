@@ -4,7 +4,7 @@ import Webcam from 'react-webcam'
 function CameraPage() {
     const videoContraints = {
         facingMode: "user",
-        aspectRatio: 9 / 16
+        aspectRatio: 3 / 4
     }
     return (
         <div className="simple-camera">

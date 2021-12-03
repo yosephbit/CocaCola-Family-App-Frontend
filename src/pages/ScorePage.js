@@ -8,6 +8,7 @@ import flame1 from '../assets/img/flame-1.png'
 import { FaFacebook } from 'react-icons/fa'
 import RouteContext from '../_helpers/routeContext';
 import CameraPage from './cameraPage'
+import { Link } from 'react-router-dom'
 
 
 function ScorePage() {
@@ -16,7 +17,7 @@ function ScorePage() {
     return (
         <div className="page score">
             <h2 className="score__header">
-                WE SCORED <span className="score__value">{path?.SCORE?.percentage}%</span> IN
+                WE SCORED <span className="score__value" title={`${path?.SCORE?.percentage || 0}%`}>{path?.SCORE?.percentage || 0}%</span> IN
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />
@@ -71,7 +72,7 @@ function ScorePage() {
                         <p className="inner-text">x50 Yu Sheng Vouchers</p>
                     </div>
                 </div>
-                <p className="grad text med">Find out more at (Link).</p>
+                <Link to="/terms" className="grad text med">Find out more at (Link).</Link>
                 
                 <img src={flame1} alt="" className="floating-img floating-img--5" />
                 <img src={flower} alt="" className="floating-img floating-img--6" />

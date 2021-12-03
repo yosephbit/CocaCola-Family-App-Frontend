@@ -45,8 +45,8 @@ function NavBar() {
                 <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} 
                     onClick={() => setPlaying(!playing)} strokeColor="white" />
                 <Popup className="menu-popup" trigger={open => open 
-                    ? (<div><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>) 
-                    : (<div><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
+                    ? (<div style={{cursor: "pointer"}}><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>) 
+                    : (<div style={{cursor: "pointer"}}><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
                     position="bottom right">
                     {close => (
                         <div className="menu fl-col just-start">

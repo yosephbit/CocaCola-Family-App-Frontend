@@ -78,10 +78,24 @@ export const adminLogin = (username, password) => {
     return axios.post(`${api}/adminLogin`, {username, password})
 }
 
+export const adminGetQuestions = (uid, token, itemsPerPage, page) => {
+    return axios.post(`${api}/getQuestionsList`, {uid, token, itemsPerPage, page})
+}
+
 export const editQuestion = (questionId, questionText, uid, token) => {
     return axios.post(`${api}/editQuestion`, {questionId, questionText, uid, token})
 }
 
 export const editChoice = (choiceId, answersText, uid, token) => {
     return axios.post(`${api}/editQuestionChoice`, {choiceId, answersText, uid, token})
+}
+
+export const addFullQuestion = (question) => {
+    return axios.post(`${api}/addMultipleQuestions`, { questions: [
+        question
+    ]})
+}
+
+export const deleteQuestion = (questionId, uid, token) => {
+    return axios.post(`${api}/deleteQuestion`, {questionId, uid, token})
 }

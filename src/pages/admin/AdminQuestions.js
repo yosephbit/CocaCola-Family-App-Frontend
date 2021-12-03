@@ -1,20 +1,27 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState, useContext } from 'react'
 import {
     MdViewColumn, MdRemove, MdArrowDownward, MdSearch, MdChevronLeft,
     MdChevronRight, MdLastPage, MdFirstPage, MdFilterList, MdSaveAlt, MdEdit, MdDeleteOutline,
     MdClear, MdCheck, MdAddBox
 } from "react-icons/md";
 import MaterialTable from 'material-table'
-import { getQuiz } from '../../_helpers/cloudFunctions';
+import { adminGetQuestions } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
+import UserContext from '../../_helpers/userContext';
 
 function AdminQuestions() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const [selectedQuestion, setSelectedQuestion] = useState(null)
-    const toggleModal = (state) => setOpen(state);
+    const toggleModal = (state) => {
+        setOpen(state);
+        !state && setDeleting(false);
+    }
+
+    const {user} = useContext(UserContext)
 
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
@@ -37,7 +44,7 @@ function AdminQuestions() {
     };
 
     useEffect(() => {
-        getQuiz(8)
+        adminGetQuestions(user?.user, user?.token, 8, 1)
             .then((res) => {
                 setLoading(false)
                 let { questions } = res.data
@@ -94,6 +101,7 @@ function AdminQuestions() {
                             tooltip: 'Delete Question',
                             onClick: (event, rowData) => {
                                 setSelectedQuestion(rowData)
+                                setDeleting(true)
                                 toggleModal(true)
                             }
                         },
@@ -101,7 +109,7 @@ function AdminQuestions() {
                 />
             </div>
             <Popup open={open} className="ques-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
-                <QuestionModal selectedQuestion={selectedQuestion} close={toggleModal} />
+                <QuestionModal deleting={deleting} selectedQuestion={selectedQuestion} close={toggleModal} />
             </Popup>
         </div>
     )

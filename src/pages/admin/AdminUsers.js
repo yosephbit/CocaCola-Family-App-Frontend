@@ -11,6 +11,7 @@ import UserContext from '../../_helpers/userContext'
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
+    const [pager, setPager] = useState({page: 1, pageSize: 8})
     const { user } = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
@@ -33,7 +34,7 @@ function AdminUsers() {
     };
 
     useEffect(() => {
-        getUsers(user?.user, 8, 1, user?.token).then(res => {
+        getUsers(user?.user, pager.pageSize, pager.page -1, user?.token).then(res => {
             let data = res.data;
             data = data.map(usrArr => {
                 return { ...usrArr[1], created_at: new Date(usrArr[1].created_at), uid: usrArr[0] }
@@ -46,7 +47,8 @@ function AdminUsers() {
             console.log(e.response)
         })
         // eslint-disable-next-line
-    }, [])
+    }, [pager])
+
     return (
         <div className="users">
             <div className="users__header fl-row align-center">
@@ -73,6 +75,7 @@ function AdminUsers() {
                         },
                     ]}
                     data={dataSource}
+                    onChangePage={(pages, pageSizes) => console.log(pages, pageSizes)}
                 />
             </div>
         </div>

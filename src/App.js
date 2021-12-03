@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './assets/scss/main.scss';
-import { AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
+import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
-import { Footer, NavBar, ProtectedLinksPage, ProtectedPlayersPage } from './components';
+import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
 import ProtectedScorePage from './components/ProtectedScorePage';
 
@@ -46,10 +46,27 @@ function App() {
             <Route path="score" element={<ProtectedScorePage />} />
             <Route path="admin" element={<AdminPage />}>
               <Route path="login" element={<AdminLogin />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="scores" element={<AdminScore />} />
-              <Route path="questions" element={<AdminQuestions />} />
-              <Route path="*" element={<Navigate to="/admin" />} />
+              <Route path="dashboard" element={
+                <ProtectedAdmin>
+                  <AdminDashboard />
+                </ProtectedAdmin>
+              } />
+              <Route path="users" element={
+                <ProtectedAdmin>
+                  <AdminUsers />
+                </ProtectedAdmin>
+              } />
+              <Route path="scores" element={
+                <ProtectedAdmin>
+                  <AdminScore />
+                </ProtectedAdmin>
+              } />
+              <Route path="questions" element={
+                <ProtectedAdmin>
+                  <AdminQuestions />
+                </ProtectedAdmin>
+              } />
+              <Route path="*" element={<Navigate to="/admin/dashboard" />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
