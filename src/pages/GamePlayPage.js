@@ -5,7 +5,7 @@ import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
 import UserContext from '../_helpers/userContext';
-import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore } from '../_helpers/cloudFunctions'
+import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore, addScoreForPlayTogether } from '../_helpers/cloudFunctions'
 import Acknowledge from '../components/Acknowledge'
 
 function GamePlayPage() {
@@ -221,9 +221,13 @@ function GamePlayPage() {
             }
         }
         const totalQuestions = challengeAnswers.length;
-        percentage=(score/totalQuestions)*100;
+        percentage = (score / totalQuestions) * 100;
+        addScoreForPlayTogether(user, score, percentage)
+            .then(res => {
+
+                storePath({ "SCORE": res?.data })
+            }).catch(err => {})
         //TODO: add endpoint to score for challenge
-        storePath({ "SCORE": percentage })
         navigate(`/score`)
     }
 }

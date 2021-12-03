@@ -69,6 +69,10 @@ export const getQuiz = (numberOfQuestions) => {
     return axios.post(`${api}/getQuiz`, {numberOfQuestions})
 }
 
+export const addScoreForPlayTogether = (respondentId,netScore,percentage) => {
+    return axios.post(`${api}/addScoreForPlayTogether`,{respondentId,netScore,percentage})
+}
+
 // admin apis
 export const getUsers = (uid, itemsPerPage, page, token) => {
     return axios.post(`${api}/getUsersList`, {uid, itemsPerPage, page, token})
