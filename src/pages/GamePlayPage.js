@@ -11,6 +11,7 @@ import Acknowledge from '../components/Acknowledge'
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
+    const [screenshot, setScreenshot] = useState("")
     const { path } = useContext(RouteContext)
     const { user } = useContext(UserContext);
     const { storePath } = useContext(RouteContext)
@@ -26,21 +27,21 @@ function GamePlayPage() {
         if (questoionsIndex === questions.length && gameStared && questoionsIndex !== 0 && !quizEnd) {
 
             setReadyToAnswer(false)
+            setQuizEnd(true);
             if (path?.via === "CHALLENGE") {
                 uploadAnswerAndRedirectToScore(path?.challengeId)
             }
             else if (path?.via === "TOGETHER") {
+                console.log("HERE2")
                 calculateAndUploadScore()
             }
             else {
-                setQuizEnd(true);
                 uploadChallangeAndSendSms(challengeAnswers)
             }
-
         }
-
         //eslint-disable-next-line
     }, [challengeAnswers, questoionsIndex])
+
     useEffect(() => {
         var singleChallenge;
         var result = choice
@@ -96,12 +97,10 @@ function GamePlayPage() {
 
     return (
         <>
-            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} quizEnd={quizEnd} />
+            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} quizEnd={quizEnd} takeImage={calculateAndUploadScore}  />
             {
-                !quizEnd ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
-
+                !quizEnd || path?.via === "TOGETHER" ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
             }
-
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
           
         </>
@@ -211,24 +210,28 @@ function GamePlayPage() {
 
             })
     }
-    function calculateAndUploadScore() {
-        console.log(challengeAnswers)
-        var score =0;
-        var percentage=0
-        for (const challenge of challengeAnswers){
-            if (challenge===1){
-                score=score+1;
-            }
-        }
-        const totalQuestions = challengeAnswers.length;
-        percentage = (score / totalQuestions) * 100;
-        addScoreForPlayTogether(user, score, percentage)
-            .then(res => {
+    function calculateAndUploadScore(img) {
+        console.log("HERE", img)
+        if(!screenshot) {
 
-                storePath({ "SCORE": res?.data })
+            console.log(challengeAnswers)
+            setScreenshot(img)
+            var score =0;
+            var percentage=0
+            for (const challenge of challengeAnswers){
+                if (challenge===1){
+                    score=score+1;
+                }
+            }
+            const totalQuestions = challengeAnswers.length;
+            percentage = (score / totalQuestions) * 100;
+            addScoreForPlayTogether(user, score, percentage)
+            .then(res => {
+                storePath({ "SCORE": res?.data, img: img })
+                navigate(`/score`)
             }).catch(err => {})
+        }
         //TODO: add endpoint to score for challenge
-        navigate(`/score`)
     }
 }
 

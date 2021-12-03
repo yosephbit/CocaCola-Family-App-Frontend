@@ -8,7 +8,7 @@ function CameraPage() {
     }
     return (
         <div className="simple-camera">
-            <Webcam className="video-tag"
+            <Webcam style={{maxWidth: "100%"}}
                 videoConstraints={videoContraints} mirrored={true}
                 audio={false} onUserMediaError={onMediaError} />
         </div>

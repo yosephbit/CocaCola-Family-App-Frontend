@@ -21,7 +21,9 @@ function ScorePage() {
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />
-                <CameraPage />
+                {/* <CameraPage /> */}
+                <img src={path?.img} alt="" className="score__img" />
+
                 <img src={flower} alt="" className="floating-img floating-img--1" />
                 <img src={bottle} alt="" className="floating-img floating-img--2" />
                 <img src={flower} alt="" className="floating-img floating-img--3" />

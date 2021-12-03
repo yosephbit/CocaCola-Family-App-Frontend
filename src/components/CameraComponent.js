@@ -19,12 +19,14 @@ class CameraComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: true
+            open: true,
+            quizEnd: this.props?.quizEnd
         }
         this.webcamRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
         this.camera = null;
         this.videoContraints = {
+            screenshotQuality: 1,
             facingMode: "user",
             // aspectRatio: window.innerHeight / window.innerWidth
         }
@@ -36,14 +38,23 @@ class CameraComponent extends React.Component {
     }
     componentDidMount() {
         this.readAngle();
-
-
     }
 
+    componentWillReceiveProps(nextProps) {
+        // You don't have to do this check first, but it can help prevent an unneeded render
+        if (nextProps.quizEnd !== this.state.quizEnd) {
+          this.setState({ quizEnd: nextProps.quizEnd });
+        }
+      }
 
     onResults = (results) => {
         const path = this.context?.path;
-        if (this?.props?.quizEnd === true) return;
+        if (this.state?.quizEnd === true) {
+            const img = this.webcamRef.current.getScreenshot({height: 280})
+            console.log(img)
+            this.props.takeImage(img)
+            return;
+        }
         if (this.state.open) this.toggleModal(false);
 
         if (this.props?.readyToAnswer) {
@@ -58,7 +69,7 @@ class CameraComponent extends React.Component {
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-            if (results.multiFaceLandmarks.length === 2 && path.via === 'TOGETHER') {
+            if (results.multiFaceLandmarks.length === 2 && path?.via === 'TOGETHER') {
                 if (this.displayError === 1) {
                     promiseResolve();
                 }
@@ -137,7 +148,7 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
             }
-            else if (results.multiFaceLandmarks.length === 1 && path.via !== 'TOGETHER') {
+            else if (results.multiFaceLandmarks.length === 1 && path?.via !== 'TOGETHER') {
                 if (this.displayError === 1) {
                     promiseResolve();
                 }
@@ -270,7 +281,7 @@ class CameraComponent extends React.Component {
         this.setState({ open: toggle });
     }
  
-    checkAnswer(buffer, canvasCtx, canvasElement) {
+    checkAnswer(buffer) {
         let msg = "Please go back to up right position to answer next question."
 
         if (buffer.length === len) {
@@ -293,13 +304,14 @@ class CameraComponent extends React.Component {
     }
 
     render() {
+        console.log("render", this.state?.quizEnd)
         return (
             <div className="camera">
                 <Webcam
                     ref={this.webcamRef}
                     videoConstraints={this.videoContraints} mirrored={true}
                     audio={false} onUserMediaError={this.onMediaError}
-                    className="video-tag"
+                    className="video-tag" 
                 />{" "}
                 <canvas
                     ref={this.canvasRef}
@@ -318,7 +330,7 @@ class CameraComponent extends React.Component {
                 </Popup>
                 <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
 
-                <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.props?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.state?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="ThreeDots"
@@ -330,8 +342,6 @@ class CameraComponent extends React.Component {
                 </Popup>
                 <ToastContainer limit={1} theme="dark" transition={Slide} />
             </div>
-
-
         );
     }
 

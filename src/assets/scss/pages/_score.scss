@@ -36,7 +36,6 @@
     &__body {
         position: relative;
         display: flex;
-        width: 100%;
         padding: 4px 0 0px;
         background: linear-gradient(to right, #C99124 5%, #F6DA67 25%, #F6DA67 80%, #C99124 100%);
     }
@@ -52,7 +51,7 @@
 
     &__img {
         width: 100%;
-        max-height: 240px;
+        max-height: 280px;
     }
 
     &__footer {
