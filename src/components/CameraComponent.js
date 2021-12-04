@@ -52,7 +52,11 @@ class CameraComponent extends React.Component {
         if (this.state?.quizEnd === true) {
             const img = this.webcamRef.current.getScreenshot({height: 280})
             console.log(img)
-            this.props.takeImage(img)
+            if(path?.via === 'TOGETHER') {
+                this.props.calculateAndUploadScore(img)
+            } else {
+                this.props.takeImage(img)
+            }
             return;
         }
         if (this.state.open) this.toggleModal(false);
