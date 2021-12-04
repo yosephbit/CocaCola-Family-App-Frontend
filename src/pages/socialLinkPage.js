@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import flower from '../assets/img/flower.png'
 import link1 from '../assets/img/link-1.png'
 import link2 from '../assets/img/link-2.png'
@@ -6,16 +6,21 @@ import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom'
+import * as TinyURL from 'tinyurl';
 
 function SocialLinkPage() {
     let navigate = useNavigate()
     let {state} = useLocation()
     
-    let link = state?.link
+    const [link, setLink]= useState(state?.link)
 
     useEffect(() => {
         if(!link) {
             navigate(`/players`)
+        } else {
+            TinyURL.shorten(link).then((res) => {
+                setLink(res);
+            }, console.log)
         }
         // eslint-disable-next-line
     }, [])

@@ -26,6 +26,7 @@
     "react-useanimations": "^2.0.6",
     "react-webcam": "^6.0.0",
     "reactjs-popup": "^2.0.5",
+    "tinyurl": "^1.1.7",
     "web-vitals": "^2.1.2"
   },
   "scripts": {

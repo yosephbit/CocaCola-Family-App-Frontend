@@ -11,7 +11,7 @@ import UserContext from '../../_helpers/userContext'
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
-    const [pager, setPager] = useState({page: 1, pageSize: 8})
+    const [pager, ] = useState({page: 1, pageSize: 8})
     const { user } = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),

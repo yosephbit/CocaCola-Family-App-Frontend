@@ -7,7 +7,6 @@ import bottle from '../assets/img/bottle.png'
 import flame1 from '../assets/img/flame-1.png'
 import { FaFacebook } from 'react-icons/fa'
 import RouteContext from '../_helpers/routeContext';
-import CameraPage from './cameraPage'
 import { Link } from 'react-router-dom'
 
 

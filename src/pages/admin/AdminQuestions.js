@@ -64,6 +64,7 @@ function AdminQuestions() {
                 setLoading(false)
                 console.log(e)
             })
+    //eslint-disable-next-line
     }, [])
 
     return (
