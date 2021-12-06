@@ -99,7 +99,7 @@ function GamePlayPage() {
         <>
             <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} quizEnd={quizEnd} takeImage={setScreenshot} calculateAndUploadScore={calculateAndUploadScore}  />
             {
-                !quizEnd || path?.via === "TOGETHER" ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
+                !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
             }
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
           
