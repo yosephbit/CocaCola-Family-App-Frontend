@@ -11,7 +11,7 @@ import Acknowledge from '../components/Acknowledge'
 function GamePlayPage() {
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
-    const [screenshot, setScreenshot] = useState("")
+    const [screenshot, setScreenshot] = useState(null)
     const { path } = useContext(RouteContext)
     const { user } = useContext(UserContext);
     const { storePath } = useContext(RouteContext)
@@ -21,6 +21,7 @@ function GamePlayPage() {
     const [readyToAnswer, setReadyToAnswer] = useState(true)
     const [choice, setChoice] = useState(null);
     const [quizEnd, setQuizEnd] = useState(false)
+    const [lastQuestion, setLastQuestion] = useState(false)
     let navigate = useNavigate();
 
     useEffect(() => {
@@ -28,16 +29,19 @@ function GamePlayPage() {
 
             setReadyToAnswer(false)
             setQuizEnd(true);
-            if (path?.via === "CHALLENGE") {
-                uploadAnswerAndRedirectToScore(path?.challengeId)
-            }
-            else if (path?.via === "TOGETHER") {
-                console.log("HERE2")
-                calculateAndUploadScore()
-            }
-            else {
-                uploadChallangeAndSendSms(challengeAnswers)
-            }
+            setLastQuestion(false)
+            // if (path?.via === "CHALLENGE") {
+            //     uploadAnswerAndRedirectToScore(path?.challengeId)
+            // }
+            // else if (path?.via === "TOGETHER") {
+            //     console.log("HERE2")
+            //     calculateAndUploadScore()
+            // }
+            // else {
+            //     uploadChallangeAndSendSms(challengeAnswers)
+            // }
+        } else if(questoionsIndex === questions.length -1) {
+            setLastQuestion(true)
         }
         //eslint-disable-next-line
     }, [challengeAnswers, questoionsIndex])
@@ -91,13 +95,13 @@ function GamePlayPage() {
         setTimeout(() => {
             setReadyToAnswer(true);
         }, 1000)
-
         //eslint-disable-next-line 
     }, [readyToAnswer, choice])
 
     return (
         <>
-            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} quizEnd={quizEnd} takeImage={setScreenshot} calculateAndUploadScore={calculateAndUploadScore}  />
+            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} 
+                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms} isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore}/>
             {
                 !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
             }
@@ -135,7 +139,7 @@ function GamePlayPage() {
                     });
                 })
         } else {
-            getQuiz(8)
+            getQuiz(2)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])
@@ -154,11 +158,13 @@ function GamePlayPage() {
                 })
         }
     }
-    function uploadAnswerAndRedirectToScore(challengeInstanceId) {
-
+    function uploadAnswerAndRedirectToScore(video) {
+        console.log(video)
+        if(!screenshot) {
+            setScreenshot(video);
         for (const challenge of challengeAnswers) {
             var singleAnswer = {
-                challangeId: challengeInstanceId,
+                challangeId: path?.challengeId,
                 respondentId: user,
                 questionId: challenge?.questionId,
                 questionChoiceId: challenge?.choiceId
@@ -171,33 +177,33 @@ function GamePlayPage() {
                 })
         }
 
-        getScore(challengeInstanceId, user)
+        getScore(path?.challengeId, user, video)
             .then(res => {
                 storePath({ "SCORE": res?.data })
-                navigate(`/score`)
+
+                navigate(`/score/${res?.data?.scoreId}`)
             }).catch(err => {
                 console.log(err)
             })
-
+        }
     }
-    function uploadChallangeAndSendSms(challengeAnswers) {
+    function uploadChallangeAndSendSms(video) {
         var challengerId = user;
-        createChallengeInstance(challengerId)
-            .then(res => {
+        let invitationId = path?.linkId;
+        if(!screenshot) {
+        setScreenshot(video);
+        console.log(video)
+        createChallengeInstance(challengerId, invitationId, video)
+            .then(async res => {
                 var challangeInstanceId = res?.data?.challangeInstanceId
 
                 for (const challenge of challengeAnswers) {
                     var singleChallenge = {
                         questionId: challenge?.questionId,
                         challangeInstanceId: challangeInstanceId,
-                        answerId: challenge?.choiceId
+                        answerId: challenge?.choiceId,
                     }
-                    addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
-                        .then(res => {
-                            console.log(res.data)
-                        }).catch(err => {
-                            console.log(err)
-                        })
+                   await addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
                 }
                 onChallengeCreated(challangeInstanceId)
                     .then(res => {
@@ -209,13 +215,13 @@ function GamePlayPage() {
                 console.log(err)
 
             })
+        }
     }
-    function calculateAndUploadScore(img) {
-        console.log("HERE", img)
+    function calculateAndUploadScore(video) {
+        console.log(video)
         if(!screenshot) {
-
             console.log(challengeAnswers)
-            setScreenshot(img)
+            setScreenshot(video);
             var score =0;
             var percentage=0
             for (const challenge of challengeAnswers){
@@ -225,10 +231,10 @@ function GamePlayPage() {
             }
             const totalQuestions = challengeAnswers.length;
             percentage = (score / totalQuestions) * 100;
-            addScoreForPlayTogether(user, score, percentage)
+            addScoreForPlayTogether(user, score, percentage, video)
             .then(res => {
-                storePath({ "SCORE": res?.data, img: img })
-                navigate(`/score`)
+                storePath({ "via": path?.via, "SCORE": res?.data })
+                navigate(`/score/${res?.data?.scoreId}`)
             }).catch(err => {})
         }
         //TODO: add endpoint to score for challenge

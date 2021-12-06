@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import banner from '../assets/img/banner-full.png'
 import cocacan from '../assets/img/coca-can.png'
 import cocashade from '../assets/img/coca-shade.png'
@@ -7,22 +7,50 @@ import bottle from '../assets/img/bottle.png'
 import flame1 from '../assets/img/flame-1.png'
 import { FaFacebook } from 'react-icons/fa'
 import RouteContext from '../_helpers/routeContext';
-import { Link } from 'react-router-dom'
-
+import { Link, useParams } from 'react-router-dom'
+import { getScoreById } from '../_helpers/cloudFunctions'
 
 function ScorePage() {
+    const { hostname } = window.location
+    const hostArr = hostname.split('.')
+    const countryCode = hostArr[hostArr.length - 1]?.toUpperCase()
     const { path } = useContext(RouteContext)
+    const { id } = useParams()
+    const [videos, setVideos] = useState([
+        // "https://file-examples-com.github.io/uploads/2020/03/file_example_WEBM_480_900KB.webm",
+        // "https://file-examples-com.github.io/uploads/2020/03/file_example_WEBM_480_900KB.webm"
+    ])
+    const [percentage, setPercentage] = useState(0)
+    const [shareCode, setShareCode] = useState('')
+
+    useEffect(() => {
+        getScoreById(id.replace('/','')).then((res) => {
+            const data = res.data;
+            const vids = data.videos?.map(vd => vd?.replace("http://localhost:9199/","https://49162cf799885a.localhost.run/"))
+            setVideos(vids || [])
+            setShareCode(data.shareCode || '');
+            setPercentage((data.percentage || 0).toFixed(0));
+        }).catch(err => {
+            //TODO: toast here (or redirect to 404)
+        })
+    }, [])
+
+    
 
     return (
         <div className="page score">
             <h2 className="score__header">
-                WE SCORED <span className="score__value" title={`${path?.SCORE?.percentage || 0}%`}>{path?.SCORE?.percentage || 0}%</span> IN
+                WE SCORED <span className="score__value" title={`${percentage}%`}>{percentage}%</span> IN
             </h2>
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />
                 {/* <CameraPage /> */}
-                <img src={path?.img} alt="" className="score__img" />
-
+                {/* <img src={path?.img} alt="" className="score__img" /> */}
+                <div className="media">
+                    {!videos?.length ? <div className='score__video'/> :  videos.map((vid, i) => (
+                        <video key={i} src={vid} className={videos.length > 1 ? 'score__video split' : 'score__video'} muted loop autoPlay />
+                    )) }
+                </div>
                 <img src={flower} alt="" className="floating-img floating-img--1" />
                 <img src={bottle} alt="" className="floating-img floating-img--2" />
                 <img src={flower} alt="" className="floating-img floating-img--3" />
@@ -30,8 +58,8 @@ function ScorePage() {
             </div>
 
             <div className="score__footer fl-col align-center">
-                <p className="grad text large">Your Participation Code: {path?.SCORE?.shareCode}</p>
-                <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=`+encodeURIComponent(`My ${'family'} and I scored ${path?.SCORE?.percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} \n #CokeReunionSG #${path?.SCORE?.shareCode}`)} data-action="share/whatsapp/share" target="_blank" 
+                <p className="grad text large">Your Participation Code: #{countryCode || ''}{shareCode}</p>
+                <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${countryCode || ''}${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
 
                     rel="noreferrer" className="link">
                     <FaFacebook size={28} color="white" />
@@ -40,7 +68,7 @@ function ScorePage() {
                 <p className="text small">include hashtag #CokeReunionSG and your participation code (eg. #12345)</p>
                 <p className="grad text med">Share the video and tell us who do you want to share a Coke with this CNY and why.</p>
                 <p className="grad text med">Most creative entries will stand to win weekly prizes!</p>
-                
+
                 <div className="score__can-img">
                     <img src={cocacan} alt="" className="img" />
                     <img src={cocashade} alt="" className="shade" />
@@ -73,8 +101,8 @@ function ScorePage() {
                         <p className="inner-text">x50 Yu Sheng Vouchers</p>
                     </div>
                 </div>
-                <Link to="/terms" className="grad text med">Find out more at (Link).</Link>
-                
+                <Link to="/terms" className="grad text med">Find out more at Terms and Conditions</Link>
+
                 <img src={flame1} alt="" className="floating-img floating-img--5" />
                 <img src={flower} alt="" className="floating-img floating-img--6" />
             </div>

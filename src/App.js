@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import './assets/scss/main.scss';
-import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
+import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
 import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
-import ProtectedScorePage from './components/ProtectedScorePage';
 
 function App() {
   const pathStr = localStorage.getItem('_path')
@@ -43,7 +42,7 @@ function App() {
             <Route path="winners" element={<WinnersPage />} />
             <Route path="prizes" element={<PrizesPage />} />
             <Route path="terms" element={<TermsPage />} />
-            <Route path="score" element={<ProtectedScorePage />} />
+            <Route path="score/:id" element={<ScorePage />} />
             <Route path="admin" element={<AdminPage />}>
               <Route path="login" element={<AdminLogin />} />
               <Route path="dashboard" element={

@@ -5,7 +5,7 @@ import {
     MdClear, MdCheck, MdAddBox
 } from "react-icons/md";
 import MaterialTable from 'material-table'
-import { getQuiz } from '../../_helpers/cloudFunctions';
+import { adminGetQuestions } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
 import UserContext from '../../_helpers/userContext';
@@ -44,27 +44,38 @@ function AdminQuestions() {
     };
 
     useEffect(() => {
-        getQuiz(50, user?.user, user?.token, 8, 1)
-            .then((res) => {
+        adminGetQuestions(user.user, user.token, 8, 1)
+            .then(res => {
+                console.log(res.data)
+                buildDataSource(res.data)
                 setLoading(false)
-                let { questions } = res.data
-                questions = questions.map(ques => {
-                    return {
-                        questionId: ques.question.questionId,
-                        question: ques.question.questionText,
-                        choice1: ques.answers.choice1.choiceText,
-                        choice2: ques.answers.choice2.choiceText,
-                        choice1Id: ques.answers.choice1.choiceId,
-                        choice2Id: ques.answers.choice2.choiceId,
-                    }
-                })
-                setDataSource(questions)
             })
             .catch(e => {
-                setLoading(false)
                 console.log(e)
+                setLoading(false)
             })
-    //eslint-disable-next-line
+        // getQuiz(50, user?.user, user?.token, 8, 1)
+        //     .then((res) => {
+        //         setLoading(false)
+        //         let { questions } = res.data
+        //         questions = questions.map(ques => {
+        //             return {
+        //                 questionId: ques.question.questionId,
+        //                 question: ques.question.questionText,
+        //                 choice1: ques.answers.choice1.choiceText,
+        //                 choice2: ques.answers.choice2.choiceText,
+        //                 choice1Id: ques.answers.choice1.choiceId,
+        //                 choice2Id: ques.answers.choice2.choiceId,
+        //             }
+        //         })
+        //         setDataSource(questions)
+        //     })
+        //     .catch(e => {
+        //         setLoading(false)
+        //         console.log(e)
+        //     })
+        
+        //eslint-disable-next-line
     }, [])
 
     return (
@@ -114,6 +125,14 @@ function AdminQuestions() {
             </Popup>
         </div>
     )
+
+    function buildDataSource(data) {
+        const questions = data.map(dt => {
+            let que = {id: dt[0], question: dt[1].questionText}
+            return que
+        })
+        setDataSource(questions)
+    }
 }
 
 export default AdminQuestions

@@ -13,6 +13,7 @@ function AdminLogin() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
+    const [fail, setFail] = useState("")
     const [open, setOpen] = useState(false)
     const toggleModal = (state) => setOpen(state);
     const navigate = useNavigate();
@@ -34,6 +35,7 @@ function AdminLogin() {
             </div>
             <form onSubmit={onSubmitHandler} className="form fl-col just-center align-center">
                 <h2 className="form__header">Admin Login</h2>
+                <p className="form__error">{fail}</p>
                 <div className="form__group">
                     <label htmlFor="" className="form__label">UserName</label>
                     <input onChange={e => setEmail(e.target.value)} name="email" type="text" value={email} className="form__input" />
@@ -109,7 +111,8 @@ function AdminLogin() {
                 }
             })
             .catch(e => {
-                console.log(e)
+                const {data} = e.response
+                setFail(data.msg)
                 toggleModal(false)
             })
     }

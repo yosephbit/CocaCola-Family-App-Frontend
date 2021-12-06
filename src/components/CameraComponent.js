@@ -20,10 +20,15 @@ class CameraComponent extends React.Component {
         super(props);
         this.state = {
             open: true,
-            quizEnd: this.props?.quizEnd
+            quizEnd: this.props?.quizEnd,
+            capturing: false,
+            recordedChunks: [],
+            isLastQuestion: this.props.isLastQuestion
         }
         this.webcamRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
+        this.mediaRecorderRef = React.createRef(null);
+
         this.camera = null;
         this.videoContraints = {
             screenshotQuality: 1,
@@ -32,12 +37,69 @@ class CameraComponent extends React.Component {
         }
         this.displayError = 0;
         this.wentBackToUpRight = true;
-
-
         //   this.path=useContext(RouteContext)
     }
     componentDidMount() {
         this.readAngle();
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.isLastQuestion === false && this.state.isLastQuestion) {
+            this.handleStartCaptureClick();
+            console.log("recording...")
+        }
+        if(prevProps.isLastQuestion === true && this.state.isLastQuestion === false ) {
+            console.log("stopping")
+            this.handleStopCaptureClick()
+        }
+    }
+
+    handleStartCaptureClick = () => {
+        // this.setState({capturing: true});
+        this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
+          mimeType: "video/webm"
+        });
+        console.log("adding event listener...")
+        console.log(this.mediaRecorderRef)
+        this.mediaRecorderRef.current.addEventListener(
+          "dataavailable",
+          this.handleDataAvailable
+        );
+        this.mediaRecorderRef.current.start();
+    }
+    
+    handleDataAvailable = ({ data }) => {
+        console.log("data is available outside if", data);
+        if (data.size > 0) {
+            console.log("data is available");
+            this.setState((state) => {
+                console.log(state.recordedChunks)
+                console.log(data)
+                return { recordedChunks: [...state.recordedChunks, data] };
+            });
+        }
+    }
+
+    handleStopCaptureClick = () => {
+        this.mediaRecorderRef.current.stop();
+        this.setState({capturing: false});
+    }
+
+    handleDownload = () => {
+        if (this.state.recordedChunks.length) {
+          const blob = new Blob(this.state.recordedChunks, {
+            type: "video/webm"
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          document.body.appendChild(a);
+          a.style = "display: none";
+          a.href = url;
+          a.download = "react-webcam-stream-capture.webm";
+          a.click();
+          window.URL.revokeObjectURL(url);
+          this.setState({recordedChunks: []});
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -45,17 +107,27 @@ class CameraComponent extends React.Component {
         if (nextProps.quizEnd !== this.state.quizEnd) {
           this.setState({ quizEnd: nextProps.quizEnd });
         }
-      }
+        if (nextProps.isLastQuestion !== this.state.isLastQuestion) {
+            this.setState({ isLastQuestion: nextProps.isLastQuestion });
+        }
+    }
 
     onResults = (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true) {
-            const img = this.webcamRef.current.getScreenshot({height: 280})
-            console.log(img)
+        if (this.state?.quizEnd === true && this.state.recordedChunks?.length > 0) {
+            // const img = this.webcamRef.current.getScreenshot({height: 280})
             if(path?.via === 'TOGETHER') {
-                this.props.calculateAndUploadScore(img)
+                this.props.calculateAndUploadScore(new Blob(this.state.recordedChunks, {
+                    type: "video/webm"
+                  }))
+            } else if(path?.via === "CHALLENGE") {
+                this.props.uploadAnswerAndRedirectToScore(new Blob(this.state.recordedChunks, {
+                    type: "video/webm"
+                  }))
             } else {
-                this.props.takeImage(img)
+                this.props.uploadChallangeAndSendSms(new Blob(this.state.recordedChunks, {
+                    type: "video/webm"
+                  }))
             }
             return;
         }
@@ -235,7 +307,6 @@ class CameraComponent extends React.Component {
 
     toastMessage(msg) {
         if (msgToastList.size < 1) {
-            
            const id= toast(msg, {
                 position: "bottom-center",
                 autoClose: 1000,
@@ -308,7 +379,6 @@ class CameraComponent extends React.Component {
     }
 
     render() {
-        console.log("render", this.state?.quizEnd)
         return (
             <div className="camera">
                 <Webcam

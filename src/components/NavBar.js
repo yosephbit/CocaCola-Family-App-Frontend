@@ -53,7 +53,7 @@ function NavBar() {
                     {close => (
                         user?.token ? (
                             <div className="menu fl-col just-start">
-                            <Link onClick={close} to="/" className="menu__item">Home</Link>
+                            <Link onClick={close} to="/admin/dashboard" className="menu__item">Home</Link>
                             <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
                             <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
                         </div>

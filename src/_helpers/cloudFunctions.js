@@ -15,8 +15,12 @@ axios.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-export const getScore = (challangeId,respondentId ) => {
-   return axios.post(`${api}/getScore`, {challangeId, respondentId}); 
+export const getScore = (challangeId,respondentId,fileToUpload ) => {
+    var formData = new FormData();
+    formData.append("fileToUpload", fileToUpload);
+    formData.append("challangeId", challangeId);
+    formData.append("respondentId", respondentId);
+   return axios.post(`${api}/getScore`, formData); 
 }
 export const getChallenge = (challengeInstanceId) =>{
     return axios.post(`${api}/getChallenge`, {challengeInstanceId});
@@ -30,8 +34,12 @@ export const addChallenge = (questionId,challangeInstanceId,answerId) => {
 export const sendCode = (name,phone_number) =>{
     return axios.post(`${api}/sendCode`,{name,phone_number},)
 }
-export const createChallengeInstance = (challangerId) =>{
-    return axios.post(`${api}/createChallangeInstance`,{challangerId})
+export const createChallengeInstance = (challangerId, invitationId = '', fileToUpload) =>{
+    var formData = new FormData();
+    formData.append("fileToUpload", fileToUpload);
+    formData.append("challangerId", challangerId);
+    formData.append("invitationId", invitationId);
+    return axios.post(`${api}/createChallangeInstance`,formData)
 }
 export const verifyToken = (verificationId,sms_token) => {
     return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
@@ -69,8 +77,18 @@ export const getQuiz = (numberOfQuestions) => {
     return axios.post(`${api}/getQuiz`, {numberOfQuestions})
 }
 
-export const addScoreForPlayTogether = (respondentId,netScore,percentage) => {
-    return axios.post(`${api}/addScoreForPlayTogether`,{respondentId,netScore,percentage})
+export const addScoreForPlayTogether = (respondentId,netScore,percentage, fileToUpload) => {
+    var formData = new FormData();
+    formData.append("fileToUpload", fileToUpload);
+    formData.append("respondentId", respondentId);
+    formData.append("netScore", netScore);
+    formData.append("percentage", percentage);
+   
+    return axios.post(`${api}/addScoreForPlayTogether`, formData)
+}
+
+export const getScoreById = ( scoreId ) => {
+    return axios.post(`${api}/getSingleScoreById`, { scoreId}); 
 }
 
 // admin apis
@@ -102,4 +120,8 @@ export const addFullQuestion = (question) => {
 
 export const deleteQuestion = (questionId, uid, token) => {
     return axios.post(`${api}/deleteQuestion`, {questionId, uid, token})
+}
+
+export const getStats = (uid, token) => {
+    return axios.post(`${api}/getDashBoardStats`, {uid, token})
 }
