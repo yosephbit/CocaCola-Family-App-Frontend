@@ -58,8 +58,8 @@ function ScorePage() {
             </div>
 
             <div className="score__footer fl-col align-center">
-                <p className="grad text large">Your Participation Code: #{countryCode || ''}{shareCode}</p>
-                <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${countryCode || ''}${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
+                <p className="grad text large">Your Participation Code: #{shareCode}</p>
+                <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
 
                     rel="noreferrer" className="link">
                     <FaFacebook size={28} color="white" />
