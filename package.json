@@ -6,7 +6,7 @@
     "@material-table/core": "^0.2.9",
     "@material-ui/core": "^4.12.3",
     "@mediapipe/camera_utils": "^0.3.1632432234",
-    "@mediapipe/face_mesh": "^0.4.1633559619",
+    "@mediapipe/face_detection": "^0.4.1628005423",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

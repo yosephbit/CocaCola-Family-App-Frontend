@@ -1,5 +1,5 @@
 import React from "react";
-import { FaceMesh } from "@mediapipe/face_mesh";
+import { FaceDetection } from "@mediapipe/face_detection";
 import * as cam from "@mediapipe/camera_utils";
 import Webcam from "react-webcam";
 import { ToastContainer, Slide, toast } from 'react-toastify';
@@ -7,7 +7,7 @@ import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
 
-var len = 10;
+var len = 6;
 var answerBuffer = [];
 
 const toastList = new Set();
@@ -145,21 +145,21 @@ class CameraComponent extends React.Component {
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-            if (results.multiFaceLandmarks.length === 2 && path?.via === 'TOGETHER') {
+            if (results.detections.length === 2 && path?.via === 'TOGETHER') {
                 if (this.displayError === 1) {
                     promiseResolve();
                 }
                 this.displayError = 2;
                 var angle, angle1
-                for (let x in results.multiFaceLandmarks) {
+                for (let x in results.detections) {
                     // eslint-disable-next-line eqeqeq
 
-                    if (x === "0" && results.multiFaceLandmarks[0].length === 468) {
-                        var slope = (results.multiFaceLandmarks[x][152].y * canvasElement.height - results.multiFaceLandmarks[x][10].y * canvasElement.height) / (results.multiFaceLandmarks[x][152].x * canvasElement.width - results.multiFaceLandmarks[x][10].x * canvasElement.width)
+                    if (x == "0") {
+                        var slope = -1 * (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
-                    if (x === "1" && results.multiFaceLandmarks[1].length === 468) {
-                        var slope1 = (results.multiFaceLandmarks[x][152].y * canvasElement.height - results.multiFaceLandmarks[x][10].y * canvasElement.height) / (results.multiFaceLandmarks[x][152].x * canvasElement.width - results.multiFaceLandmarks[x][10].x * canvasElement.width)
+                    if (x == "1" ) {
+                        var slope1 = (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle1 = (Math.atan(slope1) * 180) / Math.PI;
                     }
                 }
@@ -224,17 +224,17 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
             }
-            else if (results.multiFaceLandmarks.length === 1 && path?.via !== 'TOGETHER') {
+            else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
                 if (this.displayError === 1) {
                     promiseResolve();
                 }
                 this.displayError = 2;
 
-                for (let x in results.multiFaceLandmarks) {
+                for (let x in results.detections) {
                     // eslint-disable-next-line eqeqeq
 
-                    if (x === "0" && results.multiFaceLandmarks[0].length === 468) {
-                        slope = (results.multiFaceLandmarks[x][152].y * canvasElement.height - results.multiFaceLandmarks[x][10].y * canvasElement.height) / (results.multiFaceLandmarks[x][152].x * canvasElement.width - results.multiFaceLandmarks[x][10].x * canvasElement.width)
+                    if (x == "0") {
+                        var slope = -1 * (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
 
@@ -272,7 +272,7 @@ class CameraComponent extends React.Component {
                         );
                         this.displayError = 1
                     }
-                } else if (results.multiFaceLandmarks.length === 2) {
+                } else if (results.detections.length === 2) {
                     if (this.displayError === 2) {
                         this.displayError = 0
                     }
@@ -322,19 +322,19 @@ class CameraComponent extends React.Component {
     }
 
     readAngle() {
-        const faceMesh = new FaceMesh({
+        const facedetection = new FaceDetection({
             locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4/${file}`;
             },
         });
 
-        faceMesh.setOptions({
-            maxNumFaces: 2,
+        facedetection.setOptions({
             minDetectionConfidence: 0.7,
-            minTrackingConfidence: 0.7,
+            selfieMode: true,
+            model: "short"
         });
 
-        faceMesh.onResults(this.onResults);
+        facedetection.onResults(this.onResults);
 
         if (
             typeof this.webcamRef.current !== "undefined" &&
@@ -343,7 +343,7 @@ class CameraComponent extends React.Component {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             this.camera = new cam.Camera(this.webcamRef?.current?.video, {
                 onFrame: async () => {
-                    await faceMesh.send({ image: this.webcamRef?.current?.video });
+                    await facedetection.send({ image: this.webcamRef?.current?.video });
                 },
                 // width: 1000,
                 // height: this.screenHeight,
@@ -361,14 +361,14 @@ class CameraComponent extends React.Component {
 
         if (buffer.length === len) {
             var ans = buffer.join("-");
-            if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
+            if (ans === "Yes-Yes-Yes-Yes-Yes-Yes") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
                 this.toastMessage(msg)
 
             }
-            else if (ans === "No-No-No-No-No-No-No-No-No-No") {
+            else if (ans === "No-No-No-No-No-No") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)

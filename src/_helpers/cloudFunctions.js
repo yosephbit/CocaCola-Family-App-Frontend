@@ -13,6 +13,14 @@ axios.interceptors.response.use(function (response) {
         localStorage.removeItem("_user")
         window.location.reload()
     }
+    if(error.response?.status === 404) {
+        // localStorage.removeItem("_user")
+        window.location.href = '/404'
+    } 
+    if(error?.request && !error?.response) {
+        // connection failure
+        // alert("Connection Error");
+    }
     return Promise.reject(error);
 });
 

@@ -4,7 +4,7 @@ import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, Admi
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
-import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage } from './components';
+import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage, NotFound } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
             <Route path="prizes" element={<PrizesPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="score/:id" element={<ScorePage />} />
+            <Route path="404" element={<NotFound />} />
             <Route path="admin" element={<AdminPage />}>
               <Route path="login" element={<AdminLogin />} />
               <Route path="dashboard" element={
@@ -67,7 +68,7 @@ function App() {
               } />
               <Route path="*" element={<Navigate to="/admin/dashboard" />} />
             </Route>
-            <Route path="*" element={<Navigate to="/" replace={true} />} />
+            <Route path="*" element={<Navigate to="/404" replace={true} />} />
           </Routes>
         </RouteContext.Provider>        
       </UserContext.Provider>
