@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import banner from '../assets/img/banner-full.png'
 import cocacan from '../assets/img/coca-can.png'
 import cocashade from '../assets/img/coca-shade.png'
@@ -6,7 +6,7 @@ import flower from '../assets/img/flower.png'
 import bottle from '../assets/img/bottle.png'
 import flame1 from '../assets/img/flame-1.png'
 import { FaFacebook } from 'react-icons/fa'
-import RouteContext from '../_helpers/routeContext';
+// import RouteContext from '../_helpers/routesContext';
 import { Link, useParams } from 'react-router-dom'
 import { getScoreById } from '../_helpers/cloudFunctions'
 
@@ -14,7 +14,7 @@ function ScorePage() {
     const { hostname } = window.location
     const hostArr = hostname.split('.')
     const countryCode = hostArr[hostArr.length - 1]?.toUpperCase()
-    const { path } = useContext(RouteContext)
+    // const { path } = useContext(RouteContext)
     const { id } = useParams()
     const [videos, setVideos] = useState([
         // "https://file-examples-com.github.io/uploads/2020/03/file_example_WEBM_480_900KB.webm",
@@ -33,9 +33,7 @@ function ScorePage() {
         }).catch(err => {
             //TODO: toast here (or redirect to 404)
         })
-    }, [])
-
-    
+    }, [id])    
 
     return (
         <div className="page score">

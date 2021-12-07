@@ -2,8 +2,9 @@
 // import { functions } from "./Firebase";
 import axios from "axios";
 
-const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
-// const api = 'https://us-central1-macallan-ecf92.cloudfunctions.net/verifyToken'
+// const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
+// const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
+const api = 'https://us-central1-macallan-ecf92.cloudfunctions.net'
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -100,7 +101,7 @@ export const adminLogin = (username, password) => {
     return axios.post(`${api}/adminLogin`, {username, password})
 }
 
-export const adminGetQuestions = (uid, token, itemsPerPage, page) => {
+export const adminGetQuestions = (uid, token, page, itemsPerPage) => {
     return axios.post(`${api}/getQuestionsList`, {uid, token, itemsPerPage, page})
 }
 

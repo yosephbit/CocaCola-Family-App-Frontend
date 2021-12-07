@@ -139,7 +139,7 @@ function GamePlayPage() {
                     });
                 })
         } else {
-            getQuiz(2)
+            getQuiz(5)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])
