@@ -42,7 +42,7 @@ function GamePlayPage() {
             // else {
             //     uploadChallangeAndSendSms(challengeAnswers)
             // }
-        } else if(questoionsIndex === questions.length -1) {
+        } else if(questoionsIndex === questions.length - 2) {
             setLastQuestion(true)
         }
         //eslint-disable-next-line
