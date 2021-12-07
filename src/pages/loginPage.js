@@ -64,7 +64,7 @@ function LoginPage() {
         }
         if (user) {
             const { via } = state || {}
-            if (via === "LINK" || via === "CHALLENGE" || via === "TOGETHER") {
+            if (via === "LINK" || via === "CHALLENGE") {
                 navigate(`/game`)
             } else {
                 navigate(`/players`, { replace: true })
