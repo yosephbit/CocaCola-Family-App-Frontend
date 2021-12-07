@@ -82,8 +82,8 @@ export const answerQuestion = (respondentId, challangeId, questionId, questionCh
     return axios.post(`${api}/answerQuestion`, {respondentId, challangeId, questionId, questionChoiceId})
 }
 
-export const getQuiz = (numberOfQuestions) => {
-    return axios.post(`${api}/getQuiz`, {numberOfQuestions})
+export const getQuiz = (invitationId) => {
+    return axios.post(`${api}/getQuiz`, {invitationId})
 }
 
 export const addScoreForPlayTogether = (respondentId,netScore,percentage, fileToUpload) => {

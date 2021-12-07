@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import RouteContext from '../_helpers/routeContext';
@@ -8,7 +8,9 @@ import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore, addScoreForPlayTogether } from '../_helpers/cloudFunctions'
 import Acknowledge from '../components/Acknowledge'
 
+
 function GamePlayPage() {
+    let { state } = useLocation()
     const [gameStared, setGameStared] = useState(false)
     const [questions, setQuestions] = useState([])
     const [screenshot, setScreenshot] = useState(null)
@@ -138,8 +140,26 @@ function GamePlayPage() {
                         progress: undefined,
                     });
                 })
+        } else if(path?.via === "TOGETHER"){
+            getQuiz("TOGETHER:"+state?.relation)
+                .then(response => {
+                    setQuestions(response.data.questions)
+                    setCurrentQuestion(response.data.questions[0])
+                    setGameStared(true);
+                }).catch(e => {
+                    console.log(e.response?.data?.msg?.detail)
+                    toast(e.response?.data?.msg?.detail || 'Error has occured.', {
+                        position: "bottom-center",
+                        autoClose: 4500,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: false,
+                        progress: undefined,
+                    });
+                })
         } else {
-            getQuiz(5)
+            getQuiz(path?.linkId)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])

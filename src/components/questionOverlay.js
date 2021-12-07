@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import flower from '../assets/img/flower.png'
 import bottle from '../assets/img/bottle.png'
 import cork from '../assets/img/cork.png'
 import flame1 from '../assets/img/flame-1.png'
+import RouteContext from '../_helpers/routeContext'
 
 function QuestionOverlay(props) {
     console.log(props)
     // const { choice1, choice2 } = props?.currentQuestion?.answers
     // const { questionText } = props?.currentQuestion?.question
+    const { path } = useContext(RouteContext)
 
     return (
         <div className="main-overlay ">
-            <h2 className="question" title={props?.currentQuestion?.question?.questionText?.toString()}>{props?.currentQuestion?.question?.questionText?.toString()}</h2>
+            <h2 className="question" 
+                title={path?.via === "CHALLENGE" || path?.via === "TOGETHER" ? props?.currentQuestion?.question?.challengeText?.toString() : props?.currentQuestion?.question?.questionText?.toString()}
+            >
+                {path?.via === "CHALLENGE" || path?.via === "TOGETHER" ? props?.currentQuestion?.question?.challengeText?.toString() : props?.currentQuestion?.question?.questionText?.toString()}
+            </h2>
             <div className="btn-group">
                 <button className="img-btn img-btn--fixed" >
                     <span style={{fontSize: getFontSize(props?.currentQuestion?.answers?.choice1?.choiceText)}} className="img-btn__text" >

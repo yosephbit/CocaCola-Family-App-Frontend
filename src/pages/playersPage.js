@@ -30,18 +30,18 @@ function PlayersPage() {
             <h2 className="players__header">Pick a loved one to play!</h2>
             <div className="fl-col align-center w-full round-table">
                 <div className="row row--1">
-                    <div onClick={() => generateLink('GrandFather')} className="tiger tiger--1">
+                    <div onClick={() => generateLink('Grandpa')} className="tiger tiger--1">
                         <img src={grandpa} alt="" className="tiger__img" />
                     </div>
-                    <div onClick={() => generateLink('GrandMother')} className="tiger tiger--2">
+                    <div onClick={() => generateLink('Grandma')} className="tiger tiger--2">
                         <img src={grandma} alt="" className="tiger__img" />
                     </div>
                 </div>
                 <div className="row row--2">
-                    <div onClick={() => generateLink('Father')} className="tiger tiger--3">
+                    <div onClick={() => generateLink('Dad')} className="tiger tiger--3">
                         <img src={father} alt="" className="tiger__img" />
                     </div>
-                    <div onClick={() => generateLink('Mother')} className="tiger tiger--4">
+                    <div onClick={() => generateLink('Mum')} className="tiger tiger--4">
                         <img src={mother} alt="" className="tiger__img" />
                     </div>
                 </div>
@@ -79,7 +79,12 @@ function PlayersPage() {
 
     function generateLink(relation) {
         if (path?.via === 'TOGETHER') {
-            navigate(`/game`)
+            navigate(`/game`,
+            {
+                state: {
+                    relation
+                }
+            })
             return;
         }
         toggleModal(true)
