@@ -68,7 +68,7 @@ function App() {
               } />
               <Route path="*" element={<Navigate to="/admin/dashboard" />} />
             </Route>
-            <Route path="*" element={<Navigate to="/404" replace={true} />} />
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
         </RouteContext.Provider>        
       </UserContext.Provider>
