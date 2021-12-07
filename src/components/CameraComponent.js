@@ -7,7 +7,7 @@ import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
 
-var len = 6;
+var len = 10;
 var answerBuffer = [];
 
 const toastList = new Set();
@@ -367,14 +367,14 @@ class CameraComponent extends React.Component {
 
         if (buffer.length === len) {
             var ans = buffer.join("-");
-            if (ans === "Yes-Yes-Yes-Yes-Yes-Yes") {
+            if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
                 this.toastMessage(msg)
 
             }
-            else if (ans === "No-No-No-No-No-No") {
+            else if (ans === "No-No-No-No-No-No-No-No-No-No") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)
