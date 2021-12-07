@@ -26,7 +26,7 @@ function ScorePage() {
     useEffect(() => {
         getScoreById(id.replace('/','')).then((res) => {
             const data = res.data;
-            const vids = data.videos?.map(vd => vd?.replace("http://localhost:9199/","https://2b7076c3b84232.localhost.run/"))
+            const vids = data.videos?.map(vd => vd?.replace("http://localhost:9199/","https://d7baf04cb52966.localhost.run/"))
             setVideos(vids || [])
             setShareCode(data.shareCode || '');
             setPercentage((data.percentage || 0).toFixed(0));
