@@ -155,11 +155,15 @@ class CameraComponent extends React.Component {
                     // eslint-disable-next-line eqeqeq
 
                     if (x == "0") {
-                        var slope = -1 * (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                        var slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
                     if (x == "1" ) {
-                        var slope1 = (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                        var slope1 = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle1 = (Math.atan(slope1) * 180) / Math.PI;
                     }
                 }
@@ -234,7 +238,9 @@ class CameraComponent extends React.Component {
                     // eslint-disable-next-line eqeqeq
 
                     if (x == "0") {
-                        var slope = -1 * (results.detections[x].landmarks[2].y * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (results.detections[x].landmarks[2].x * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                        var slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
 
