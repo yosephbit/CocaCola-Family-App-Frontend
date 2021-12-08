@@ -50,7 +50,7 @@ class CameraComponent extends React.Component {
         }
         if(prevProps.isLastQuestion === true && this.state.isLastQuestion === false ) {
             console.log("stopping")
-            this.handleStopCaptureClick()
+            setTimeout( () => this.handleStopCaptureClick(), 800)
         }
     }
 
@@ -58,7 +58,7 @@ class CameraComponent extends React.Component {
         // this.setState({capturing: true});
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
           mimeType: "video/webm"
-        });
+        }); 
         console.log("adding event listener...")
         console.log(this.mediaRecorderRef)
         this.mediaRecorderRef.current.addEventListener(
