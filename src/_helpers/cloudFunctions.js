@@ -9,7 +9,7 @@ const api = 'https://us-central1-macallan-ecf92.cloudfunctions.net'
 axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
-    console.log(error.response)
+    // console.log(error.response)
     if(error.response?.status === 401) {
         localStorage.removeItem("_user")
         window.location.reload()

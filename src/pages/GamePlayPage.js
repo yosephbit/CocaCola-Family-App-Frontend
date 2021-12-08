@@ -7,7 +7,8 @@ import RouteContext from '../_helpers/routeContext';
 import UserContext from '../_helpers/userContext';
 import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuestion, getScore, addScoreForPlayTogether } from '../_helpers/cloudFunctions'
 import Acknowledge from '../components/Acknowledge'
-
+import Loader from "react-loader-spinner";
+import Popup from 'reactjs-popup';
 
 function GamePlayPage() {
     let { state } = useLocation()
@@ -20,6 +21,7 @@ function GamePlayPage() {
     const [questoionsIndex, setQuestionsIndex] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [challengeAnswers, setChallengeAnswers] = useState([])
+    const [loading, setLoading] = useState(false)
     const [readyToAnswer, setReadyToAnswer] = useState(true)
     const [choice, setChoice] = useState(null);
     const [quizEnd, setQuizEnd] = useState(false)
@@ -42,7 +44,7 @@ function GamePlayPage() {
             // else {
             //     uploadChallangeAndSendSms(challengeAnswers)
             // }
-        } else if(questoionsIndex === questions.length - 2) {
+        } else if (questoionsIndex === questions.length - 2) {
             setLastQuestion(true)
         }
         //eslint-disable-next-line
@@ -74,7 +76,7 @@ function GamePlayPage() {
                     }
                 } else if (result === 1) {
                     if (gameStared === false) {
-                        navigate(-1)
+                        navigate("/")
                         return
                     }
                     singleChallenge = {
@@ -102,13 +104,24 @@ function GamePlayPage() {
 
     return (
         <>
-            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} 
-                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms} isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore}/>
+            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer}
+                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms} isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} />
             {
-                !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ?  gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} />  : <Acknowledge/>
+                !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ? gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} /> : <Acknowledge />
             }
+            <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
+                <div className="modal">
+                    <Loader
+                        type="TailSpin"
+                        color="#FEFEFE"
+                        height={40}
+                        width={40}
+                    />
+                    <span className="modal__text">Loading...</span>
+                </div>
+            </Popup>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-          
+
         </>
     )
     function onChoiceMade(result) {
@@ -117,19 +130,22 @@ function GamePlayPage() {
     }
 
     function startGame() {
-        setGameStared(true);
+        setLoading(true)
         if (path?.via === "CHALLENGE") {
             var challengeInstanceId = path?.challengeId;
             getChallenge(challengeInstanceId)
                 .then(response => {
                     console.log(response.data)
                     setQuestions(response.data.questions)
+                    setGameStared(true);
+                    setLoading(false)
 
                     setCurrentQuestion(response.data.questions[0])
                     setGameStared(true);
                     console.log(response.data.questions)
                 }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
+                    setLoading(false)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -140,13 +156,15 @@ function GamePlayPage() {
                         progress: undefined,
                     });
                 })
-        } else if(path?.via === "TOGETHER"){
-            getQuiz("TOGETHER:"+state?.relation)
+        } else if (path?.via === "TOGETHER") {
+            getQuiz("TOGETHER:" + state?.relation)
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])
+                    setLoading(false)
                     setGameStared(true);
                 }).catch(e => {
+                    setLoading(false)
                     console.log(e.response?.data?.msg?.detail)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
@@ -163,9 +181,11 @@ function GamePlayPage() {
                 .then(response => {
                     setQuestions(response.data.questions)
                     setCurrentQuestion(response.data.questions[0])
+                    setLoading(false)
                     setGameStared(true);
                 }).catch(e => {
                     console.log(e.response?.data?.msg?.detail)
+                    setLoading(false)
                     toast(e.response?.data?.msg?.detail || 'Error has occured.', {
                         position: "bottom-center",
                         autoClose: 4500,
@@ -180,82 +200,82 @@ function GamePlayPage() {
     }
     function uploadAnswerAndRedirectToScore(video) {
         console.log(video)
-        if(!screenshot) {
+        if (!screenshot) {
             setScreenshot(video);
-        for (const challenge of challengeAnswers) {
-            var singleAnswer = {
-                challangeId: path?.challengeId,
-                respondentId: user,
-                questionId: challenge?.questionId,
-                questionChoiceId: challenge?.choiceId
+            for (const challenge of challengeAnswers) {
+                var singleAnswer = {
+                    challangeId: path?.challengeId,
+                    respondentId: user,
+                    questionId: challenge?.questionId,
+                    questionChoiceId: challenge?.choiceId
+                }
+                answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
+                    .then(res => {
+                        console.log(res)
+                    }).catch(err => {
+                        console.error(err)
+                    })
             }
-            answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
+
+            getScore(path?.challengeId, user, video)
                 .then(res => {
-                    console.log(res)
+                    storePath({ "SCORE": res?.data })
+
+                    navigate(`/score/${res?.data?.scoreId}`)
                 }).catch(err => {
-                    console.error(err)
+                    console.log(err)
                 })
-        }
-
-        getScore(path?.challengeId, user, video)
-            .then(res => {
-                storePath({ "SCORE": res?.data })
-
-                navigate(`/score/${res?.data?.scoreId}`)
-            }).catch(err => {
-                console.log(err)
-            })
         }
     }
     function uploadChallangeAndSendSms(video) {
         var challengerId = user;
         let invitationId = path?.linkId;
-        if(!screenshot) {
-        setScreenshot(video);
-        console.log(video)
-        createChallengeInstance(challengerId, invitationId, video)
-            .then(async res => {
-                var challangeInstanceId = res?.data?.challangeInstanceId
+        if (!screenshot) {
+            setScreenshot(video);
+            console.log(video)
+            createChallengeInstance(challengerId, invitationId, video)
+                .then(async res => {
+                    var challangeInstanceId = res?.data?.challangeInstanceId
 
-                for (const challenge of challengeAnswers) {
-                    var singleChallenge = {
-                        questionId: challenge?.questionId,
-                        challangeInstanceId: challangeInstanceId,
-                        answerId: challenge?.choiceId,
+                    for (const challenge of challengeAnswers) {
+                        var singleChallenge = {
+                            questionId: challenge?.questionId,
+                            challangeInstanceId: challangeInstanceId,
+                            answerId: challenge?.choiceId,
+                        }
+                        await addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
                     }
-                   await addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
-                }
-                onChallengeCreated(challangeInstanceId)
-                    .then(res => {
-                    }).catch(err => {
-                        console.log(err)
-                    })
+                    onChallengeCreated(challangeInstanceId)
+                        .then(res => {
+                        }).catch(err => {
+                            console.log(err)
+                        })
 
-            }).catch(err => {
-                console.log(err)
+                }).catch(err => {
+                    console.log(err)
 
-            })
+                })
         }
     }
     function calculateAndUploadScore(video) {
         console.log(video)
-        if(!screenshot) {
+        if (!screenshot) {
             console.log(challengeAnswers)
             setScreenshot(video);
-            var score =0;
-            var percentage=0
-            for (const challenge of challengeAnswers){
-                if (challenge===1){
-                    score=score+1;
+            var score = 0;
+            var percentage = 0
+            for (const challenge of challengeAnswers) {
+                if (challenge === 1) {
+                    score = score + 1;
                 }
             }
             const totalQuestions = challengeAnswers.length;
             percentage = (score / totalQuestions) * 100;
             addScoreForPlayTogether(user, score, percentage, video)
-            .then(res => {
-                storePath({ "via": path?.via, "SCORE": res?.data })
-                navigate(`/score/${res?.data?.scoreId}`)
-            }).catch(err => {})
+                .then(res => {
+                    storePath({ "via": path?.via, "SCORE": res?.data })
+                    navigate(`/score/${res?.data?.scoreId}`)
+                }).catch(err => { })
         }
         //TODO: add endpoint to score for challenge
     }

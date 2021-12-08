@@ -301,7 +301,6 @@ class CameraComponent extends React.Component {
                             );
                             toastList.add(id);
                         }
-
                         this.displayError = 1
                     }
                 }
