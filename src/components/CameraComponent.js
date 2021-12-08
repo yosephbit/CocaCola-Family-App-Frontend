@@ -57,7 +57,7 @@ class CameraComponent extends React.Component {
     handleStartCaptureClick = () => {
         // this.setState({capturing: true});
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
-          mimeType: "video/webm"
+          mimeType: "video/mp4"
         }); 
         console.log("adding event listener...")
         console.log(this.mediaRecorderRef)
@@ -85,23 +85,6 @@ class CameraComponent extends React.Component {
         this.setState({capturing: false});
     }
 
-    handleDownload = () => {
-        if (this.state.recordedChunks.length) {
-          const blob = new Blob(this.state.recordedChunks, {
-            type: "video/webm"
-          });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          document.body.appendChild(a);
-          a.style = "display: none";
-          a.href = url;
-          a.download = "react-webcam-stream-capture.webm";
-          a.click();
-          window.URL.revokeObjectURL(url);
-          this.setState({recordedChunks: []});
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.quizEnd !== this.state.quizEnd) {
@@ -118,15 +101,15 @@ class CameraComponent extends React.Component {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
             if(path?.via === 'TOGETHER') {
                 this.props.calculateAndUploadScore(new Blob(this.state.recordedChunks, {
-                    type: "video/webm"
+                    type: "video/mp4"
                   }))
             } else if(path?.via === "CHALLENGE") {
                 this.props.uploadAnswerAndRedirectToScore(new Blob(this.state.recordedChunks, {
-                    type: "video/webm"
+                    type: "video/mp4"
                   }))
             } else {
                 this.props.uploadChallangeAndSendSms(new Blob(this.state.recordedChunks, {
-                    type: "video/webm"
+                    type: "video/mp4"
                   }))
             }
             return;
