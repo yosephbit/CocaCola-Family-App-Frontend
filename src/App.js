@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './assets/scss/main.scss';
 import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
 import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage, NotFound } from './components';
 import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
+import Popup from 'reactjs-popup';
 
 function App() {
   const pathStr = localStorage.getItem('_path')
@@ -25,11 +26,24 @@ function App() {
 
   const [user, setUser] = useState(userData)
   const [path, setPath] = useState(pathData)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        stream.getVideoTracks().forEach(function (track) {
+          track.stop();
+        });
+      }).catch(e => {
+        console.log(e)
+        setOpen(true)
+      })
+  }, [])
 
   return (
     <div className="app">
       <UserContext.Provider value={{ user, storeUser }}>
-      <NavBar />
+        <NavBar />
         <RouteContext.Provider value={{ path, storePath }}>
           <Routes>
             <Route path="/" element={<WelcomePage />} />
@@ -70,9 +84,24 @@ function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
-        </RouteContext.Provider>        
+        </RouteContext.Provider>
       </UserContext.Provider>
       <Footer />
+      <Popup open={open} className="login-popup welcome" closeOnDocumentClick={false}>
+        <div className="modal fl-col">
+          <p className="text">
+            You will need to allow camera access to play.
+          </p>
+          <p className="text">
+            Go to your browser settings and give access to this site
+          </p>
+          <div className="actions fl-row just-end align-center">
+            <button onClick={() => setOpen(false)} className="actions__btn">
+              Got it
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 

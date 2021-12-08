@@ -5,22 +5,29 @@ import link2 from '../assets/img/link-2.png'
 import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'
 import { ToastContainer, toast } from 'react-toastify';
+import Loader from "react-loader-spinner";
+import Popup from 'reactjs-popup';
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as TinyURL from 'tinyurl';
 
 function SocialLinkPage() {
     let navigate = useNavigate()
-    let {state} = useLocation()
-    
-    const [link, setLink]= useState(state?.link)
+    let { state } = useLocation()
+
+    const [link, setLink] = useState(state?.link)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if(!link) {
+        if (!link) {
             navigate(`/players`)
         } else {
             TinyURL.shorten(link).then((res) => {
                 setLink(res);
+                setLoading(false)
             }, console.log)
+                .catch(e => {
+                    setLoading(false)
+                })
         }
         // eslint-disable-next-line
     }, [])
@@ -37,13 +44,23 @@ function SocialLinkPage() {
                     <div onClick={() => copyLinkToClipboard(link)} className="link">
                         <img src={link1} alt="" className="link-img" />
                     </div>
-                    <a href={`whatsapp://send?text=${linkText}`} data-action="share/whatsapp/share" target="_blank" 
+                    <a href={`whatsapp://send?text=${linkText}`} data-action="share/whatsapp/share" target="_blank"
                         rel="noreferrer" className="link">
                         <img src={link2} alt="" className="link-img" />
                     </a>
                 </div>
             </div>
-
+            <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
+                <div className="modal">
+                    <Loader
+                        type="TailSpin"
+                        color="#FEFEFE"
+                        height={40}
+                        width={40}
+                    />
+                    <span className="modal__text">Creating link</span>
+                </div>
+            </Popup>
             <ToastContainer theme="dark" />
 
             <img src={flower} alt="" className="floating-img floating-img--1" />
@@ -57,7 +74,7 @@ function SocialLinkPage() {
 
     function copyLinkToClipboard(link) {
         // navigate("/links")
-        if(!navigator.clipboard) {
+        if (!navigator.clipboard) {
             return;
         }
         navigator.clipboard.writeText(link)

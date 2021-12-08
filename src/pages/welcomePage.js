@@ -6,6 +6,8 @@ import flame2 from '../assets/img/flame-2.png'
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import { useSearchParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { getInviteDetails } from '../_helpers/cloudFunctions'
+import Loader from "react-loader-spinner";
+import Popup from 'reactjs-popup';
 
 function WelcomePage() {
     const [searchParams] = useSearchParams()
@@ -14,15 +16,18 @@ function WelcomePage() {
     const [link, setLink] = useState(searchParams.get("invite"))
     const challengeLink = searchParams.get("challenge");
     const [name, setName] = useState('')
+    const [loading, setLoading] = useState(!!link)
 
     useEffect(() => {
         if (link) {
             getInviteDetails(link)
                 .then(res => {
                     setName(res.data?.from)
+                    setLoading(false)
                 })
                 .catch(e => {
                     console.log(e)
+                    setLoading(false)
                     setLink("")
                     toast("Invitation link is not valid", {
                         position: "bottom-center",
@@ -83,6 +88,17 @@ function WelcomePage() {
                 </div>
 
             </div>
+            <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
+                <div className="modal">
+                    <Loader
+                        type="TailSpin"
+                        color="#FEFEFE"
+                        height={40}
+                        width={40}
+                    />
+                    <span className="modal__text">Loading</span>
+                </div>
+            </Popup>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
             {/* <img src={flower} alt="" className="floating-img floating-img--1" /> */}
             <img src={flower} alt="" className="floating-img floating-img--2" />

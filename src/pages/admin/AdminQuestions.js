@@ -9,6 +9,7 @@ import { adminGetQuestions } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
 import UserContext from '../../_helpers/userContext';
+// import { useSearchParams } from 'react-router-dom';
 
 function AdminQuestions() {
     const [dataSource, setDataSource] = useState([])
@@ -16,6 +17,8 @@ function AdminQuestions() {
     const [open, setOpen] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [selectedQuestion, setSelectedQuestion] = useState(null)
+    // const [searchParams, setSearchParams] = useSearchParams();
+    const [pager, setPager] = useState({page: 1, pageSize: 8})
     const toggleModal = (state) => {
         setOpen(state);
         !state && setDeleting(false);
@@ -44,7 +47,8 @@ function AdminQuestions() {
     };
 
     useEffect(() => {
-        adminGetQuestions(user.user, user.token, 8, 1)
+        // setSearchParams({ ...pager })
+        adminGetQuestions(user.user, user.token, pager.page, pager.pageSize)
             .then(res => {
                 console.log(res.data)
                 buildDataSource(res.data)
@@ -76,8 +80,23 @@ function AdminQuestions() {
         //     })
         
         //eslint-disable-next-line
-    }, [])
+    }, [pager])
 
+    // useEffect(() => {
+    //     setSearchParams({ ...pager })
+    //     setLoading(true)
+    //     adminGetQuestions(user.user, user.token, pager.page -1, pager.pageSize)
+    //         .then(res => {
+    //             console.log(res.data)
+    //             buildDataSource(res.data)
+    //             setLoading(false)
+    //         })
+    //         .catch(e => {
+    //             console.log(e)
+    //             setLoading(false)
+    //         })
+    // }, [pager])
+    
     return (
         <div className="users">
             <div className="users__header fl-row align-center">
@@ -99,6 +118,9 @@ function AdminQuestions() {
                         { title: 'CHOICE 2', field: 'choice2' },
                     ]}
                     data={dataSource}
+                    components={{
+                        // Pagination: "null"
+                    }}
                     actions={[
                         {
                             icon: () => <MdEdit color="blue" />,
@@ -118,6 +140,7 @@ function AdminQuestions() {
                             }
                         },
                     ]}
+                    onChangePage={(page, pageSize) => {console.log("change happened", page, pageSize); setPager({page, pageSize})}}
                 />
             </div>
             <Popup open={open} className="ques-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
