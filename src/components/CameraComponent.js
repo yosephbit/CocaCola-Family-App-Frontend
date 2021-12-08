@@ -50,7 +50,7 @@ class CameraComponent extends React.Component {
         }
         if(prevProps.isLastQuestion === true && this.state.isLastQuestion === false ) {
             console.log("stopping")
-            setTimeout( () => this.handleStopCaptureClick(), 800)
+            setTimeout( () => this.handleStopCaptureClick(), 3000)
         }
     }
 

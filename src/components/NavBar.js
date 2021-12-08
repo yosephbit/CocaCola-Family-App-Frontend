@@ -31,11 +31,19 @@ function NavBar() {
     useEffect(() => {
         if (playing) {
             setVolClass('')
-            audio.volume = 0.1
-            audio.loop = true
-            audio.play()
+            try {
+                audio.volume = 0.1
+                audio.loop = true
+                audio.play()
+            } catch (e) {
+                console.log(e)
+            }
         } else {
-            audio.pause()
+            try {
+                audio.pause()
+            } catch (e) {
+                console.log(e, "pause")
+            }
         }
         //eslint-disable-next-line
     }, [playing])
@@ -44,27 +52,27 @@ function NavBar() {
         <div className="navbar fl-row just-between align-center">
             <img src={coca} alt="" className="navbar__logo" />
             <div className="navbar__actions fl-row align-center">
-                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing} 
+                <UseAnimations className={volClass} animation={volume} size={40} reverse={!playing}
                     onClick={() => setPlaying(!playing)} strokeColor="white" />
-                <Popup className="menu-popup" trigger={open => open 
-                    ? (<div style={{cursor: "pointer"}}><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>) 
-                    : (<div style={{cursor: "pointer"}}><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
+                <Popup className="menu-popup" trigger={open => open
+                    ? (<div style={{ cursor: "pointer" }}><FaTimes color="white" size={23} style={{ marginLeft: '3px' }} /></div>)
+                    : (<div style={{ cursor: "pointer" }}><FaBars color="white" size={23} style={{ marginLeft: '3px' }} /></div>)}
                     position="bottom right">
                     {close => (
                         user?.token ? (
                             <div className="menu fl-col just-start">
-                            <Link onClick={close} to="/admin/dashboard" className="menu__item">Home</Link>
-                            <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
-                            <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
-                        </div>
+                                <Link onClick={close} to="/admin/dashboard" className="menu__item">Home</Link>
+                                <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
+                                <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
+                            </div>
                         ) : (
                             <div className="menu fl-col just-start">
-                            <Link onClick={close} to="/" className="menu__item">Home</Link>
-                            <Link onClick={close} to="howto" className="menu__item">How to Participate</Link>
-                            <Link onClick={close} to="prizes" className="menu__item">Prizes</Link>
-                            <Link onClick={close} to="winners" className="menu__item">Winner List</Link>
-                            <Link onClick={close} to="terms" className="menu__item">Terms & Conditions</Link>
-                        </div>
+                                <Link onClick={close} to="/" className="menu__item">Home</Link>
+                                <Link onClick={close} to="howto" className="menu__item">How to Participate</Link>
+                                <Link onClick={close} to="prizes" className="menu__item">Prizes</Link>
+                                <Link onClick={close} to="winners" className="menu__item">Winner List</Link>
+                                <Link onClick={close} to="terms" className="menu__item">Terms & Conditions</Link>
+                            </div>
                         )
                     )}
                 </Popup>
