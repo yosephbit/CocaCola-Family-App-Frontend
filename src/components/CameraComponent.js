@@ -21,7 +21,7 @@ class CameraComponent extends React.Component {
         this.state = {
             open: true,
             quizEnd: this.props?.quizEnd,
-            capturing: false,
+            capturing: true,
             recordedChunks: [],
             isLastQuestion: this.props.isLastQuestion
         }
@@ -46,16 +46,17 @@ class CameraComponent extends React.Component {
     componentDidUpdate(prevProps) {
         if(prevProps.isLastQuestion === false && this.state.isLastQuestion) {
             this.handleStartCaptureClick();
-            console.log("recording...")
         }
         if(prevProps.isLastQuestion === true && this.state.isLastQuestion === false ) {
-            console.log("stopping")
             setTimeout( () => this.handleStopCaptureClick(), 3000)
         }
     }
 
     handleStartCaptureClick = () => {
-        // this.setState({capturing: true});
+        if(!window.MediaRecorder) {
+            this.setState({capturing: false});
+            return;
+        }
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
           mimeType: "video/mp4"
         }); 
@@ -66,6 +67,7 @@ class CameraComponent extends React.Component {
           this.handleDataAvailable
         );
         this.mediaRecorderRef.current.start();
+        console.log("recording...")
     }
     
     handleDataAvailable = ({ data }) => {
@@ -81,8 +83,13 @@ class CameraComponent extends React.Component {
     }
 
     handleStopCaptureClick = () => {
+        if(!window.MediaRecorder) {
+            this.setState({capturing: false});
+            return;
+        }
         this.mediaRecorderRef.current.stop();
         this.setState({capturing: false});
+        console.log("stopping")
     }
 
     componentWillReceiveProps(nextProps) {
@@ -97,7 +104,7 @@ class CameraComponent extends React.Component {
 
     onResults = (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true && this.state.recordedChunks?.length > 0) {
+        if (this.state?.quizEnd === true && this.state.capturing === false) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
             if(path?.via === 'TOGETHER') {
                 this.props.calculateAndUploadScore(new Blob(this.state.recordedChunks, {
