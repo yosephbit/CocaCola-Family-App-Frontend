@@ -53,15 +53,25 @@ function GamePlayPage() {
     useEffect(() => {
         var singleChallenge;
         var result = choice
-        if (result !== null && !readyToAnswer) {
+        if (result !== null && !readyToAnswer && !quizEnd) {
             if (path?.via === "TOGETHER") {
                 if (result != null) {
 
-                    if (gameStared === false) {
-                        startGame()
-                        return
+                    if (result === 1) {
+                        if (gameStared === false) {
+                            startGame()
+                            return
+                        }
+
+                    } else if (result === 0) {
+                        if (gameStared === false) {
+                            navigate("/")
+                            return
+                        }
+
                     }
-                    singleChallenge = result;
+                    singleChallenge = result === 0 ? 1 : result;
+                    console.log(choice, "choice", questoionsIndex, (new Date()).toISOString());
                 }
             } else {
                 if (result === -1) {
@@ -85,9 +95,12 @@ function GamePlayPage() {
                     }
                 }
             }
-            setChallengeAnswers((oldArray => [...oldArray, singleChallenge]))
-            if (questions.length - 1 > questoionsIndex) {
+            setChallengeAnswers((oldArray => {
+                oldArray[questoionsIndex] = singleChallenge;
+                return oldArray;
+            }))
 
+            if (questions.length - 1 > questoionsIndex) {
                 setCurrentQuestion(questions[questoionsIndex + 1])
                 setQuestionsIndex(questoionsIndex + 1);
 
@@ -98,7 +111,7 @@ function GamePlayPage() {
 
         setTimeout(() => {
             setReadyToAnswer(true);
-        }, 1000)
+        }, 1500)
         //eslint-disable-next-line 
     }, [readyToAnswer, choice])
 

@@ -7,7 +7,7 @@ import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
 
-var len = 10;
+var len = 3;
 var answerBuffer = [];
 
 const toastList = new Set();
@@ -79,8 +79,8 @@ class CameraComponent extends React.Component {
         console.log("adding event listener...")
         console.log(this.mediaRecorderRef)
         this.mediaRecorderRef.current.addEventListener(
-          "dataavailable",
-          this.handleDataAvailable
+            "dataavailable",
+            this.handleDataAvailable
         );
         this.mediaRecorderRef.current.start();
         console.log("recording...")
@@ -117,7 +117,7 @@ class CameraComponent extends React.Component {
         }
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.quizEnd !== this.state.quizEnd) {
-          this.setState({ quizEnd: nextProps.quizEnd });
+            this.setState({ quizEnd: nextProps.quizEnd });
         }
         if (nextProps.isLastQuestion !== this.state.isLastQuestion) {
             this.setState({ isLastQuestion: nextProps.isLastQuestion });
@@ -167,77 +167,43 @@ class CameraComponent extends React.Component {
                     // eslint-disable-next-line eqeqeq
 
                     if (x.toString() === "0") {
-                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
-                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         var slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
-                    if (x.toString() === "1" ) {
-                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
-                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                    if (x.toString() === "1") {
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         var slope1 = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle1 = (Math.atan(slope1) * 180) / Math.PI;
                     }
                 }
-                if (angle < 70 && angle > 0 && angle1 < 70 && angle1 > 0) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("Yes");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("Yes");
-                    }
+                if (angle < 70 && angle > 0 && angle1 < 70 && angle1 > 0 && this.wentBackToUpRight) {
+                    answerBuffer.push("Yes");
+
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -70 && angle < 0 && angle1 > -70 && angle1 < 0) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("Yes");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("Yes");
-                    }
+                else if (angle > -70 && angle < 0 && angle1 > -70 && angle1 < 0 && this.wentBackToUpRight) {
+
+                    answerBuffer.push("Ok");
+
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -70 && angle < 0 && angle1 < 70 && angle1 > 0) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("No");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("No");
-                    }
+                else if (angle > -70 && angle < 0 && angle1 < 70 && angle1 > 0 && this.wentBackToUpRight) {
+
+                    answerBuffer.push("No");
+
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle < 70 && angle > 0 && angle1 > -70 && angle1 < 0) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("No");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("No");
-                    }
+                else if (angle < 70 && angle > 0 && angle1 > -70 && angle1 < 0 && this.wentBackToUpRight) {
+
+                    answerBuffer.push("No");
+
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if ((angle < 70 && angle > 0) || (angle > -70 && angle < 0)) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("No");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("No");
-                    }
-                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
-                }
-                else if ((angle1 < 70 && angle1 > 0) || (angle1 > -70 && angle1 < 0)) {
-                    if (answerBuffer.length < len) {
-                        answerBuffer.push("No");
-                    }
-                    else {
-                        answerBuffer.shift();
-                        answerBuffer.push("No");
-                    }
-                    this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
+                else if ((angle > 70 || angle < -70) && (angle1 > 70 || angle1 < -70)) {
+                    this.wentBackToUpRight = true
                 }
             }
             else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
@@ -250,8 +216,8 @@ class CameraComponent extends React.Component {
                     // eslint-disable-next-line
 
                     if (x.toString() === "0") {
-                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) /2
-                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) /2
+                        let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
+                        let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
                         angle = (Math.atan(slope) * 180) / Math.PI;
                     }
@@ -324,7 +290,7 @@ class CameraComponent extends React.Component {
 
     toastMessage(msg) {
         if (msgToastList.size < 1) {
-           const id= toast(msg, {
+            const id = toast(msg, {
                 position: "bottom-center",
                 autoClose: 1000,
                 hideProgressBar: true,
@@ -332,7 +298,7 @@ class CameraComponent extends React.Component {
                 pauseOnHover: false,
                 draggable: false,
                 progress: undefined,
-                onClose: ()=>{msgToastList.delete(id)}
+                onClose: () => { msgToastList.delete(id) }
             });
             msgToastList.add(id);
         }
@@ -372,20 +338,25 @@ class CameraComponent extends React.Component {
     toggleModal(toggle) {
         this.setState({ open: toggle });
     }
- 
+
     checkAnswer(buffer) {
         let msg = "Please go back to up right position to answer next question."
 
         if (buffer.length === len) {
             var ans = buffer.join("-");
-            if (ans === "Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes-Yes") {
+            if (ans === "Yes-Yes-Yes") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
                 this.toastMessage(msg)
 
+            } else if (ans === "Ok-Ok-Ok") { 
+                answerBuffer = [];
+                this.wentBackToUpRight = false;
+                this.props.onChoiceMade(0)
+                this.toastMessage(msg)
             }
-            else if (ans === "No-No-No-No-No-No-No-No-No-No") {
+            else if (ans === "No-No-No") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)
@@ -402,7 +373,7 @@ class CameraComponent extends React.Component {
                     ref={this.webcamRef}
                     videoConstraints={this.videoContraints} mirrored={true}
                     audio={false} onUserMediaError={this.onMediaError}
-                    className="video-tag" 
+                    className="video-tag"
                 />{" "}
                 <canvas
                     ref={this.canvasRef}
