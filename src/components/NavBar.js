@@ -2,11 +2,12 @@ import React, { useState, useEffect, useContext } from 'react'
 import coca from '../assets/img/coca.png'
 import UseAnimations from 'react-useanimations'
 import volume from 'react-useanimations/lib/volume'
-import soundfile from '../assets/audio/chinese_new_year.ogg'
+import soundfile from '../assets/audio/chinese_new_year.mp3'
 import Popup from 'reactjs-popup'
 import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from "react-icons/fa";
 import UserContext from '../_helpers/userContext'
+// import { isIOS } from 'react-device-detect';
 
 function NavBar() {
     const [audio] = useState(new Audio(soundfile));
@@ -17,11 +18,15 @@ function NavBar() {
     const handleInteract = () => {
         const wrapper = document.querySelector('.icon-wrapper')
         wrapper?.click()
-        window.removeEventListener("mousedown", handleInteract);
+        document.removeEventListener("mousedown", handleInteract);
     };
 
     useEffect(() => {
         document.addEventListener("mousedown", handleInteract, false);
+        // console.log(isIOS, "is ios")
+        // if(!isIOS) {
+        //     document.addEventListener("mousedown", handleInteract, false);
+        // }
         setTimeout(() => {
             setVolClass(volClass + ' bounce')
         }, 5000);
@@ -32,6 +37,7 @@ function NavBar() {
         if (playing) {
             setVolClass('')
             try {
+                // audio.load()
                 audio.volume = 0.1
                 audio.loop = true
                 audio.play()

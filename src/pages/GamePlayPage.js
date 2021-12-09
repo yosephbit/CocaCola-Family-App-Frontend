@@ -104,7 +104,7 @@ function GamePlayPage() {
 
     return (
         <>
-            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer}
+            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} gameStared={gameStared}
                 quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms} isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} />
             {
                 !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ? gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} /> : <Acknowledge />

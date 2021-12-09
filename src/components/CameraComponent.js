@@ -23,7 +23,8 @@ class CameraComponent extends React.Component {
             quizEnd: this.props?.quizEnd,
             capturing: true,
             recordedChunks: [],
-            isLastQuestion: this.props.isLastQuestion
+            isLastQuestion: this.props.isLastQuestion,
+            mimeType: 'video/webm'
         }
         this.webcamRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
@@ -40,16 +41,31 @@ class CameraComponent extends React.Component {
         //   this.path=useContext(RouteContext)
     }
     componentDidMount() {
+        let types = ["video/webm",
+            "video/webm;codecs=vp8",
+            "video/webm;codecs=daala",
+            "video/webm;codecs=h264",
+            "video/mpeg",
+            "video/mp4"
+        ];
+
+        for (let i in types) {
+            if (MediaRecorder.isTypeSupported(types[i])) {
+                this.setState({ mimeType: types[i] },() => console.log(this.state.mimeType, "camera supported"))
+                break;
+            }
+        }
         this.readAngle();
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.isLastQuestion === false && this.state.isLastQuestion) {
-            this.handleStartCaptureClick();
-        }
-        if(prevProps.isLastQuestion === true && this.state.isLastQuestion === false ) {
-            setTimeout( () => this.handleStopCaptureClick(), 3000)
-        }
+        // if (prevProps.isLastQuestion === false && this.state.isLastQuestion) {
+        //     this.handleStartCaptureClick();
+        // }
+        // if (prevProps.isLastQuestion === true && this.state.isLastQuestion === false) {
+        //     // setTimeout(() => this.handleStopCaptureClick(), 3000)
+        //     this.handleStopCaptureClick()
+        // }
     }
 
     handleStartCaptureClick = () => {
@@ -58,8 +74,8 @@ class CameraComponent extends React.Component {
             return;
         }
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
-          mimeType: "video/mp4"
-        }); 
+          mimeType: this.state.mimeType
+        });
         console.log("adding event listener...")
         console.log(this.mediaRecorderRef)
         this.mediaRecorderRef.current.addEventListener(
@@ -69,7 +85,7 @@ class CameraComponent extends React.Component {
         this.mediaRecorderRef.current.start();
         console.log("recording...")
     }
-    
+
     handleDataAvailable = ({ data }) => {
         console.log("data is available outside if", data);
         if (data.size > 0) {
@@ -93,6 +109,12 @@ class CameraComponent extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if(nextProps.gameStared) {
+            this.handleStartCaptureClick()
+        }
+        if(nextProps.quizEnd) {
+            this.handleStopCaptureClick()
+        }
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.quizEnd !== this.state.quizEnd) {
           this.setState({ quizEnd: nextProps.quizEnd });
@@ -108,15 +130,15 @@ class CameraComponent extends React.Component {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
             if(path?.via === 'TOGETHER') {
                 this.props.calculateAndUploadScore(new Blob(this.state.recordedChunks, {
-                    type: "video/mp4"
+                    type: this.state.mimeType
                   }))
-            } else if(path?.via === "CHALLENGE") {
+            } else if (path?.via === "CHALLENGE") {
                 this.props.uploadAnswerAndRedirectToScore(new Blob(this.state.recordedChunks, {
-                    type: "video/mp4"
+                    type: this.state.mimeType
                   }))
             } else {
                 this.props.uploadChallangeAndSendSms(new Blob(this.state.recordedChunks, {
-                    type: "video/mp4"
+                    type: this.state.mimeType
                   }))
             }
             return;
