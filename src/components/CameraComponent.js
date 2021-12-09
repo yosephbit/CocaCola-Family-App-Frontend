@@ -71,6 +71,7 @@ class CameraComponent extends React.Component {
             this.setState({capturing: false});
             return;
         }
+        console.log(this.webcamRef.current.stream)
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
           mimeType: this.state.mimeType
         });
@@ -102,7 +103,7 @@ class CameraComponent extends React.Component {
             return;
         }
         this.mediaRecorderRef.current.stop();
-        // this.setState({capturing: false});
+        setTimeout(() => this.setState({capturing: false}), 3000);
         console.log("stopping")
     }
 
