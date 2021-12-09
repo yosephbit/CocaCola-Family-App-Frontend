@@ -23,6 +23,7 @@ class CameraComponent extends React.Component {
             quizEnd: this.props?.quizEnd,
             capturing: true,
             recordedChunks: [],
+            gameStared: this.props.gameStared,
             isLastQuestion: this.props.isLastQuestion,
             mimeType: 'video/webm'
         }
@@ -42,9 +43,6 @@ class CameraComponent extends React.Component {
     }
     componentDidMount() {
         let types = ["video/webm",
-            "video/webm;codecs=vp8",
-            "video/webm;codecs=daala",
-            "video/webm;codecs=h264",
             "video/mpeg",
             "video/mp4"
         ];
@@ -59,13 +57,13 @@ class CameraComponent extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        // if (prevProps.isLastQuestion === false && this.state.isLastQuestion) {
-        //     this.handleStartCaptureClick();
-        // }
-        // if (prevProps.isLastQuestion === true && this.state.isLastQuestion === false) {
-        //     // setTimeout(() => this.handleStopCaptureClick(), 3000)
-        //     this.handleStopCaptureClick()
-        // }
+        if (prevProps.gameStared === false && this.state.gameStared) {
+            this.handleStartCaptureClick();
+        }
+        if (prevProps.isLastQuestion === true && this.state.isLastQuestion === false) {
+            // setTimeout(() => this.handleStopCaptureClick(), 3000)
+            this.handleStopCaptureClick()
+        }
     }
 
     handleStartCaptureClick = () => {
@@ -104,17 +102,11 @@ class CameraComponent extends React.Component {
             return;
         }
         this.mediaRecorderRef.current.stop();
-        this.setState({capturing: false});
+        // this.setState({capturing: false});
         console.log("stopping")
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.gameStared) {
-            this.handleStartCaptureClick()
-        }
-        if(nextProps.quizEnd) {
-            this.handleStopCaptureClick()
-        }
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.quizEnd !== this.state.quizEnd) {
             this.setState({ quizEnd: nextProps.quizEnd });
@@ -122,24 +114,25 @@ class CameraComponent extends React.Component {
         if (nextProps.isLastQuestion !== this.state.isLastQuestion) {
             this.setState({ isLastQuestion: nextProps.isLastQuestion });
         }
+        if (nextProps.gameStared !== this.state.gameStared) {
+            this.setState({ gameStared: nextProps.gameStared });
+        }
     }
 
     onResults = (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true && this.state.capturing === false) {
+        if (this.state?.quizEnd === true && (this.state.capturing === false || this.state.recordedChunks.length > 0)) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
+            let blob = new Blob(this.state.recordedChunks, {
+                type: this.state.mimeType,
+              })
+            let file = new File([blob], `player-video.${this.state.mimeType.split('/')[1]}`)
             if(path?.via === 'TOGETHER') {
-                this.props.calculateAndUploadScore(new Blob(this.state.recordedChunks, {
-                    type: this.state.mimeType
-                  }))
+                this.props.calculateAndUploadScore(file)
             } else if (path?.via === "CHALLENGE") {
-                this.props.uploadAnswerAndRedirectToScore(new Blob(this.state.recordedChunks, {
-                    type: this.state.mimeType
-                  }))
+                this.props.uploadAnswerAndRedirectToScore(file)
             } else {
-                this.props.uploadChallangeAndSendSms(new Blob(this.state.recordedChunks, {
-                    type: this.state.mimeType
-                  }))
+                this.props.uploadChallangeAndSendSms(file)
             }
             return;
         }

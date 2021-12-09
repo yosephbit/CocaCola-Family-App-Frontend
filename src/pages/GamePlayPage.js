@@ -212,7 +212,6 @@ function GamePlayPage() {
         }
     }
     function uploadAnswerAndRedirectToScore(video) {
-        console.log(video)
         if (!screenshot) {
             setScreenshot(video);
             for (const challenge of challengeAnswers) {
@@ -271,9 +270,7 @@ function GamePlayPage() {
         }
     }
     function calculateAndUploadScore(video) {
-        console.log(video)
         if (!screenshot) {
-            console.log(challengeAnswers)
             setScreenshot(video);
             var score = 0;
             var percentage = 0
