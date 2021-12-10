@@ -428,7 +428,7 @@ class CameraComponent extends React.Component {
                         <span className="modal__text">Loading...</span>
                     </div>
                 </Popup>
-                <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+                {/* <ToastContainer  theme="dark" transition={Slide} /> */}
 
                 <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.state?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
@@ -440,7 +440,7 @@ class CameraComponent extends React.Component {
                         />
                     </div>
                 </Popup>
-                <ToastContainer limit={1} theme="dark" transition={Slide} />
+                <ToastContainer autoClose={3000} pauseOnFocusLoss={false} limit={1} theme="dark" transition={Slide} />
             </div>
         );
     }
