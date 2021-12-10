@@ -70,8 +70,11 @@ function GamePlayPage() {
                         }
 
                     }
-                    singleChallenge = result === 0 ? 1 : result;
-                    console.log(choice, "choice", questoionsIndex, (new Date()).toISOString());
+                    singleChallenge = {
+                        "questionId": currentQuestion?.question?.questionId,
+                        "choiceId": currentQuestion?.answers?.choice1?.choiceId,
+                        "result": result === 0 ? 1 : result
+                    }
                 }
             } else {
                 if (result === -1) {
@@ -95,10 +98,12 @@ function GamePlayPage() {
                     }
                 }
             }
-            setChallengeAnswers((oldArray => {
-                oldArray[questoionsIndex] = singleChallenge;
-                return oldArray;
-            }))
+            if (!checkIsQuestionAnswered(singleChallenge?.questionId)) {
+                setChallengeAnswers((oldArray => {
+                    oldArray[questoionsIndex] = singleChallenge;
+                    return oldArray;
+                }))
+            }
 
             if (questions.length - 1 > questoionsIndex) {
                 setCurrentQuestion(questions[questoionsIndex + 1])
@@ -245,7 +250,7 @@ function GamePlayPage() {
         if (!screenshot) {
             setScreenshot(video);
             console.log(video)
-            createChallengeInstance(challengerId, invitationId, video)
+             createChallengeInstance(challengerId, invitationId, video)
                 .then(async res => {
                     var challangeInstanceId = res?.data?.challangeInstanceId
 
@@ -275,7 +280,7 @@ function GamePlayPage() {
             var score = 0;
             var percentage = 0
             for (const challenge of challengeAnswers) {
-                if (challenge === 1) {
+                if (challenge?.result === 1) {
                     score = score + 1;
                 }
             }
@@ -287,7 +292,17 @@ function GamePlayPage() {
                     navigate(`/score/${res?.data?.scoreId}`)
                 }).catch(err => { })
         }
-        //TODO: add endpoint to score for challenge
+    }
+
+    function checkIsQuestionAnswered(questionId) {
+        let isAlreadyAnswered = false;
+        for (const challenge of challengeAnswers) {
+            if (questionId === challenge?.questionId) {
+                isAlreadyAnswered = true;
+                break;
+            }
+        }
+        return isAlreadyAnswered;
     }
 }
 

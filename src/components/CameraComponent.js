@@ -173,30 +173,30 @@ class CameraComponent extends React.Component {
                         angle1 = (Math.atan(slope1) * 180) / Math.PI;
                     }
                 }
-                if (angle < 70 && angle > 0 && angle1 < 70 && angle1 > 0 && this.wentBackToUpRight) {
+                if (angle < 67 && angle > 0 && angle1 < 67 && angle1 > 0 && this.wentBackToUpRight) {
                     answerBuffer.push("Yes");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -70 && angle < 0 && angle1 > -70 && angle1 < 0 && this.wentBackToUpRight) {
+                else if (angle > -67 && angle < 0 && angle1 > -67 && angle1 < 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("Ok");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -70 && angle < 0 && angle1 < 70 && angle1 > 0 && this.wentBackToUpRight) {
+                else if (angle > -67 && angle < 0 && angle1 < 67 && angle1 > 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("No");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle < 70 && angle > 0 && angle1 > -70 && angle1 < 0 && this.wentBackToUpRight) {
+                else if (angle < 67 && angle > 0 && angle1 > -67 && angle1 < 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("No");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if ((angle > 70 || angle < -70) && (angle1 > 70 || angle1 < -70)) {
+                else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
                     this.wentBackToUpRight = true
                 }
             }
@@ -217,14 +217,14 @@ class CameraComponent extends React.Component {
                     }
 
                 }
-                if (angle < 70 && angle > 0 && this.wentBackToUpRight) {
+                if (angle < 67 && angle > 0 && this.wentBackToUpRight) {
                     answerBuffer.push("No");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
-                } else if (angle > -70 && angle < 0 && this.wentBackToUpRight) {
+                } else if (angle > -67 && angle < 0 && this.wentBackToUpRight) {
                     answerBuffer.push("Yes");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
-                } else if (angle > 70 || angle < -70) {
+                } else if (angle > 75 || angle < -75) {
                     this.wentBackToUpRight = true
                 }
             }
