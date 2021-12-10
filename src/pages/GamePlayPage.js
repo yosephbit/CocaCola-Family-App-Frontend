@@ -143,7 +143,7 @@ function GamePlayPage() {
                         height={40}
                         width={40}
                     />
-                    <span className="modal__text">Loading...</span>
+                    <span className="modal__text">{ quizEnd ? "Calculating..." : "Loading..."}</span>
                 </div>
             </Popup>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
@@ -227,6 +227,7 @@ function GamePlayPage() {
     function uploadAnswerAndRedirectToScore(video) {
         if (!screenshot) {
             setScreenshot(video);
+            setLoading(true)
             for (const challenge of challengeAnswers) {
                 var singleAnswer = {
                     challangeId: path?.challengeId,
@@ -237,8 +238,10 @@ function GamePlayPage() {
                 answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
                     .then(res => {
                         console.log(res)
+                        setLoading(false)
                     }).catch(err => {
                         console.error(err)
+                        setLoading(false)
                     })
             }
 
@@ -257,7 +260,7 @@ function GamePlayPage() {
         let invitationId = path?.linkId;
         if (!screenshot) {
             setScreenshot(video);
-            console.log(video)
+            setLoading(true)
              createChallengeInstance(challengerId, invitationId, video)
                 .then(async res => {
                     var challangeInstanceId = res?.data?.challangeInstanceId
@@ -272,18 +275,20 @@ function GamePlayPage() {
                     }
                     onChallengeCreated(challangeInstanceId)
                         .then(res => {
+                            setLoading(false)
                         }).catch(err => {
                             console.log(err)
                         })
 
                 }).catch(err => {
                     console.log(err)
-
+                    setLoading(false)
                 })
         }
     }
     function calculateAndUploadScore(video) {
         if (!screenshot) {
+            setLoading(true)
             setScreenshot(video);
             var score = 0;
             var percentage = 0
@@ -296,9 +301,12 @@ function GamePlayPage() {
             percentage = (score / totalQuestions) * 100;
             addScoreForPlayTogether(user, score, percentage, video)
                 .then(res => {
+                    setLoading(false)
                     storePath({ "via": path?.via, "SCORE": res?.data })
                     navigate(`/score/${res?.data?.scoreId}`)
-                }).catch(err => { })
+                }).catch(err => {
+                    setLoading(false)
+                })
         }
     }
 
