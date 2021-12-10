@@ -29,6 +29,14 @@ function GamePlayPage() {
     let navigate = useNavigate();
 
     useEffect(() => {
+        if (path?.via === 'TOGETHER' && !state?.relation) {
+            navigate(`/players`)
+            return;
+        }
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
         if (questoionsIndex === questions.length && gameStared && questoionsIndex !== 0 && !quizEnd) {
 
             setReadyToAnswer(false)

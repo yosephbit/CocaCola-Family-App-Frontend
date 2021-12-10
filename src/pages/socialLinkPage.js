@@ -22,12 +22,21 @@ function SocialLinkPage() {
             navigate(`/players`)
         } else {
             TinyURL.shorten(link).then((res) => {
-                setLink(res);
-                setLoading(false)
-            }, console.log)
-                .catch(e => {
+                if(res === 'Error') {
+                    setLink(link)
                     setLoading(false)
-                })
+                } else {
+                    setLink(res);
+                    setLoading(false)
+                }
+            }, () => {
+                setLink(link)
+                setLoading(false)
+            })
+            .catch(e => {
+                setLink(link)
+                setLoading(false)
+            })
         }
         // eslint-disable-next-line
     }, [])

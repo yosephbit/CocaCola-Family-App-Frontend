@@ -38,19 +38,6 @@ function App() {
     //     console.log(e)
     //     setOpen(true)
     //   })
-    let types = ["video/webm",
-      "video/webm;codecs=vp8",
-      "video/webm;codecs=daala",
-      "video/webm;codecs=h264",
-      "video/mpeg",
-      "video/mp4"
-    ];
-
-    for (let i in types) {
-      if(MediaRecorder.isTypeSupported(types[i])) {
-        console.log(types[i] + " maybe supported");
-      }
-    }
   }, [])
 
 

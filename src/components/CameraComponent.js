@@ -6,6 +6,7 @@ import { ToastContainer, Slide, toast } from 'react-toastify';
 import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
+import { isIOS } from 'react-device-detect'
 
 var len = 3;
 var answerBuffer = [];
@@ -27,8 +28,10 @@ class CameraComponent extends React.Component {
             isLastQuestion: this.props.isLastQuestion,
             mimeType: 'video/webm'
         }
+        console.log(isIOS, "is iso eko")
         this.webcamRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
+        this.inputRef = React.createRef(null);
         this.mediaRecorderRef = React.createRef(null);
 
         this.camera = null;
@@ -54,6 +57,10 @@ class CameraComponent extends React.Component {
             }
         }
         this.readAngle();
+        // navigator.mediaDevices.getUserMedia({video: {facingMode: "user"}, audio: false})
+        //     .then()
+        //     .catch(console.log)
+        
     }
 
     componentDidUpdate(prevProps) {
@@ -90,10 +97,11 @@ class CameraComponent extends React.Component {
         if (data.size > 0) {
             console.log("data is available");
             this.setState((state) => {
-                console.log(state.recordedChunks)
-                console.log(data)
                 return { recordedChunks: [...state.recordedChunks, data] };
             });
+        }
+        else if(isIOS) {
+            this.setState({capturing: false})
         }
     }
 
@@ -103,9 +111,29 @@ class CameraComponent extends React.Component {
             return;
         }
         this.mediaRecorderRef.current.stop();
-        setTimeout(() => this.setState({capturing: false}), 3000);
         console.log("stopping")
     }
+
+    b64toBlob = (b64Data, contentType='image/png', sliceSize=512) => {
+        let data = b64Data.split(',')[1]
+        const byteCharacters = atob(data);
+        const byteArrays = [];
+      
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize);
+      
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+      
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+      
+        const blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+      }
 
     componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
@@ -122,20 +150,35 @@ class CameraComponent extends React.Component {
 
     onResults = (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true && (this.state.capturing === false || this.state.recordedChunks.length > 0)) {
+        if (this.state?.quizEnd === true && (this.state.recordedChunks.length > 0 || this.state.capturing === false)) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
-            let blob = new Blob(this.state.recordedChunks, {
-                type: this.state.mimeType,
-              })
-            let file = new File([blob], `player-video.${this.state.mimeType.split('/')[1]}`)
-            if(path?.via === 'TOGETHER') {
-                this.props.calculateAndUploadScore(file)
-            } else if (path?.via === "CHALLENGE") {
-                this.props.uploadAnswerAndRedirectToScore(file)
+            
+            if(this.state.capturing === false) {
+                const img = this.webcamRef.current.getScreenshot({height: 280})
+                let blob = this.b64toBlob(img)
+                let file = new File([blob], `player-image.png`)
+                if(path?.via === 'TOGETHER') {
+                    this.props.calculateAndUploadScore(file)
+                } else if (path?.via === "CHALLENGE") {
+                    this.props.uploadAnswerAndRedirectToScore(file)
+                } else {
+                    this.props.uploadChallangeAndSendSms(file)
+                }
+                return;
             } else {
-                this.props.uploadChallangeAndSendSms(file)
+                let blob = new Blob(this.state.recordedChunks, {
+                    type: this.state.mimeType,
+                })
+                let file = new File([blob], `player-video.${this.state.mimeType.split('/')[1]}`)
+                if(path?.via === 'TOGETHER') {
+                    this.props.calculateAndUploadScore(file)
+                } else if (path?.via === "CHALLENGE") {
+                    this.props.uploadAnswerAndRedirectToScore(file)
+                } else {
+                    this.props.uploadChallangeAndSendSms(file)
+                }
+                return;
             }
-            return;
         }
         if (this.state.open) this.toggleModal(false);
 
@@ -365,6 +408,7 @@ class CameraComponent extends React.Component {
             <div className="camera">
                 <Webcam
                     ref={this.webcamRef}
+                    screenshotFormat="image/png"
                     videoConstraints={this.videoContraints} mirrored={true}
                     audio={false} onUserMediaError={this.onMediaError}
                     className="video-tag"
