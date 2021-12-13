@@ -11,7 +11,7 @@ import UserContext from '../../_helpers/userContext'
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
-    const [pager, ] = useState({page: 1, pageSize: 8})
+    const [pager, ] = useState({page: 0, pageSize: 100})
     const { user } = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
@@ -34,8 +34,8 @@ function AdminUsers() {
     };
 
     useEffect(() => {
-        getUsers(user?.user, pager.pageSize, pager.page -1, user?.token).then(res => {
-            let data = res.data;
+        getUsers(user?.user, pager.pageSize, pager.page, user?.token).then(res => {
+            let data = res.data.users;
             data = data.map(usrArr => {
                 return { ...usrArr[1], created_at: new Date(usrArr[1].created_at), uid: usrArr[0] }
             })

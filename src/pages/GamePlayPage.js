@@ -165,7 +165,6 @@ function GamePlayPage() {
                     setQuestions(response.data.questions)
                     setGameStared(true);
                     setLoading(false)
-
                     setCurrentQuestion(response.data.questions[0])
                     setGameStared(true);
                     console.log(response.data.questions)

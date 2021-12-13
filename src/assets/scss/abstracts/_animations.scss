@@ -1,15 +1,16 @@
 .floating-img {
-    animation: fadeup .5s ease-in;
-
+    animation: fadeup .8s ease-in forwards;
+    opacity: 0;
+    
     &--3, &--5, &--7 {
-        animation-delay: .1s;
+        animation-delay: .6s;
     }
 }
 
 @keyframes fadeup {
     from {
-        opacity: 0;
-        transform: translateY(5px)
+        opacity: 0.5;
+        transform: translateY(-15px);
     }
 
     to {

@@ -54,7 +54,7 @@ function ScorePage() {
             {percentage !== null ? (<h2 className="score__header">
                 WE SCORED <span className="score__value" title={`${percentage}%`}>{percentage}%</span> IN
             </h2>) : (
-                <h2 className="score__header"></h2>
+                <p className="score__header"></p>
             )}
             <div className="score__body">
                 <img src={banner} alt="" className="score__logo" />
@@ -79,7 +79,7 @@ function ScorePage() {
                 {percentage !== null && (
                     <>
                         <p className="grad text large">Your Participation Code: #{shareCode}</p>
-                        <a href={`https://www.facebook.com/share.php?u=${encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
+                        <a href={`https://www.facebook.com/share.php?u=${videos[0] || encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
 
                             rel="noreferrer" className="link">
                             <FaFacebook size={28} color="white" />

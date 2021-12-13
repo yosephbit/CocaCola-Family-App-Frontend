@@ -18,7 +18,7 @@ function AdminQuestions() {
     const [deleting, setDeleting] = useState(false)
     const [selectedQuestion, setSelectedQuestion] = useState(null)
     // const [searchParams, setSearchParams] = useSearchParams();
-    const [pager, setPager] = useState({page: 1, pageSize: 8})
+    const [pager, setPager] = useState({page: 0, pageSize: 50})
     const toggleModal = (state) => {
         setOpen(state);
         !state && setDeleting(false);
@@ -51,7 +51,7 @@ function AdminQuestions() {
         adminGetQuestions(user.user, user.token, pager.page, pager.pageSize)
             .then(res => {
                 console.log(res.data)
-                buildDataSource(res.data)
+                buildDataSource(res.data.questions)
                 setLoading(false)
             })
             .catch(e => {
@@ -80,7 +80,7 @@ function AdminQuestions() {
         //     })
         
         //eslint-disable-next-line
-    }, [pager])
+    }, [])
 
     // useEffect(() => {
     //     setSearchParams({ ...pager })
@@ -113,6 +113,7 @@ function AdminQuestions() {
                     icons={tableIcons}
                     isLoading={loading}
                     columns={[
+                        { title: 'RELATION', field: 'relation' },
                         { title: 'QUESTION', field: 'question' },
                         { title: 'CHOICE 1', field: 'choice1' },
                         { title: 'CHOICE 2', field: 'choice2' },
@@ -151,7 +152,11 @@ function AdminQuestions() {
 
     function buildDataSource(data) {
         const questions = data.map(dt => {
-            let que = {id: dt[0], question: dt[1].questionText}
+            let que = {
+                id: dt.question.questionId, question: dt.question.questionText,
+                relation: dt.relation, choice1: dt.answers.choice1.choiceText,
+                choice2: dt.answers.choice2.choiceText
+            }
             return que
         })
         setDataSource(questions)
