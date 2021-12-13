@@ -23,7 +23,7 @@ axios.interceptors.response.use(function (response) {
 
 export const getScore = (challangeId,respondentId,fileToUpload ) => {
     var formData = new FormData();
-    formData.append("fileToUpload", fileToUpload);
+    formData.append("fileToUpload", fileToUpload, fileToUpload.name);
     formData.append("challangeId", challangeId);
     formData.append("respondentId", respondentId);
    return axios.post(`${api}/getScore`, formData); 
@@ -42,7 +42,7 @@ export const sendCode = (name,phone_number) =>{
 }
 export const createChallengeInstance = (challangerId, invitationId = '', fileToUpload) =>{
     var formData = new FormData();
-    formData.append("fileToUpload", fileToUpload);
+    formData.append("fileToUpload", fileToUpload, fileToUpload.name);
     formData.append("challangerId", challangerId);
     formData.append("invitationId", invitationId);
     return axios.post(`${api}/createChallangeInstance`,formData)
@@ -85,12 +85,12 @@ export const getQuiz = (invitationId) => {
 
 export const addScoreForPlayTogether = (respondentId,netScore,percentage, fileToUpload) => {
     var formData = new FormData();
-    formData.append("fileToUpload", fileToUpload);
+    formData.append("fileToUpload", fileToUpload, fileToUpload.name);
     formData.append("respondentId", respondentId);
     formData.append("netScore", netScore);
     formData.append("percentage", percentage);
    
-    return axios.post(`${api}/addScoreForPlayTogether`, formData)
+    return axios.post(`${api}/addScoreForPlayTogether`, formData, {})
 }
 
 export const getScoreById = ( scoreId ) => {
