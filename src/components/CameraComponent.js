@@ -15,6 +15,11 @@ var answerBuffer = [];
 const toastList = new Set();
 const msgToastList = new Set();
 
+const gif = new GIF({
+    workers: 2,
+    quality: 10
+}) 
+
 var promiseResolve;
 class CameraComponent extends React.Component {
     static contextType = RouteContext
@@ -67,8 +72,18 @@ class CameraComponent extends React.Component {
         if (prevProps.gameStared === false && this.state.gameStared) {
             this.handleStartCaptureClick();
         }
-        if (prevProps.isLastQuestion === true && this.state.isLastQuestion === false) {
+        if (prevProps.isLastQuestion === false && this.state.isLastQuestion === true) {
             // setTimeout(() => this.handleStopCaptureClick(), 3000)
+            if(isIOS) {
+                let interval = setInterval(() => {
+                    console.log(this.state.images.length, "interval ")
+                    if(this.state.images.length <= 25)
+                        this.takeScreenshot()
+                    else {
+                        clearInterval(interval)
+                    }
+                }, 100)
+            } 
             this.handleStopCaptureClick()
         }
     }
@@ -150,12 +165,9 @@ class CameraComponent extends React.Component {
         if (this.state?.quizEnd === true && (this.state.recordedChunks.length > 0 || this.state.capturing === false)) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
             if(this.state.capturing === false) {
-                const gif = new GIF({
-                    workers: 2,
-                    quality: 10
-                })
+                this.setState({capturing: true})
                 this.state.images.forEach(img => {
-                    gif.addFrame(img, { delay: 1000 });
+                    gif.addFrame(img, { delay: 100 });
                 });
                 gif.on('finished', blob => {
                     // Uploading the blob
@@ -168,6 +180,8 @@ class CameraComponent extends React.Component {
                         this.props.uploadChallangeAndSendSms(file)
                     }
                 });
+                gif.render();
+
                 return;
             } else {
                 let blob = new Blob(this.state.recordedChunks, {
@@ -404,9 +418,6 @@ class CameraComponent extends React.Component {
                 this.toastMessage(msg)
             }
             answerBuffer = [];
-            if(isIOS) {
-                this.takeScreenshot()
-            }
         }
     }
 
