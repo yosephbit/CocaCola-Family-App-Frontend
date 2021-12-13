@@ -143,7 +143,7 @@ function GamePlayPage() {
                         height={40}
                         width={40}
                     />
-                    <span className="modal__text">{ quizEnd ? "Calculating..." : "Loading..."}</span>
+                    <span className="modal__text">{ quizEnd ? "Submitting..." : "Loading..."}</span>
                 </div>
             </Popup>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />

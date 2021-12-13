@@ -7,6 +7,7 @@ import Popup from 'reactjs-popup';
 import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
 import { isIOS } from 'react-device-detect'
+import * as GIF from 'gif.js.optimized'
 
 var len = 3;
 var answerBuffer = [];
@@ -26,9 +27,9 @@ class CameraComponent extends React.Component {
             recordedChunks: [],
             gameStared: this.props.gameStared,
             isLastQuestion: this.props.isLastQuestion,
-            mimeType: 'video/webm'
+            mimeType: 'video/webm',
+            images: []
         }
-        console.log(isIOS, "is iso eko")
         this.webcamRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
         this.inputRef = React.createRef(null);
@@ -52,7 +53,7 @@ class CameraComponent extends React.Component {
 
         for (let i in types) {
             if (MediaRecorder.isTypeSupported(types[i])) {
-                this.setState({ mimeType: types[i] },() => console.log(this.state.mimeType, "camera supported"))
+                this.setState({ mimeType: types[i] })
                 break;
             }
         }
@@ -60,7 +61,6 @@ class CameraComponent extends React.Component {
         // navigator.mediaDevices.getUserMedia({video: {facingMode: "user"}, audio: false})
         //     .then()
         //     .catch(console.log)
-        
     }
 
     componentDidUpdate(prevProps) {
@@ -78,12 +78,9 @@ class CameraComponent extends React.Component {
             this.setState({capturing: false});
             return;
         }
-        console.log(this.webcamRef.current.stream)
         this.mediaRecorderRef.current = new MediaRecorder(this.webcamRef.current.stream, {
           mimeType: this.state.mimeType
         });
-        console.log("adding event listener...")
-        console.log(this.mediaRecorderRef)
         this.mediaRecorderRef.current.addEventListener(
             "dataavailable",
             this.handleDataAvailable
@@ -152,18 +149,25 @@ class CameraComponent extends React.Component {
         const path = this.context?.path;
         if (this.state?.quizEnd === true && (this.state.recordedChunks.length > 0 || this.state.capturing === false)) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
-            
             if(this.state.capturing === false) {
-                const img = this.webcamRef.current.getScreenshot({height: 280})
-                let blob = this.b64toBlob(img)
-                let file = new File([blob], `player-image.png`)
-                if(path?.via === 'TOGETHER') {
-                    this.props.calculateAndUploadScore(file)
-                } else if (path?.via === "CHALLENGE") {
-                    this.props.uploadAnswerAndRedirectToScore(file)
-                } else {
-                    this.props.uploadChallangeAndSendSms(file)
-                }
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10
+                })
+                this.state.images.forEach(img => {
+                    gif.addFrame(img, { delay: 1000 });
+                });
+                gif.on('finished', blob => {
+                    // Uploading the blob
+                    let file = new File([blob], `player-gif.gif`)
+                    if(path?.via === 'TOGETHER') {
+                        this.props.calculateAndUploadScore(file)
+                    } else if (path?.via === "CHALLENGE") {
+                        this.props.uploadAnswerAndRedirectToScore(file)
+                    } else {
+                        this.props.uploadChallangeAndSendSms(file)
+                    }
+                });
                 return;
             } else {
                 let blob = new Blob(this.state.recordedChunks, {
@@ -207,33 +211,33 @@ class CameraComponent extends React.Component {
                         let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
                         let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         var slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
-                        angle = (Math.atan(slope) * 180) / Math.PI;
+                        angle = Math.round((Math.atan(slope) * 180) / Math.PI);
                     }
                     if (x.toString() === "1") {
                         let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
                         let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         var slope1 = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
-                        angle1 = (Math.atan(slope1) * 180) / Math.PI;
+                        angle1 = Math.round((Math.atan(slope1) * 180) / Math.PI);
                     }
                 }
-                if (angle < 67 && angle > 0 && angle1 < 67 && angle1 > 0 && this.wentBackToUpRight) {
+                if (angle < 65 && angle > 0 && angle1 < 65 && angle1 > 0 && this.wentBackToUpRight) {
                     answerBuffer.push("Yes");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -67 && angle < 0 && angle1 > -67 && angle1 < 0 && this.wentBackToUpRight) {
+                else if (angle > -65 && angle < 0 && angle1 > -65 && angle1 < 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("Ok");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle > -67 && angle < 0 && angle1 < 67 && angle1 > 0 && this.wentBackToUpRight) {
+                else if (angle > -65 && angle < 0 && angle1 < 65 && angle1 > 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("No");
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if (angle < 67 && angle > 0 && angle1 > -67 && angle1 < 0 && this.wentBackToUpRight) {
+                else if (angle < 65 && angle > 0 && angle1 > -65 && angle1 < 0 && this.wentBackToUpRight) {
 
                     answerBuffer.push("No");
 
@@ -256,14 +260,14 @@ class CameraComponent extends React.Component {
                         let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
                         let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
                         slope = -1 * (eyeY * canvasElement.height - results.detections[x].landmarks[3].y * canvasElement.height) / (eyeX * canvasElement.width - results.detections[x].landmarks[3].x * canvasElement.width)
-                        angle = (Math.atan(slope) * 180) / Math.PI;
+                        angle = Math.round((Math.atan(slope) * 180) / Math.PI);
                     }
 
                 }
-                if (angle < 67 && angle > 0 && this.wentBackToUpRight) {
+                if (angle < 65 && angle > 0 && this.wentBackToUpRight) {
                     answerBuffer.push("No");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
-                } else if (angle > -67 && angle < 0 && this.wentBackToUpRight) {
+                } else if (angle > -65 && angle < 0 && this.wentBackToUpRight) {
                     answerBuffer.push("Yes");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
@@ -400,7 +404,19 @@ class CameraComponent extends React.Component {
                 this.toastMessage(msg)
             }
             answerBuffer = [];
+            if(isIOS) {
+                this.takeScreenshot()
+            }
         }
+    }
+
+    takeScreenshot() {
+        const data = this.webcamRef.current.getScreenshot({height: 280})
+        const image = new Image()
+        image.src = data
+        this.setState((state) => {
+            return { images: [...state.images, image] };
+        });
     }
 
     render() {
@@ -440,7 +456,8 @@ class CameraComponent extends React.Component {
                         />
                     </div>
                 </Popup>
-                <ToastContainer autoClose={3000} pauseOnFocusLoss={false} limit={1} theme="dark" transition={Slide} />
+                <ToastContainer autoClose={3000} pauseOnFocusLoss={false}
+                   pro  limit={1} theme="dark" transition={Slide} hideProgressBar />
             </div>
         );
     }
