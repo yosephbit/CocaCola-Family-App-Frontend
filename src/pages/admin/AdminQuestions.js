@@ -114,6 +114,7 @@ function AdminQuestions() {
                     isLoading={loading}
                     columns={[
                         { title: 'RELATION', field: 'relation' },
+                        { title: 'CHALLENGE', field: 'challengeText' },
                         { title: 'QUESTION', field: 'question' },
                         { title: 'CHOICE 1', field: 'choice1' },
                         { title: 'CHOICE 2', field: 'choice2' },
@@ -154,6 +155,7 @@ function AdminQuestions() {
         const questions = data.map(dt => {
             let que = {
                 id: dt.question.questionId, question: dt.question.questionText,
+                challengeText: dt.question.challengeText,
                 relation: dt.relation, choice1: dt.answers.choice1.choiceText,
                 choice2: dt.answers.choice2.choiceText
             }
