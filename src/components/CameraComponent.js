@@ -259,7 +259,7 @@ class CameraComponent extends React.Component {
                 else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
                     setTimeout(() => {
                         this.wentBackToUpRight = true
-                    }, 800);
+                    }, 2000);
                 }
             }
             else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
@@ -289,7 +289,7 @@ class CameraComponent extends React.Component {
                 } else if (angle > 75 || angle < -75) {
                     setTimeout(() => {
                         this.wentBackToUpRight = true
-                    }, 800);
+                    }, 2000);
                 }
             }
 
