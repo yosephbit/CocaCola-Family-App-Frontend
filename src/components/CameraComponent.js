@@ -76,7 +76,6 @@ class CameraComponent extends React.Component {
             // setTimeout(() => this.handleStopCaptureClick(), 3000)
             if(isIOS) {
                 let interval = setInterval(() => {
-                    console.log(this.state.images.length, "interval ")
                     if(this.state.images.length <= 25)
                         this.takeScreenshot()
                     else {
@@ -258,7 +257,9 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
-                    this.wentBackToUpRight = true
+                    setTimeout(() => {
+                        this.wentBackToUpRight = true
+                    }, 800);
                 }
             }
             else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
@@ -286,7 +287,9 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
                 } else if (angle > 75 || angle < -75) {
-                    this.wentBackToUpRight = true
+                    setTimeout(() => {
+                        this.wentBackToUpRight = true
+                    }, 800);
                 }
             }
 
@@ -307,6 +310,7 @@ class CameraComponent extends React.Component {
                             {
                                 position: toast.POSITION.TOP_CENTER,
                                 autoClose: 1000,
+                                hideProgressBar: true
                             }
                         );
                         this.displayError = 1
