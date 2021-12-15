@@ -5,17 +5,15 @@ import cork from '../assets/img/cork.png'
 import flame1 from '../assets/img/flame-1.png'
 import RouteContext from '../_helpers/routeContext'
 
+let { TweenLite, TweenMax, Linear, Sine } = window;
+
 function QuestionOverlay(props) {
-    console.log(props)
-    // const { choice1, choice2 } = props?.currentQuestion?.answers
-    // const { questionText } = props?.currentQuestion?.question
     const { path } = useContext(RouteContext)
 
     return (
         <div className="main-overlay ">
             <h2 className="question" 
-                title={path?.via === "CHALLENGE" || path?.via === "TOGETHER" ? props?.currentQuestion?.question?.challengeText?.toString() : props?.currentQuestion?.question?.questionText?.toString()}
-            >
+                title={path?.via === "CHALLENGE" || path?.via === "TOGETHER" ? props?.currentQuestion?.question?.challengeText?.toString() : props?.currentQuestion?.question?.questionText?.toString()}>
                 {path?.via === "CHALLENGE" || path?.via === "TOGETHER" ? props?.currentQuestion?.question?.challengeText?.toString() : props?.currentQuestion?.question?.questionText?.toString()}
             </h2>
             <div className="btn-group">
@@ -30,12 +28,16 @@ function QuestionOverlay(props) {
                     </span>
                 </button>
             </div>
-            <img src={flower} alt="" className="floating-img floating-img--1" />
-            <img src={flower} alt="" className="floating-img floating-img--2" />
-            <img src={flower} alt="" className="floating-img floating-img--3" />
+            { 
+                (!TweenLite || !TweenMax || !Linear || !Sine) && <>
+                <img src={flower} alt="" className="floating-img floating-img--1" />
+                <img src={flower} alt="" className="floating-img floating-img--2" />
+                <img src={flower} alt="" className="floating-img floating-img--3" />
+                <img src={flower} alt="" className="floating-img floating-img--6" />
+                </>
+            }
             <img src={flame1} alt="" className="floating-img floating-img--4" />
             <img src={bottle} alt="" className="floating-img floating-img--5" />
-            <img src={flower} alt="" className="floating-img floating-img--6" />
             <img src={cork} alt="" className="floating-img floating-img--7" />
 
         </div>

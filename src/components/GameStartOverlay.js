@@ -5,6 +5,8 @@ import cork from '../assets/img/cork.png'
 import flame1 from '../assets/img/flame-1.png'
 import { useNavigate } from 'react-router-dom'
 
+let { TweenLite, TweenMax, Linear, Sine } = window;
+
 function GameStartOverlay(props) {
     let navigate = useNavigate();
     return (
@@ -25,12 +27,16 @@ function GameStartOverlay(props) {
                     </span>
                 </button>
             </div>
-            <img src={flower} alt="" className="floating-img floating-img--1" />
-            <img src={flower} alt="" className="floating-img floating-img--2" />
-            <img src={flower} alt="" className="floating-img floating-img--3" />
+            {
+               (!TweenLite || !TweenMax || !Linear || !Sine) && <>
+                <img src={flower} alt="" className="floating-img floating-img--1" />
+                <img src={flower} alt="" className="floating-img floating-img--2" />
+                <img src={flower} alt="" className="floating-img floating-img--3" />
+                <img src={flower} alt="" className="floating-img floating-img--6" />
+                </>
+            }
             <img src={flame1} alt="" className="floating-img floating-img--4" />
             <img src={bottle} alt="" className="floating-img floating-img--5" />
-            <img src={flower} alt="" className="floating-img floating-img--6" />
             <img src={cork} alt="" className="floating-img floating-img--7" />
         </div>
     )

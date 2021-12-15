@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import banner from '../assets/img/banner-full.png'
 import cocacan from '../assets/img/coca-can.png'
 import cocashade from '../assets/img/coca-shade.png'
@@ -11,6 +11,7 @@ import Popup from 'reactjs-popup';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import { Link, useParams } from 'react-router-dom'
 import { getScoreById } from '../_helpers/cloudFunctions'
+import html2canvas from 'html2canvas';
 
 function ScorePage() {
     const { hostname } = window.location
@@ -49,39 +50,66 @@ function ScorePage() {
         })
     }, [id])
 
+    useLayoutEffect(() => {
+        if (percentage !== null) {
+            console.log("screen shooting...")
+            const ele = document.querySelector('.ht2can')
+            const footers = Array.from(document.querySelectorAll('.grad'))
+            const header = document.querySelector('.score__header')
+            footers.forEach(toggleStyleForCanvas);
+            toggleStyleForCanvas(header);
+
+            html2canvas(ele, {
+                allowTaint: true
+            }).then(function (canvas) {
+                footers.forEach(toggleStyleForCanvas)
+                toggleStyleForCanvas(header)
+                // document.body.appendChild(canvas);
+                const dt = canvas.toDataURL("image/png");
+                const blob = b64toBlob(dt)
+                let file = new File([blob], `player-image.png`)
+                console.log(file)
+            }).catch(e => {
+                footers.forEach(toggleStyleForCanvas)
+                toggleStyleForCanvas(header)
+            })
+        }
+    }, [percentage])
+
     return (
         <div className="page score">
-            {percentage !== null ? (<h2 className="score__header">
-                WE SCORED <span className="score__value" title={`${percentage}%`}>{percentage}%</span> IN
-            </h2>) : (
-                <p className="score__header"></p>
-            )}
-            <div className="score__body">
-                <img src={banner} alt="" className="score__logo" />
-                {/* <CameraPage /> */}
-                {/* <img src={path?.img} alt="" className="score__img" /> */}
-                <div className="media">
-                    {!videos?.length ? <div className='score__video' /> : videos.map((vid, i) => {
-                        if (vid.endsWith('.gif') || vid.endsWith('.png')) {
-                            return <img key={i} src={vid} alt="" className="score__img" />
-                        } else {
-                            return <video key={i} src={vid} className={videos.length > 1 ? 'score__video split' : 'score__video'} muted loop autoPlay />
-                        }
-                    })}
+            <div className="ht2can fl-col align-center">
+                {percentage !== null ? (<h2 className="score__header">
+                    WE SCORED <span className="score__value" title={`${percentage}%`}>{percentage}%</span> IN
+                </h2>) : (
+                    <p className="score__header"></p>
+                )}
+                <div className="score__body">
+                    <img src={banner} alt="" className="score__logo" />
+                    {/* <CameraPage /> */}
+                    {/* <img src={path?.img} alt="" className="score__img" /> */}
+                    <div className="media">
+                        {!videos?.length ? <div className='score__video' /> : videos.map((vid, i) => {
+                            if (vid.endsWith('.gif') || vid.endsWith('.png')) {
+                                return <img key={i} src={vid} alt="" className="score__img" />
+                            } else {
+                                return <video key={i} src={vid} className={videos.length > 1 ? 'score__video split' : 'score__video'} muted loop autoPlay />
+                            }
+                        })}
+                    </div>
+                    <img src={flower} alt="" className="floating-img floating-img--1" />
+                    <img src={bottle} alt="" className="floating-img floating-img--2" />
+                    <img src={flower} alt="" className="floating-img floating-img--3" />
+                    <img src={flower} alt="" className="floating-img floating-img--4" />
                 </div>
-                <img src={flower} alt="" className="floating-img floating-img--1" />
-                <img src={bottle} alt="" className="floating-img floating-img--2" />
-                <img src={flower} alt="" className="floating-img floating-img--3" />
-                <img src={flower} alt="" className="floating-img floating-img--4" />
             </div>
 
             <div className="score__footer fl-col align-center">
                 {percentage !== null && (
                     <>
                         <p className="grad text large">Your Participation Code: #{shareCode}</p>
-                        <a href={`https://www.facebook.com/share.php?u=${videos[0] || encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${shareCode || ''}`)} data-action="share/facebook/share" target="_blank"
-
-                            rel="noreferrer" className="link">
+                        <a href={`https://www.facebook.com/share.php?u=${"https://i.ibb.co/yf4mCDK/Screenshot-from-2021-12-14-10-34-20.png" || encodeURIComponent(window?.location?.origin)}&quote=` + encodeURIComponent(`My ${'family'} and I scored ${percentage}% in the Coca-Cola Reunion Trivia Challenge! Think you can do better? challenge yourself at ${window?.location?.origin} and check out my video at ${window.location.href} \n\n#CokeReunion${countryCode || ''} \n #${shareCode || ''}`)}
+                            data-action="share/facebook/share" target="_blank" rel="noreferrer" className="link">
                             <FaFacebook size={28} color="white" />
                         </a>
                         <p className="grad text x-large">SHARE YOUR RESULTS NOW</p>
@@ -143,6 +171,31 @@ function ScorePage() {
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
         </div>
     )
+
+    function b64toBlob(b64Data, contentType = 'image/png', sliceSize = 512) {
+        let data = b64Data.split(',')[1]
+        const byteCharacters = atob(data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    function toggleStyleForCanvas(ele) {
+        ele.style.background = ele.style.background ? '' : 'none';
+        ele.style.color = ele.style.color ? '' : '#ECD473';
+    }
 }
 
 export default ScorePage

@@ -15,28 +15,29 @@ function SocialLinkPage() {
     let { state } = useLocation()
 
     const [link, setLink] = useState(state?.link)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (!link) {
             navigate(`/players`)
         } else {
-            TinyURL.shorten(link).then((res) => {
-                if(res === 'Error') {
-                    setLink(link)
-                    setLoading(false)
-                } else {
-                    setLink(res);
-                    setLoading(false)
-                }
-            }, () => {
-                setLink(link)
-                setLoading(false)
-            })
-            .catch(e => {
-                setLink(link)
-                setLoading(false)
-            })
+            setLink(link)
+            // TinyURL.shorten(link).then((res) => {
+            //     if(res === 'Error') {
+            //         setLink(link)
+            //         setLoading(false)
+            //     } else {
+            //         setLink(res);
+            //         setLoading(false)
+            //     }
+            // }, () => {
+            //     setLink(link)
+            //     setLoading(false)
+            // })
+            // .catch(e => {
+            //     setLink(link)
+            //     setLoading(false)
+            // })
         }
         // eslint-disable-next-line
     }, [])

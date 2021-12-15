@@ -1,0 +1,22 @@
+diff --git a/node_modules/html2canvas/dist/html2canvas.js b/node_modules/html2canvas/dist/html2canvas.js
+index a9f7dd1..509c589 100644
+--- a/node_modules/html2canvas/dist/html2canvas.js
++++ b/node_modules/html2canvas/dist/html2canvas.js
+@@ -7085,7 +7085,7 @@
+                                                 canvas.height = height;
+                                                 ctx = canvas.getContext('2d');
+                                                 gradient_1 = ctx.createLinearGradient(x0, y0, x1, y1);
+-                                                processColorStops(backgroundImage.stops, lineLength).forEach(function (colorStop) {
++                                                processColorStops(backgroundImage.stops, lineLength || 1).forEach(function (colorStop) {
+                                                     return gradient_1.addColorStop(colorStop.stop, asString(colorStop.color));
+                                                 });
+                                                 ctx.fillStyle = gradient_1;
+@@ -7107,7 +7107,7 @@
+                                                 _g = calculateRadius(backgroundImage, x, y, width, height), rx = _g[0], ry = _g[1];
+                                                 if (rx > 0 && ry > 0) {
+                                                     radialGradient_1 = this_1.ctx.createRadialGradient(left + x, top_1 + y, 0, left + x, top_1 + y, rx);
+-                                                    processColorStops(backgroundImage.stops, rx * 2).forEach(function (colorStop) {
++                                                    processColorStops(backgroundImage.stops, rx * 2 || 1).forEach(function (colorStop) {
+                                                         return radialGradient_1.addColorStop(colorStop.stop, asString(colorStop.color));
+                                                     });
+                                                     this_1.path(path);

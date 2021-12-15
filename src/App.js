@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './assets/scss/main.scss';
 import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -28,21 +28,8 @@ function App() {
   const [path, setPath] = useState(pathData)
   const [open, setOpen] = useState(false)
 
-  useEffect(() => {
-    // navigator.mediaDevices.getUserMedia({ video: true })
-    //   .then(stream => {
-    //     stream.getVideoTracks().forEach(function (track) {
-    //       track.stop();
-    //     });
-    //   }).catch(e => {
-    //     console.log(e)
-    //     setOpen(true)
-    //   })
-  }, [])
-
-
   return (
-    <div className="app">
+    <div id="container" className="app">
       <UserContext.Provider value={{ user, storeUser }}>
         <NavBar />
         <RouteContext.Provider value={{ path, storePath }}>

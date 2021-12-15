@@ -23,4 +23,13 @@ body {
     min-width: 320px;
     max-width: 768px;
     margin: 0 auto;
+    overflow: hidden;
+}
+
+.dot {
+    width:35px;
+    height:35px;
+    position:absolute;
+    background: url(../../img/flower.png);
+    background-size: 100% 100%;
 }

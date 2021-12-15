@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useLayoutEffect } from 'react'
 import { CameraComponent, GameStartOverlay, QuestionOverlay } from '../components'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { getQuiz, getChallenge } from '../_helpers/cloudFunctions';
@@ -9,6 +9,8 @@ import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuesti
 import Acknowledge from '../components/Acknowledge'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
+
+let { TweenLite, TweenMax, Linear, Sine } = window;
 
 function GamePlayPage() {
     let { state } = useLocation()
@@ -27,6 +29,37 @@ function GamePlayPage() {
     const [quizEnd, setQuizEnd] = useState(false)
     const [lastQuestion, setLastQuestion] = useState(false)
     let navigate = useNavigate();
+
+    useLayoutEffect(() => {
+        if(!TweenLite || !TweenMax || !Linear || !Sine) return;
+        TweenLite.set("#container", { perspective: 600 })
+        // TweenLite.set("img", { xPercent: "-50%", yPercent: "-50%" })
+
+        var total = 9;
+        var warp = document.getElementById("container"), w = window.innerWidth, h = window.innerHeight;
+
+        for (let i = 0; i < total; i++) {
+            var Div = document.createElement('div');
+            TweenLite.set(Div, { attr: { class: 'dot' }, x: R(0, w), y: R(-200, -150), z: R(-200, 200), zIndex: 10 });
+            warp.prepend(Div);
+            animm(Div);
+        }
+
+        function animm(elm) {
+            TweenMax.to(elm, R(6, 15), { y: h + 100, ease: Linear.easeNone, repeat: -1, delay: -15 });
+            TweenMax.to(elm, R(4, 8), { x: '+=100', rotationZ: R(0, 180), repeat: -1, yoyo: true, ease: Sine.easeInOut });
+            TweenMax.to(elm, R(2, 8), { rotationX: R(0, 360), rotationY: R(0, 360), repeat: -1, yoyo: true, ease: Sine.easeInOut, delay: -5 });
+        };
+
+        function R(min, max) { return min + Math.random() * (max - min) };
+        
+        return () => {
+            const dots = Array.from(document.querySelectorAll('.dot'))
+            dots.forEach(dot => dot.remove())
+        }
+
+    }, [])
+    
 
     useEffect(() => {
         if (path?.via === 'TOGETHER' && !state?.relation) {
@@ -143,7 +176,7 @@ function GamePlayPage() {
                         height={40}
                         width={40}
                     />
-                    <span className="modal__text">{ quizEnd ? "Submitting..." : "Loading..."}</span>
+                    <span className="modal__text">{quizEnd ? "Submitting..." : "Loading..."}</span>
                 </div>
             </Popup>
             <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
@@ -260,7 +293,7 @@ function GamePlayPage() {
         if (!screenshot) {
             setScreenshot(video);
             setLoading(true)
-             createChallengeInstance(challengerId, invitationId, video)
+            createChallengeInstance(challengerId, invitationId, video)
                 .then(async res => {
                     var challangeInstanceId = res?.data?.challangeInstanceId
 
@@ -285,6 +318,7 @@ function GamePlayPage() {
                 })
         }
     }
+
     function calculateAndUploadScore(video) {
         if (!screenshot) {
             setLoading(true)

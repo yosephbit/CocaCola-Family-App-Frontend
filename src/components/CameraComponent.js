@@ -44,10 +44,11 @@ class CameraComponent extends React.Component {
         this.videoContraints = {
             screenshotQuality: 1,
             facingMode: "user",
-            // aspectRatio: window.innerHeight / window.innerWidth
+            aspectRatio: window.innerHeight / window.innerWidth
         }
         this.displayError = 0;
         this.wentBackToUpRight = true;
+        this.wentBackToUpRightTimeout = null;
         //   this.path=useContext(RouteContext)
     }
     componentDidMount() {
@@ -63,9 +64,6 @@ class CameraComponent extends React.Component {
             }
         }
         this.readAngle();
-        // navigator.mediaDevices.getUserMedia({video: {facingMode: "user"}, audio: false})
-        //     .then()
-        //     .catch(console.log)
     }
 
     componentDidUpdate(prevProps) {
@@ -257,7 +255,8 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
-                    setTimeout(() => {
+                    if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
+                        this.wentBackToUpRightTimeout = setTimeout(() => {
                         this.wentBackToUpRight = true
                     }, 2000);
                 }
@@ -287,7 +286,8 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
                 } else if (angle > 75 || angle < -75) {
-                    setTimeout(() => {
+                    if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
+                        this.wentBackToUpRightTimeout = setTimeout(() => {
                         this.wentBackToUpRight = true
                     }, 2000);
                 }
@@ -472,7 +472,7 @@ class CameraComponent extends React.Component {
                     </div>
                 </Popup>
                 <ToastContainer autoClose={3000} pauseOnFocusLoss={false}
-                   pro  limit={1} theme="dark" transition={Slide} hideProgressBar />
+                   limit={1} theme="dark" transition={Slide} hideProgressBar />
             </div>
         );
     }
