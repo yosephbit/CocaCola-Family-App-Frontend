@@ -35,7 +35,7 @@ function GamePlayPage() {
         TweenLite.set("#container", { perspective: 600 })
         // TweenLite.set("img", { xPercent: "-50%", yPercent: "-50%" })
 
-        var total = 9;
+        var total = 4;
         var warp = document.getElementById("container"), w = window.innerWidth, h = window.innerHeight;
 
         for (let i = 0; i < total; i++) {
