@@ -216,8 +216,7 @@ class CameraComponent extends React.Component {
                 this.displayError = 2;
                 var angle, angle1
                 for (let x in results.detections) {
-                    // eslint-disable-next-line eqeqeq
-
+                    // eslint-disable-next-line
                     if (x.toString() === "0") {
                         let eyeX = (results.detections[x].landmarks[0].x + results.detections[x].landmarks[1].x) / 2
                         let eyeY = (results.detections[x].landmarks[0].y + results.detections[x].landmarks[1].y) / 2
@@ -255,10 +254,10 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
-                    if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
-                        this.wentBackToUpRightTimeout = setTimeout(() => {
-                        this.wentBackToUpRight = true
-                    }, 2000);
+                    // if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
+                    this.wentBackToUpRightTimeout = setTimeout(() => {
+                    this.wentBackToUpRight = true
+                    }, 800);
                 }
             }
             else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
@@ -286,10 +285,10 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
                 } else if (angle > 75 || angle < -75) {
-                    if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
-                        this.wentBackToUpRightTimeout = setTimeout(() => {
-                        this.wentBackToUpRight = true
-                    }, 2000);
+                    // if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
+                    this.wentBackToUpRightTimeout = setTimeout(() => {
+                    this.wentBackToUpRight = true
+                    }, 800);
                 }
             }
 
@@ -409,7 +408,7 @@ class CameraComponent extends React.Component {
                 this.props.onChoiceMade(1)
                 this.toastMessage(msg)
 
-            } else if (ans === "Ok-Ok-Ok") { 
+            } else if (ans === "Ok-Ok-Ok") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(0)
