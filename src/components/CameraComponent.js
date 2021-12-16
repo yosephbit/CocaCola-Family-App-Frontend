@@ -44,7 +44,7 @@ class CameraComponent extends React.Component {
         this.videoContraints = {
             screenshotQuality: 1,
             facingMode: "user",
-            aspectRatio: window.innerHeight / window.innerWidth
+            // aspectRatio: 2.04
         }
         this.displayError = 0;
         this.wentBackToUpRight = true;
@@ -66,6 +66,13 @@ class CameraComponent extends React.Component {
         this.readAngle();
     }
 
+    componentWillUnmount() {
+        let stream = this.webcamRef.current.video.srcObject;
+        const tracks = stream.getTracks();        
+        tracks.forEach(track => track.stop());
+        this.webcamRef.current.video.srcObject = null;
+    }
+
     componentDidUpdate(prevProps) {
         if (prevProps.gameStared === false && this.state.gameStared) {
             this.handleStartCaptureClick();
@@ -80,7 +87,10 @@ class CameraComponent extends React.Component {
                         clearInterval(interval)
                     }
                 }, 100)
-            } 
+            }
+            // if(this.state.images.length === 0) {
+            //     this.takeScreenshot()
+            // }
             this.handleStopCaptureClick()
         }
     }
@@ -377,10 +387,7 @@ class CameraComponent extends React.Component {
 
         facedetection.onResults(this.onResults);
 
-        if (
-            typeof this.webcamRef.current !== "undefined" &&
-            this.webcamRef.current !== null
-        ) {
+        if (typeof this.webcamRef.current !== "undefined" && this.webcamRef.current !== null) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             this.camera = new cam.Camera(this.webcamRef?.current?.video, {
                 onFrame: async () => {

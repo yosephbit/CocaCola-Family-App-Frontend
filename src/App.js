@@ -4,8 +4,7 @@ import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, Admi
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
-import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage, NotFound } from './components';
-import ProtectedGamePlayPage from './components/ProtectedGamePlayPage';
+import { Footer, NavBar, ProtectedAdmin, ProtectedLinksPage, ProtectedPlayersPage, NotFound, ProtectedGamePlayPage } from './components';
 import Popup from 'reactjs-popup';
 
 function App() {

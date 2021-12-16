@@ -135,7 +135,7 @@ function LoginPage() {
                                 <span className="modal__text">Logging in</span>
                             </div>
                         </Popup>
-                        <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+                        <ToastContainer autoClose={4500} theme="dark" transition={Slide} limit={1} />
 
                         <img src={flower} alt="" className="floating-img floating-img--1" />
                         <img src={flower} alt="" className="floating-img floating-img--2" />

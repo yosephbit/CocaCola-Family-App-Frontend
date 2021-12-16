@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
 import { useLocation, useNavigate } from 'react-router-dom'
-import * as TinyURL from 'tinyurl';
+// import * as TinyURL from 'tinyurl';
 
 function SocialLinkPage() {
     let navigate = useNavigate()
