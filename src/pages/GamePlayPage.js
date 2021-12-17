@@ -28,6 +28,9 @@ function GamePlayPage() {
     const [choice, setChoice] = useState(null);
     const [quizEnd, setQuizEnd] = useState(false)
     const [lastQuestion, setLastQuestion] = useState(false)
+
+    const [wentBackToUpRight, setWentBackToRight] = useState(true)
+
     let navigate = useNavigate();
 
     useLayoutEffect(() => {
@@ -94,7 +97,7 @@ function GamePlayPage() {
     useEffect(() => {
         var singleChallenge;
         var result = choice
-        if (result !== null && !readyToAnswer && !quizEnd) {
+        if (result !== null && !readyToAnswer && !quizEnd && wentBackToUpRight) {
             if (path?.via === "TOGETHER") {
                 if (result != null) {
 
@@ -153,6 +156,7 @@ function GamePlayPage() {
             } else {
                 setQuestionsIndex(questoionsIndex + 1);
             }
+            setWentBackToRight(false)
         }
 
         setTimeout(() => {
@@ -164,7 +168,8 @@ function GamePlayPage() {
     return (
         <>
             <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} gameStared={gameStared}
-                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms} isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} />
+                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms}
+                isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} childSetWentRightBack={setWentBackToRight}/>
             {
                 !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ? gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} /> : <Acknowledge />
             }

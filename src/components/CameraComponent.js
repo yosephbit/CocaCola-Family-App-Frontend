@@ -167,7 +167,7 @@ class CameraComponent extends React.Component {
         }
     }
 
-    onResults = (results) => {
+    onResults =async  (results) => {
         const path = this.context?.path;
         if (this.state?.quizEnd === true && (this.state.recordedChunks.length > 0 || this.state.capturing === false)) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
@@ -264,10 +264,10 @@ class CameraComponent extends React.Component {
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
                 else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
-                    // if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
-                    this.wentBackToUpRightTimeout = setTimeout(() => {
-                    this.wentBackToUpRight = true
-                    }, 800);
+                    
+                    await this.sleep(500);
+                    this.props.childSetWentRightBack(true)
+                    this.wentBackToUpRight=true
                 }
             }
             else if (results.detections.length === 1 && path?.via !== 'TOGETHER') {
@@ -294,11 +294,10 @@ class CameraComponent extends React.Component {
                     answerBuffer.push("Yes");
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
 
-                } else if (angle > 75 || angle < -75) {
-                    // if(this.wentBackToUpRightTimeout) clearTimeout(this.wentBackToUpRightTimeout)
-                    this.wentBackToUpRightTimeout = setTimeout(() => {
-                    this.wentBackToUpRight = true
-                    }, 800);
+                } else if ((angle > 75 || angle < -75) && this.wentBackToUpRight === false) {
+                    await this.sleep(500);
+                    this.props.childSetWentRightBack(true)
+                    this.wentBackToUpRight=true
                 }
             }
 
@@ -355,7 +354,11 @@ class CameraComponent extends React.Component {
             canvasCtx.restore();
         }
     }
-
+    
+    sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+      
     toastMessage(msg) {
         if (msgToastList.size < 1) {
             const id = toast(msg, {
@@ -404,30 +407,34 @@ class CameraComponent extends React.Component {
         this.setState({ open: toggle });
     }
 
-    checkAnswer(buffer) {
+    async checkAnswer(buffer) {
         let msg = "Please go back to up right position to answer next question."
 
-        if (buffer.length === len) {
+        if (buffer.length === len && this.wentBackToUpRight) {
             var ans = buffer.join("-");
             if (ans === "Yes-Yes-Yes") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(1)
+                this.props.childSetWentRightBack(false)
                 this.toastMessage(msg)
 
             } else if (ans === "Ok-Ok-Ok") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(0)
+                this.props.childSetWentRightBack(false)
                 this.toastMessage(msg)
             }
             else if (ans === "No-No-No") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;
                 this.props.onChoiceMade(-1)
+                this.props.childSetWentRightBack(false)
                 this.toastMessage(msg)
             }
             answerBuffer = [];
+            await this.sleep(500);
         }
     }
 
