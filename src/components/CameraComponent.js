@@ -263,7 +263,7 @@ class CameraComponent extends React.Component {
 
                     this.checkAnswer(answerBuffer, canvasCtx, canvasElement);
                 }
-                else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75)) {
+                else if ((angle > 75 || angle < -75) && (angle1 > 75 || angle1 < -75) && this.wentBackToUpRight === false) {
                     
                     await this.sleep(500);
                     this.props.childSetWentRightBack(true)
@@ -412,6 +412,7 @@ class CameraComponent extends React.Component {
 
         if (buffer.length === len && this.wentBackToUpRight) {
             var ans = buffer.join("-");
+            console.log(ans);
             if (ans === "Yes-Yes-Yes") {
                 answerBuffer = [];
                 this.wentBackToUpRight = false;

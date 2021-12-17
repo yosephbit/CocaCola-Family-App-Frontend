@@ -189,8 +189,8 @@ function GamePlayPage() {
         </>
     )
     function onChoiceMade(result) {
-        setReadyToAnswer(false)
         setChoice(result);
+        setReadyToAnswer(false)
     }
 
     function startGame() {
@@ -330,6 +330,7 @@ function GamePlayPage() {
             setScreenshot(video);
             var score = 0;
             var percentage = 0
+            console.log(challengeAnswers);
             for (const challenge of challengeAnswers) {
                 if (challenge?.result === 1) {
                     score = score + 1;
