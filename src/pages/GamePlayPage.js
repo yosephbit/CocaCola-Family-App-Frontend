@@ -9,8 +9,15 @@ import { createChallengeInstance, addChallenge, onChallengeCreated, answerQuesti
 import Acknowledge from '../components/Acknowledge'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
+import html2canvas from 'html2canvas';
+import * as GIF from 'gif.js.optimized'
 
 let { TweenLite, TweenMax, Linear, Sine } = window;
+
+const gif = new GIF({
+    workers: 2,
+    quality: 8
+})
 
 function GamePlayPage() {
     let { state } = useLocation()
@@ -28,13 +35,14 @@ function GamePlayPage() {
     const [choice, setChoice] = useState(null);
     const [quizEnd, setQuizEnd] = useState(false)
     const [lastQuestion, setLastQuestion] = useState(false)
+    const [images, setImages] = useState([])
 
     const [wentBackToUpRight, setWentBackToRight] = useState(true)
 
     let navigate = useNavigate();
 
     useLayoutEffect(() => {
-        if(!TweenLite || !TweenMax || !Linear || !Sine) return;
+        if (!TweenLite || !TweenMax || !Linear || !Sine) return;
         TweenLite.set("#container", { perspective: 600 })
         // TweenLite.set("img", { xPercent: "-50%", yPercent: "-50%" })
 
@@ -55,14 +63,13 @@ function GamePlayPage() {
         };
 
         function R(min, max) { return min + Math.random() * (max - min) };
-        
+
         return () => {
             const dots = Array.from(document.querySelectorAll('.dot'))
             dots.forEach(dot => dot.remove())
         }
-
     }, [])
-    
+
 
     useEffect(() => {
         if (path?.via === 'TOGETHER' && !state?.relation) {
@@ -165,14 +172,57 @@ function GamePlayPage() {
         //eslint-disable-next-line 
     }, [readyToAnswer, choice])
 
+    useEffect(() => {
+        let interval;
+        if (gameStared && questions.length > 0 && !quizEnd) {
+            console.log("things happening")
+            const ele = document.querySelector('.gamepage')
+            interval = setInterval(async () => {
+                // if(images.length <= 3) {
+                    const canvas = await html2canvas(ele, {scale: 1});
+                    const img = new Image()
+                    const data = canvas.toDataURL("image/jpeg");
+                    // console.log(data)
+                    img.src = data;
+                    setImages(prevImages => [...prevImages, img]);
+                // }
+            }, 800)
+
+            // setTimeout(() => {
+            //     clearInterval(interval)
+            //     images.forEach(img => {
+            //         console.log(img)
+            //         gif.addFrame(img, { delay: 100 });
+            //     });
+                
+            //     gif.on('finished', blob => {
+            //         // Uploading the blob
+            //         let file = new File([blob], `player-gif.gif`)
+            //         window.open(URL.createObjectURL(blob), '_blank');
+            //     });
+            //     console.log(gif)
+            //     // if(gif.frames.length > 0 && gif.frames.length == images.length) 
+            //     gif.render()
+            // }, 20000);
+        }
+        if(quizEnd) {
+            setLoading(true)
+            clearInterval(interval)
+        }
+        return () => {
+            clearInterval(interval)
+        }
+    }, [gameStared, questions, quizEnd])
     return (
         <>
-            <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} gameStared={gameStared}
-                quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms}
-                isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} childSetWentRightBack={setWentBackToRight}/>
-            {
-                !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ? gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} /> : <Acknowledge />
-            }
+            <div className="gamepage">
+                <CameraComponent onChoiceMade={onChoiceMade} readyToAnswer={readyToAnswer} gameStared={gameStared} images={images}
+                    quizEnd={quizEnd} uploadAnswerAndRedirectToScore={uploadAnswerAndRedirectToScore} uploadChallangeAndSendSms={uploadChallangeAndSendSms}
+                    isLastQuestion={lastQuestion} calculateAndUploadScore={calculateAndUploadScore} childSetWentRightBack={setWentBackToRight} />
+                {
+                    !quizEnd || path?.via === "TOGETHER" || path?.via === "CHALLENGE" ? gameStared ? <QuestionOverlay currentQuestion={currentQuestion} /> : <GameStartOverlay startGame={startGame} /> : <Acknowledge />
+                }
+            </div>
             <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
                 <div className="modal">
                     <Loader

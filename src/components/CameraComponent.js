@@ -28,6 +28,7 @@ class CameraComponent extends React.Component {
         this.state = {
             open: true,
             quizEnd: this.props?.quizEnd,
+            images: this.props?.images,
             capturing: true,
             recordedChunks: [],
             gameStared: this.props.gameStared,
@@ -36,6 +37,7 @@ class CameraComponent extends React.Component {
             images: []
         }
         this.webcamRef = React.createRef(null);
+        this.backImgRef = React.createRef(null);
         this.canvasRef = React.createRef(null);
         this.inputRef = React.createRef(null);
         this.mediaRecorderRef = React.createRef(null);
@@ -75,23 +77,28 @@ class CameraComponent extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.gameStared === false && this.state.gameStared) {
-            this.handleStartCaptureClick();
+            // this.handleStartCaptureClick();
+            this.wentBackToUpRightTimeout = setInterval(() => this.repaintBackground(), 800);
         }
-        if (prevProps.isLastQuestion === false && this.state.isLastQuestion === true) {
+        if (prevProps.quizEnd === false && this.state.quizEnd === true && this.wentBackToUpRightTimeout) {
+            clearInterval(this.wentBackToUpRightTimeout);
             // setTimeout(() => this.handleStopCaptureClick(), 3000)
-            if(isIOS) {
-                let interval = setInterval(() => {
-                    if(this.state.images.length <= 25)
-                        this.takeScreenshot()
-                    else {
-                        clearInterval(interval)
-                    }
-                }, 100)
-            }
+            // if(isIOS) {
+            //     let interval = setInterval(() => {
+            //         if(this.state.images.length <= 25)
+            //             this.takeScreenshot()
+            //         else {
+            //             clearInterval(interval)
+            //         }
+            //     }, 100)
+            // }
             // if(this.state.images.length === 0) {
             //     this.takeScreenshot()
             // }
-            this.handleStopCaptureClick()
+            // this.handleStopCaptureClick()
+        }
+        if(prevProps.readyToAnswer === false && this.props.readyToAnswer === true) {
+            this.repaintBackground()
         }
     }
 
@@ -159,6 +166,9 @@ class CameraComponent extends React.Component {
         if (nextProps.quizEnd !== this.state.quizEnd) {
             this.setState({ quizEnd: nextProps.quizEnd });
         }
+        if (nextProps.images !== this.state.images) {
+            this.setState({ images: nextProps.images });
+        }
         if (nextProps.isLastQuestion !== this.state.isLastQuestion) {
             this.setState({ isLastQuestion: nextProps.isLastQuestion });
         }
@@ -169,12 +179,12 @@ class CameraComponent extends React.Component {
 
     onResults =async  (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true && (this.state.recordedChunks.length > 0 || this.state.capturing === false)) {
+        if (this.state?.quizEnd === true && (this.state.images.length > 0) && this.state.capturing == true) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
-            if(this.state.capturing === false) {
-                this.setState({capturing: true})
+            // if(this.state.capturing === false) {
+                this.setState({capturing: false})
                 this.state.images.forEach(img => {
-                    gif.addFrame(img, { delay: 100 });
+                    gif.addFrame(img, { delay: 400 });
                 });
                 gif.on('finished', blob => {
                     // Uploading the blob
@@ -190,20 +200,20 @@ class CameraComponent extends React.Component {
                 gif.render();
 
                 return;
-            } else {
-                let blob = new Blob(this.state.recordedChunks, {
-                    type: this.state.mimeType,
-                })
-                let file = new File([blob], `player-video.${this.state.mimeType.split('/')[1]}`)
-                if(path?.via === 'TOGETHER') {
-                    this.props.calculateAndUploadScore(file)
-                } else if (path?.via === "CHALLENGE") {
-                    this.props.uploadAnswerAndRedirectToScore(file)
-                } else {
-                    this.props.uploadChallangeAndSendSms(file)
-                }
-                return;
-            }
+            // } else {
+            //     let blob = new Blob(this.state.recordedChunks, {
+            //         type: this.state.mimeType,
+            //     })
+            //     let file = new File([blob], `player-video.${this.state.mimeType.split('/')[1]}`)
+            //     if(path?.via === 'TOGETHER') {
+            //         this.props.calculateAndUploadScore(file)
+            //     } else if (path?.via === "CHALLENGE") {
+            //         this.props.uploadAnswerAndRedirectToScore(file)
+            //     } else {
+            //         this.props.uploadChallangeAndSendSms(file)
+            //     }
+            //     return;
+            // }
         }
         if (this.state.open) this.toggleModal(false);
 
@@ -439,18 +449,24 @@ class CameraComponent extends React.Component {
         }
     }
 
-    takeScreenshot() {
-        const data = this.webcamRef.current.getScreenshot({height: 280})
-        const image = new Image()
-        image.src = data
-        this.setState((state) => {
-            return { images: [...state.images, image] };
-        });
+    // takeScreenshot() {
+    //     const data = this.webcamRef.current.getScreenshot({height: 280})
+    //     const image = new Image()
+    //     image.src = data
+    //     this.setState((state) => {
+    //         return { images: [...state.images, image] };
+    //     });
+    // }
+
+    repaintBackground() {
+        const data = this.webcamRef?.current?.getScreenshot({height: 280})
+        if(this.backImgRef && this.backImgRef.current) this.backImgRef.current.src = data
     }
 
     render() {
         return (
             <div className="camera">
+                <img ref={this.backImgRef} alt="" className="camera__img" />
                 <Webcam
                     ref={this.webcamRef}
                     screenshotFormat="image/png"
@@ -462,6 +478,7 @@ class CameraComponent extends React.Component {
                     ref={this.canvasRef}
                     className="output_canvas"
                 ></canvas>
+                
                 <Popup open={this.state.open} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader

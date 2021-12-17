@@ -76,7 +76,7 @@ function WelcomePage() {
                         ) : (
                             <>
                                 <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
-                                    Test your knowledge
+                                    Get challenged
                                 </Link>
                                 <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
                                     Play together now!

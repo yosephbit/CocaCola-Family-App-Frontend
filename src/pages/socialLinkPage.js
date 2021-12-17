@@ -42,7 +42,7 @@ function SocialLinkPage() {
         // eslint-disable-next-line
     }, [])
 
-    let linkText = `Gong Xi Fa Chai! Your loved one wants to play the Coca-cola Family Reunion Trivia Challenge with you. Please click this link to participate ${link}`
+    let linkText = `Gong Xi Fa Chai! Your loved one wants to play the Coca-Cola Family Reunion Trivia Challenge with you. Please click this link to participate ${link}`
     return (
         <div className="page social fl-col align-center">
             <div className="img-container fl-col just-center align-center">

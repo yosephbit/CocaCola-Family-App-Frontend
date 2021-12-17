@@ -1,8 +1,11 @@
 .ht2can {
     width: 100%;
-    background: url(../../img/bg.png);
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+.ht2can-bg {
+    background: url(../../img/bg.png);
 }
 
 .score {
@@ -58,9 +61,9 @@
     }
 
     &__img {
-        width: 50%;
+        width: 100%;
         min-height: 200px;
-        max-height: 280px;
+        max-height: 460px;
     }
 
     .media {

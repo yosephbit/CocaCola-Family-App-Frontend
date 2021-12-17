@@ -47,6 +47,13 @@ export const createChallengeInstance = (challangerId, invitationId = '', fileToU
     formData.append("invitationId", invitationId);
     return axios.post(`${api}/createChallangeInstance`,formData)
 }
+
+export const upload = (fileToUpload) =>{
+    var formData = new FormData();
+    formData.append("fileToUpload", fileToUpload, fileToUpload.name);
+    return axios.post(`${api}/upload`,formData)
+}
+
 export const verifyToken = (verificationId,sms_token) => {
     return axios.post(`${api}/verifyToken`,{verificationId,sms_token});
 }
