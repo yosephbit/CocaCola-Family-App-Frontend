@@ -9,8 +9,8 @@ import { adminGetQuestions } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
 import UserContext from '../../_helpers/userContext';
+// import { alpha } from '@material-ui/core/styles'
 // import { useSearchParams } from 'react-router-dom';
-
 function AdminQuestions() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
@@ -50,7 +50,6 @@ function AdminQuestions() {
         // setSearchParams({ ...pager })
         adminGetQuestions(user.user, user.token, pager.page, pager.pageSize)
             .then(res => {
-                console.log(res.data)
                 buildDataSource(res.data.questions)
                 setLoading(false)
             })
@@ -107,12 +106,8 @@ function AdminQuestions() {
 
             <div className="users__content fl-col">
                 <button onClick={() => { toggleModal(true); setSelectedQuestion(null) }} className="img-btn self-end">Add Question</button>
-                <MaterialTable
-                    title="Questions"
-                    search={false}
-                    icons={tableIcons}
-                    isLoading={loading}
-                    columns={[
+                <MaterialTable title="Questions" search={false}
+                    icons={tableIcons} isLoading={loading} columns={[
                         { title: 'RELATION', field: 'relation' },
                         { title: 'CHALLENGE', field: 'challengeText' },
                         { title: 'QUESTION', field: 'question' },
@@ -156,8 +151,9 @@ function AdminQuestions() {
             let que = {
                 id: dt.question.questionId, question: dt.question.questionText,
                 challengeText: dt.question.challengeText,
-                relation: dt.relation, choice1: dt.answers.choice1.choiceText,
-                choice2: dt.answers.choice2.choiceText
+                relation: dt.relation, 
+                choice1: dt.answers.choice1.choiceText, choice1Id: dt.answers.choice1.choiceId,
+                choice2: dt.answers.choice2.choiceText, choice2Id: dt.answers.choice2.choiceId
             }
             return que
         })

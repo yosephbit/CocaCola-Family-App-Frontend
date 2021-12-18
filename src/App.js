@@ -28,7 +28,7 @@ function App() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div id="container" className="app">
+    <div id="container" className="app" style={{maxWidth: user?.token ? '948px' : ''}}>
       <UserContext.Provider value={{ user, storeUser }}>
         <NavBar />
         <RouteContext.Provider value={{ path, storePath }}>

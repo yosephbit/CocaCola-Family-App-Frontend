@@ -10,14 +10,8 @@ import Acknowledge from '../components/Acknowledge'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
 import html2canvas from 'html2canvas';
-import * as GIF from 'gif.js.optimized'
 
 let { TweenLite, TweenMax, Linear, Sine } = window;
-
-const gif = new GIF({
-    workers: 2,
-    quality: 8
-})
 
 function GamePlayPage() {
     let { state } = useLocation()
@@ -179,7 +173,7 @@ function GamePlayPage() {
             const ele = document.querySelector('.gamepage')
             interval = setInterval(async () => {
                 // if(images.length <= 3) {
-                    const canvas = await html2canvas(ele, {scale: 1});
+                    const canvas = await html2canvas(ele, {scale: 1, logging: false});
                     const img = new Image()
                     const data = canvas.toDataURL("image/jpeg");
                     // console.log(data)

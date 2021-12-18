@@ -34,7 +34,6 @@ class CameraComponent extends React.Component {
             gameStared: this.props.gameStared,
             isLastQuestion: this.props.isLastQuestion,
             mimeType: 'video/webm',
-            images: []
         }
         this.webcamRef = React.createRef(null);
         this.backImgRef = React.createRef(null);
@@ -179,12 +178,12 @@ class CameraComponent extends React.Component {
 
     onResults =async  (results) => {
         const path = this.context?.path;
-        if (this.state?.quizEnd === true && (this.state.images.length > 0) && this.state.capturing == true) {
+        if (this.state?.quizEnd === true && (this.state.images.length > 0) && this.state.capturing === true) {
             // const img = this.webcamRef.current.getScreenshot({height: 280})
             // if(this.state.capturing === false) {
                 this.setState({capturing: false})
                 this.state.images.forEach(img => {
-                    gif.addFrame(img, { delay: 400 });
+                    gif.addFrame(img, { delay: Math.round(10000/this.state.images.length) });
                 });
                 gif.on('finished', blob => {
                     // Uploading the blob

@@ -4,7 +4,7 @@ import UseAnimations from 'react-useanimations'
 import volume from 'react-useanimations/lib/volume'
 import soundfile from '../assets/audio/chinese_new_year.mp3'
 import Popup from 'reactjs-popup'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaBars, FaTimes } from "react-icons/fa";
 import UserContext from '../_helpers/userContext'
 // import { isIOS } from 'react-device-detect';
@@ -13,7 +13,8 @@ function NavBar() {
     const [audio] = useState(new Audio(soundfile));
     const [playing, setPlaying] = useState(false)
     const [volClass, setVolClass] = useState('icon-wrapper')
-    const { user } = useContext(UserContext)
+    const { user, storeUser } = useContext(UserContext)
+    const navigate = useNavigate();
 
     const handleInteract = () => {
         const wrapper = document.querySelector('.icon-wrapper')
@@ -70,6 +71,7 @@ function NavBar() {
                                 <Link onClick={close} to="/admin/dashboard" className="menu__item">Home</Link>
                                 <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
                                 <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
+                                <span onClick={() => {logout(); close();}} className="menu__item">Logout</span>
                             </div>
                         ) : (
                             <div className="menu fl-col just-start">
@@ -85,6 +87,11 @@ function NavBar() {
             </div>
         </div>
     )
+
+    function logout() {
+        storeUser(null)
+        navigate('/')
+    }
 }
 
 export default NavBar
