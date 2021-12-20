@@ -46,10 +46,10 @@ function PlayersPage() {
                     </div>
                 </div>
                 <div className="row row--3">
-                    <div onClick={() => generateLink('Son')} className="tiger tiger--5">
+                    <div onClick={() => generateLink('Brother')} className="tiger tiger--5">
                         <img src={sister} alt="" className="tiger__img" />
                     </div>
-                    <div onClick={() => generateLink('Daughter')} className="tiger tiger--6">
+                    <div onClick={() => generateLink('Sister')} className="tiger tiger--6">
                         <img src={brother} alt="" className="tiger__img" />
                     </div>
                 </div>
