@@ -39,7 +39,7 @@ function WinnersPage() {
                     </div>
                 </div>
 
-                <h5 className="sub-header">GrabFood Codes</h5>
+                <h5 className="sub-header">1-Year supply of Coca-Cola</h5>
                 <div className="table">
                     <div className="table__row table__header">
                         <div className="table__cell">NAME</div>

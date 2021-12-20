@@ -15,3 +15,4 @@ export { default as AdminUsers } from "./admin/AdminUsers"
 export { default as AdminScore } from "./admin/AdminScore"
 export { default as AdminQuestions } from "./admin/AdminQuestions"
 export { default as AdminDashboard } from "./admin/AdminDashboard"
+export { default as AdminWinners } from './admin/AdminWinners'

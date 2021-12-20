@@ -478,7 +478,7 @@ class CameraComponent extends React.Component {
                     className="output_canvas"
                 ></canvas>
                 
-                <Popup open={this.state.open} className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                <Popup open={this.state.open} lockScroll className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
                     <div className="modal">
                         <Loader
                             type="TailSpin"

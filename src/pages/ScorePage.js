@@ -111,7 +111,7 @@ function ScorePage() {
                     <div className="media">
                         {!videos?.length ? <div className='score__video' /> : videos.map((vid, i) => {
                             if (vid.endsWith('.gif') || vid.endsWith('.png')) {
-                                return <img key={i} src={vid} alt="" className="score__img" />
+                                return <img key={i} style={{width: videos?.length === 2 ? '50%' : '100%'}} src={vid} alt="" className="score__img" />
                             } else {
                                 return <video key={i} src={vid} className={videos.length > 1 ? 'score__video split' : 'score__video'} muted loop autoPlay />
                             }

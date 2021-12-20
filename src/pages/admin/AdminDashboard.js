@@ -11,7 +11,6 @@ function AdminDashboard() {
     useEffect(() => {
         getStats(user.user, user.token)
             .then(res => {
-                console.log(res.data)
                 setLoading(false)
                 setStats(res.data)
             })

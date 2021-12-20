@@ -117,12 +117,12 @@ export const adminGetQuestions = (uid, token, page, itemsPerPage) => {
     return axios.post(`${api}/getQuestionsList`, {uid, token, itemsPerPage, page})
 }
 
-export const editQuestion = (questionId, questionText, uid, token) => {
-    return axios.post(`${api}/editQuestion`, {questionId, questionText, uid, token})
+export const editQuestion = (questionId, questionText, challengeText, relation, uid, token) => {
+    return axios.post(`${api}/editQuestion`, {questionId, questionText, challengeText, relation, uid, token})
 }
 
-export const editChoice = (choiceId, answersText, uid, token) => {
-    return axios.post(`${api}/editQuestionChoice`, {choiceId, answersText, uid, token})
+export const editChoice = (choiceID, answersText, uid, token) => {
+    return axios.post(`${api}/editQuestionChoice`, {choiceID, answersText, uid, token})
 }
 
 export const addFullQuestion = (question) => {

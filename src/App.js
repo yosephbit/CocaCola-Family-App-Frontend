@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './assets/scss/main.scss';
-import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
+import { AdminDashboard, AdminLogin, AdminPage, AdminQuestions, AdminScore, AdminUsers, AdminWinners, LoginPage, ParticipationPage, PrizesPage, ScorePage, ShareToWinPage, TermsPage, WelcomePage, WinnersPage } from './pages';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UserContext from './_helpers/userContext';
 import RouteContext from './_helpers/routeContext';
@@ -65,6 +65,11 @@ function App() {
               <Route path="questions" element={
                 <ProtectedAdmin>
                   <AdminQuestions />
+                </ProtectedAdmin>
+              } />
+              <Route path="winners" element={
+                <ProtectedAdmin>
+                  <AdminWinners />
                 </ProtectedAdmin>
               } />
               <Route path="*" element={<Navigate to="/admin/dashboard" />} />

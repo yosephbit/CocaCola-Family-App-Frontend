@@ -103,7 +103,6 @@ function AdminLogin() {
 
         adminLogin(email, password)
             .then(res => {
-                console.log(res.data)
                 const uid = res.data
                 if (uid) {
                     storeUser(uid)

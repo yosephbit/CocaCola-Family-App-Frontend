@@ -9,8 +9,8 @@ import { adminGetQuestions } from '../../_helpers/cloudFunctions';
 import Popup from 'reactjs-popup';
 import QuestionModal from '../../components/QuestionModal';
 import UserContext from '../../_helpers/userContext';
-// import { alpha } from '@material-ui/core/styles'
-// import { useSearchParams } from 'react-router-dom';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+
 function AdminQuestions() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
@@ -80,21 +80,6 @@ function AdminQuestions() {
         
         //eslint-disable-next-line
     }, [])
-
-    // useEffect(() => {
-    //     setSearchParams({ ...pager })
-    //     setLoading(true)
-    //     adminGetQuestions(user.user, user.token, pager.page -1, pager.pageSize)
-    //         .then(res => {
-    //             console.log(res.data)
-    //             buildDataSource(res.data)
-    //             setLoading(false)
-    //         })
-    //         .catch(e => {
-    //             console.log(e)
-    //             setLoading(false)
-    //         })
-    // }, [pager])
     
     return (
         <div className="users">
@@ -141,15 +126,17 @@ function AdminQuestions() {
                 />
             </div>
             <Popup open={open} className="ques-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>
-                <QuestionModal deleting={deleting} selectedQuestion={selectedQuestion} close={toggleModal} />
+                <QuestionModal deleting={deleting} selectedQuestion={selectedQuestion} close={closeHandler} />
             </Popup>
+            <ToastContainer autoClose={4500} theme="dark" transition={Slide} limit={1} />
+
         </div>
     )
 
     function buildDataSource(data) {
         const questions = data.map(dt => {
             let que = {
-                id: dt.question.questionId, question: dt.question.questionText,
+                questionId: dt.question.questionId, question: dt.question.questionText,
                 challengeText: dt.question.challengeText,
                 relation: dt.relation, 
                 choice1: dt.answers.choice1.choiceText, choice1Id: dt.answers.choice1.choiceId,
@@ -158,6 +145,26 @@ function AdminQuestions() {
             return que
         })
         setDataSource(questions)
+    }
+
+    function closeHandler(action) {
+        toggleModal(false)
+        if(!action) return;
+        let msg;
+        if(action === 'EDIT') {
+            msg = "Question Editted!"
+        } else if(action === 'ADD') {
+            msg = "Question Added!"
+        }
+        toast(msg, {
+            position: "bottom-center",
+            autoClose: 4500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+        });
     }
 }
 

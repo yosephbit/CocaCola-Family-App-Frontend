@@ -71,6 +71,7 @@ function NavBar() {
                                 <Link onClick={close} to="/admin/dashboard" className="menu__item">Home</Link>
                                 <Link onClick={close} to="/admin/users" className="menu__item">Users</Link>
                                 <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
+                                {/* <Link onClick={close} to="/admin/winners" className="menu__item">Winners</Link> */}
                                 <span onClick={() => {logout(); close();}} className="menu__item">Logout</span>
                             </div>
                         ) : (

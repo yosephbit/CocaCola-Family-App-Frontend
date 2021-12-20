@@ -8,6 +8,7 @@ import { useSearchParams, Link, useNavigate, useLocation } from 'react-router-do
 import { getInviteDetails } from '../_helpers/cloudFunctions'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
+import { ParticipationPage, ShareToWinPage } from '.'
 
 function WelcomePage() {
     const [searchParams] = useSearchParams()
@@ -48,68 +49,72 @@ function WelcomePage() {
     }, [])
 
     return (
-        <div className="page welcome fl-col just-center align-center">
-            <div className="container fl-col just-center align-center">
-                <img src={banner} alt="" className="main-banner" />
-                {link && (
-                    <>
-                        <p className="welcome__text">
-                            Welcome and Gong Xi Fa Cai! Your loved one {name} wants to play the Family
-                            Reunion Trivia Challenge with you.
-                        </p>
-                        <p className="welcome__text">
-                            Please answer the trivia for your loved one to play.
-                        </p>
-                    </>
-                )}
-                <div className="fl-col">
-                    {challengeLink ? (
+        <>
+            <div className="page welcome fl-col just-center align-center">
+                <div className="container fl-col just-center align-center">
+                    <img src={banner} alt="" className="main-banner" />
+                    {link && (
+                        <>
+                            <p className="welcome__text">
+                                Welcome and Gong Xi Fa Cai! Your loved one {name} wants to play the Family
+                                Reunion Trivia Challenge with you.
+                            </p>
+                            <p className="welcome__text">
+                                Please answer the trivia for your loved one to play.
+                            </p>
+                        </>
+                    )}
+                    <div className="fl-col">
+                        {challengeLink ? (
 
-                        <Link to={challengeLink ? `login?challenge=${challengeLink}` : "login"} state={{ via: 'CHALLENGE', challengeId: challengeLink }} className="img-btn img-btn--large fl-row just-center align-center">
-                            Start now
-                        </Link>) : (
-
-                        link ? (
-                            <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
+                            <Link to={challengeLink ? `login?challenge=${challengeLink}` : "login"} state={{ via: 'CHALLENGE', challengeId: challengeLink }} className="img-btn img-btn--large fl-row just-center align-center">
                                 Start now
-                            </Link>
-                        ) : (
-                            <>
-                                <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
-                                    Get challenged
+                            </Link>) : (
+
+                            link ? (
+                                <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'LINK', linkId: link }} className="img-btn fl-row just-center align-center">
+                                    Start now
                                 </Link>
-                                <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
-                                    Play together now!
-                                </Link>
-                            </>
+                            ) : (
+                                <>
+                                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'NORMAL' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                        Get challenged
+                                    </Link>
+                                    <Link to={link ? `login?invite=${link}` : "login"} state={{ via: 'TOGETHER' }} className="img-btn img-btn--large fl-row just-center align-center">
+                                        Play together now!
+                                    </Link>
+                                </>
+                            )
                         )
-                    )
-                    }
+                        }
+                    </div>
+
                 </div>
+                <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
+                    <div className="modal">
+                        <Loader
+                            type="TailSpin"
+                            color="#FEFEFE"
+                            height={40}
+                            width={40}
+                        />
+                        <span className="modal__text">Loading</span>
+                    </div>
+                </Popup>
+                <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
+                {/* <img src={flower} alt="" className="floating-img floating-img--1" /> */}
+                <img src={flower} alt="" className="floating-img floating-img--2" />
+                {/* <img src={flower} alt="" className="floating-img floating-img--3" /> */}
+                <img src={flower} alt="" className="floating-img floating-img--4" />
+                <img src={flower} alt="" className="floating-img floating-img--5" />
+                <img src={flower} alt="" className="floating-img floating-img--6" />
+                <img src={flame1} alt="" className="floating-img floating-img--7" />
+                <img src={flame2} alt="" className="floating-img floating-img--8" />
 
             </div>
-            <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
-                <div className="modal">
-                    <Loader
-                        type="TailSpin"
-                        color="#FEFEFE"
-                        height={40}
-                        width={40}
-                    />
-                    <span className="modal__text">Loading</span>
-                </div>
-            </Popup>
-            <ToastContainer autoClose={4500} theme="dark" transition={Slide} />
-            {/* <img src={flower} alt="" className="floating-img floating-img--1" /> */}
-            <img src={flower} alt="" className="floating-img floating-img--2" />
-            {/* <img src={flower} alt="" className="floating-img floating-img--3" /> */}
-            <img src={flower} alt="" className="floating-img floating-img--4" />
-            <img src={flower} alt="" className="floating-img floating-img--5" />
-            <img src={flower} alt="" className="floating-img floating-img--6" />
-            <img src={flame1} alt="" className="floating-img floating-img--7" />
-            <img src={flame2} alt="" className="floating-img floating-img--8" />
-
-        </div>
+            <ParticipationPage />
+            <ShareToWinPage />
+        </>
     )
 }
 
