@@ -56,28 +56,7 @@ function AdminQuestions() {
             .catch(e => {
                 console.log(e)
                 setLoading(false)
-            })
-        // getQuiz(50, user?.user, user?.token, 8, 1)
-        //     .then((res) => {
-        //         setLoading(false)
-        //         let { questions } = res.data
-        //         questions = questions.map(ques => {
-        //             return {
-        //                 questionId: ques.question.questionId,
-        //                 question: ques.question.questionText,
-        //                 choice1: ques.answers.choice1.choiceText,
-        //                 choice2: ques.answers.choice2.choiceText,
-        //                 choice1Id: ques.answers.choice1.choiceId,
-        //                 choice2Id: ques.answers.choice2.choiceId,
-        //             }
-        //         })
-        //         setDataSource(questions)
-        //     })
-        //     .catch(e => {
-        //         setLoading(false)
-        //         console.log(e)
-        //     })
-        
+            })        
         //eslint-disable-next-line
     }, [])
     
@@ -122,7 +101,7 @@ function AdminQuestions() {
                             }
                         },
                     ]}
-                    onChangePage={(page, pageSize) => {console.log("change happened", page, pageSize); setPager({page, pageSize})}}
+                    onChangePage={(page, pageSize) => {setPager({page, pageSize})}}
                 />
             </div>
             <Popup open={open} className="ques-popup" closeOnDocumentClick={false} onClose={() => toggleModal(false)}>

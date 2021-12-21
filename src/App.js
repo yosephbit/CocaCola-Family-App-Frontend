@@ -67,6 +67,11 @@ function App() {
                   <AdminQuestions />
                 </ProtectedAdmin>
               } />
+              <Route path="scores" element={
+                <ProtectedAdmin>
+                  <AdminScore />
+                </ProtectedAdmin>
+              } />
               <Route path="winners" element={
                 <ProtectedAdmin>
                   <AdminWinners />

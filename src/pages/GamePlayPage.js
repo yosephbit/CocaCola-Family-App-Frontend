@@ -337,12 +337,12 @@ function GamePlayPage() {
         }
     }
     function uploadChallangeAndSendSms(video) {
-        var challengerId = user;
+        // var challengerId = user;
         let invitationId = path?.linkId;
         if (!screenshot) {
             setScreenshot(video);
             setLoading(true)
-            createChallengeInstance(challengerId, invitationId, video)
+            createChallengeInstance(invitationId, video)
                 .then(async res => {
                     var challangeInstanceId = res?.data?.challangeInstanceId
 

@@ -62,9 +62,14 @@ function LoginPage() {
             }
             //Auto Login if session exist 
         }
+        const { via } = state || {}
+        if (via === "LINK") {
+            console.log("here is it")
+            navigate(`/game`, { replace: true })
+            return;
+        }
         if (user) {
-            const { via } = state || {}
-            if (via === "LINK" || via === "CHALLENGE") {
+            if (via === "CHALLENGE") {
                 navigate(`/game`)
             } else {
                 navigate(`/players`, { replace: true })

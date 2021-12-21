@@ -66,6 +66,7 @@ function AdminUsers() {
                     columns={[
                         { title: 'NAME', field: 'name' },
                         { title: 'PHONE', field: 'phone_number' },
+                        // { title: 'SCORE', field: 'scores' },
                         {
                             title: 'DATE', field: 'created_at', type: 'date',
                             dateSetting: {
@@ -75,7 +76,7 @@ function AdminUsers() {
                         },
                     ]}
                     data={dataSource}
-                    onChangePage={(pages, pageSizes) => console.log(pages, pageSizes)}
+                    onChangePage={(pages, pageSizes) => {}}
                 />
             </div>
         </div>

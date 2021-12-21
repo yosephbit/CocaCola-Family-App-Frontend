@@ -40,10 +40,10 @@ export const addChallenge = (questionId,challangeInstanceId,answerId) => {
 export const sendCode = (name,phone_number) =>{
     return axios.post(`${api}/sendCode`,{name,phone_number},)
 }
-export const createChallengeInstance = (challangerId, invitationId = '', fileToUpload) =>{
+export const createChallengeInstance = (invitationId = '', fileToUpload) =>{
     var formData = new FormData();
     formData.append("fileToUpload", fileToUpload, fileToUpload.name);
-    formData.append("challangerId", challangerId);
+    // formData.append("challangerId", challangerId);
     formData.append("invitationId", invitationId);
     return axios.post(`${api}/createChallangeInstance`,formData)
 }
@@ -137,4 +137,8 @@ export const deleteQuestion = (questionId, uid, token) => {
 
 export const getStats = (uid, token) => {
     return axios.post(`${api}/getDashBoardStats`, {uid, token})
+}
+
+export const adminGetScoreList = (uid, token, page, itemsPerPage) => {
+    return axios.post(`${api}/getScoresList`, {uid, token, itemsPerPage, page})
 }
