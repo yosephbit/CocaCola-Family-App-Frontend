@@ -8,6 +8,7 @@ import Loader from "react-loader-spinner";
 import RouteContext from '../_helpers/routeContext'
 import { isIOS } from 'react-device-detect'
 import * as GIF from 'gif.js.optimized'
+import { PopupPortal } from ".";
 
 var len = 3;
 var answerBuffer = [];
@@ -478,31 +479,33 @@ class CameraComponent extends React.Component {
                     className="output_canvas"
                 ></canvas>
                 
-                <Popup open={this.state.open} lockScroll className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
-                    <div className="modal">
-                        <Loader
-                            type="TailSpin"
-                            color="#FEFEFE"
-                            height={40}
-                            width={40}
-                        />
-                        <span className="modal__text">Loading...</span>
-                    </div>
-                </Popup>
+                <PopupPortal open={this.state.open}>
+                    <Popup open={this.state.open} lockScroll className="login-popup" closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                        <div className="modal">
+                            <Loader
+                                type="TailSpin"
+                                color="#FEFEFE"
+                                height={40}
+                                width={40}
+                            />
+                            <span className="modal__text">Loading...</span>
+                        </div>
+                    </Popup>
+                </PopupPortal>
                 {/* <ToastContainer  theme="dark" transition={Slide} /> */}
 
-                <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.state?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
-                    <div className="modal">
-                        <Loader
-                            type="ThreeDots"
-                            color="white"
-                            height={80}
-                            width={80}
-                        />
-                    </div>
-                </Popup>
-                <ToastContainer autoClose={3000} pauseOnFocusLoss={false}
-                   limit={1} theme="dark" transition={Slide} hideProgressBar />
+                <PopupPortal open={!this.state.open && (!this.props?.readyToAnswer && !this.state?.quizEnd)}>
+                    <Popup open={!this.state.open && (!this.props?.readyToAnswer && !this.state?.quizEnd)} className="next-popup" transparent={true} closeOnDocumentClick={false} onClose={() => this.toggleModal(false)}>
+                        <div className="modal">
+                            <Loader type="ThreeDots" color="white"
+                                height={80} width={80} />
+                        </div>
+                    </Popup>
+                </PopupPortal>
+                <PopupPortal open={true}>
+                    <ToastContainer autoClose={3000} pauseOnFocusLoss={false}
+                        limit={1} theme="dark" transition={Slide} hideProgressBar />
+                </PopupPortal>
             </div>
         );
     }

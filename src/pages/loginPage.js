@@ -4,6 +4,12 @@ import flame1 from '../assets/img/flame-1.png'
 import banner from '../assets/img/banner-full.png'
 import Loader from "react-loader-spinner";
 import Popup from 'reactjs-popup';
+import grandpa from '../assets/img/tiger-1.png'
+import grandma from '../assets/img/tiger-2.png'
+import father from '../assets/img/tiger-3.png'
+import mother from '../assets/img/tiger-4.png'
+import sister from '../assets/img/tiger-5.png'
+import brother from '../assets/img/tiger-6.png'
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'reactjs-popup/dist/index.css';
@@ -55,7 +61,7 @@ function LoginPage() {
                 storePath({ via, linkId })
             } else if (via === "CHALLENGE") {
                 storePath({ via, challengeId })
-            } else if(via === "TOGETHER"){
+            } else if (via === "TOGETHER") {
                 storePath({ via })
             } else if (via === "NORMAL") {
                 storePath({ via })
@@ -148,6 +154,14 @@ function LoginPage() {
                         <img src={flower} alt="" className="floating-img floating-img--4" />
                         <img src={flower} alt="" className="floating-img floating-img--5" />
                         <img src={flame1} alt="" className="floating-img floating-img--6" />
+                        <div className="temp-imgs">
+                            <img src={grandpa} alt="" className="tiger__img" />
+                            <img src={grandma} alt="" className="tiger__img" />
+                            <img src={father} alt="" className="tiger__img" />
+                            <img src={mother} alt="" className="tiger__img" />
+                            <img src={sister} alt="" className="tiger__img" />
+                            <img src={brother} alt="" className="tiger__img" />
+                        </div>
                     </>
                 )
             }

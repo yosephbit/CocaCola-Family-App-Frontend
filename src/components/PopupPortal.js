@@ -1,20 +1,9 @@
-import React from 'react'
-import Popup from 'reactjs-popup';
-import Loader from "react-loader-spinner";
+import ReactDOM from 'react-dom';
 
-function PopupPortal() {
+function PopupPortal({isOpen, children}) {
     if (!isOpen) return null
     return ReactDOM.createPortal(
-        <Popup open={isOpen} className="next-popup" transparent={true} closeOnDocumentClick={false}>
-            <div className="modal">
-                <Loader
-                    type="ThreeDots"
-                    color="white"
-                    height={80}
-                    width={80}
-                />
-            </div>
-        </Popup>,
+        {children},
         document.body
     )
 }

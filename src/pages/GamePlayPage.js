@@ -45,25 +45,28 @@ function GamePlayPage() {
 
         for (let i = 0; i < total; i++) {
             var Div = document.createElement('div');
-            TweenLite.set(Div, { attr: { class: 'dot' }, x: R(0, w), y: R(-200, -150), z: R(-200, 200), zIndex: 10 });
+            if(i % 2 === 0) {
+                TweenLite.set(Div, { attr: { class: 'dot' }, x: R(0, w), y: R(-200, -150), z: R(-200, 200), zIndex: 10 });
+            } else {
+                TweenLite.set(Div, { attr: { class: 'dot-cork' }, x: R(0, w), y: R(-200, -150), z: R(-200, 200), zIndex: 10 });
+            }
             warp.prepend(Div);
             animm(Div);
         }
 
         function animm(elm) {
             TweenMax.to(elm, R(6, 15), { y: h + 100, ease: Linear.easeNone, repeat: -1, delay: -15 });
-            TweenMax.to(elm, R(4, 8), { x: '+=100', rotationZ: R(0, 180), repeat: -1, yoyo: true, ease: Sine.easeInOut });
+            // TweenMax.to(elm, R(4, 8), { x: '+=100', rotationZ: R(0, 180), repeat: -1, yoyo: true, ease: Sine.easeInOut });
             TweenMax.to(elm, R(2, 8), { rotationX: R(0, 360), rotationY: R(0, 360), repeat: -1, yoyo: true, ease: Sine.easeInOut, delay: -5 });
         };
 
         function R(min, max) { return min + Math.random() * (max - min) };
 
         return () => {
-            const dots = Array.from(document.querySelectorAll('.dot'))
+            const dots = [...Array.from(document.querySelectorAll('.dot')), ...Array.from(document.querySelectorAll('.dot-cork'))]
             dots.forEach(dot => dot.remove())
         }
     }, [])
-
 
     useEffect(() => {
         if (path?.via === 'TOGETHER' && !state?.relation) {
@@ -181,23 +184,6 @@ function GamePlayPage() {
                     setImages(prevImages => [...prevImages, img]);
                 // }
             }, 800)
-
-            // setTimeout(() => {
-            //     clearInterval(interval)
-            //     images.forEach(img => {
-            //         console.log(img)
-            //         gif.addFrame(img, { delay: 100 });
-            //     });
-                
-            //     gif.on('finished', blob => {
-            //         // Uploading the blob
-            //         let file = new File([blob], `player-gif.gif`)
-            //         window.open(URL.createObjectURL(blob), '_blank');
-            //     });
-            //     console.log(gif)
-            //     // if(gif.frames.length > 0 && gif.frames.length == images.length) 
-            //     gif.render()
-            // }, 20000);
         }
         if(quizEnd) {
             setLoading(true)
@@ -305,35 +291,34 @@ function GamePlayPage() {
                 })
         }
     }
-    function uploadAnswerAndRedirectToScore(video) {
+    async function uploadAnswerAndRedirectToScore(video) {
         if (!screenshot) {
-            setScreenshot(video);
-            setLoading(true)
-            for (const challenge of challengeAnswers) {
-                var singleAnswer = {
-                    challangeId: path?.challengeId,
-                    respondentId: user,
-                    questionId: challenge?.questionId,
-                    questionChoiceId: challenge?.choiceId
-                }
-                answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId)
-                    .then(res => {
-                        console.log(res)
-                        setLoading(false)
-                    }).catch(err => {
-                        console.error(err)
-                        setLoading(false)
-                    })
-            }
+            try {
 
-            getScore(path?.challengeId, user, video)
+                setScreenshot(video);
+                setLoading(true)
+                let promise = []
+                for (const challenge of challengeAnswers) {
+                    var singleAnswer = {
+                        challangeId: path?.challengeId,
+                        respondentId: user,
+                        questionId: challenge?.questionId,
+                        questionChoiceId: challenge?.choiceId
+                    }
+                    promise.push(answerQuestion(singleAnswer.respondentId, singleAnswer.challangeId, singleAnswer.questionId, singleAnswer.questionChoiceId))
+                    
+                }
+                await Promise.all(promise)
+                
+                getScore(path?.challengeId, user, video)
                 .then(res => {
                     storePath({ "SCORE": res?.data })
-
                     navigate(`/score/${res?.data?.scoreId}`)
-                }).catch(err => {
-                    console.log(err)
                 })
+            } catch(e) {
+                setLoading(false);
+                console.log(e);
+            }
         }
     }
     function uploadChallangeAndSendSms(video) {
@@ -345,15 +330,16 @@ function GamePlayPage() {
             createChallengeInstance(invitationId, video)
                 .then(async res => {
                     var challangeInstanceId = res?.data?.challangeInstanceId
-
+                    let promise = []
                     for (const challenge of challengeAnswers) {
                         var singleChallenge = {
                             questionId: challenge?.questionId,
                             challangeInstanceId: challangeInstanceId,
                             answerId: challenge?.choiceId,
                         }
-                        await addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId)
+                        promise.push(addChallenge(singleChallenge.questionId, singleChallenge.challangeInstanceId, singleChallenge.answerId))
                     }
+                    await Promise.all(promise)
                     onChallengeCreated(challangeInstanceId)
                         .then(res => {
                             setLoading(false)

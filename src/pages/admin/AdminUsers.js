@@ -1,17 +1,21 @@
 import React, { useEffect, useState, forwardRef, useContext } from 'react'
 import {
-    MdViewColumn, MdRemove, MdArrowDownward, MdSearch, MdChevronLeft,
+    MdViewColumn, MdRemove, MdArrowDownward, MdSearch, MdChevronLeft, MdVisibility,
     MdChevronRight, MdLastPage, MdFirstPage, MdFilterList, MdSaveAlt, MdEdit, MdDeleteOutline,
     MdClear, MdCheck, MdAddBox
 } from "react-icons/md";
 import MaterialTable from 'material-table'
 import { getUsers } from '../../_helpers/cloudFunctions';
 import UserContext from '../../_helpers/userContext'
+import Popup from 'reactjs-popup';
+import { UserLinksModal} from '../../components/.';
 
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
-    const [pager, ] = useState({page: 0, pageSize: 100})
+    const [openLinks, setOpenLinks] = useState(false)
+    const [selectedUser, setSelectedUser] = useState(null)
+    const [pager] = useState({ page: 0, pageSize: 100 })
     const { user } = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
@@ -35,12 +39,7 @@ function AdminUsers() {
 
     useEffect(() => {
         getUsers(user?.user, pager.pageSize, pager.page, user?.token).then(res => {
-            let data = res.data.users;
-            data = data.map(usrArr => {
-                return { ...usrArr[1], created_at: new Date(usrArr[1].created_at), uid: usrArr[0] }
-            })
-            console.log(data)
-            setDataSource(data)
+            buildDataSource(res.data.users)
             setLoading(false)
         }).catch(e => {
             setLoading(false)
@@ -66,7 +65,6 @@ function AdminUsers() {
                     columns={[
                         { title: 'NAME', field: 'name' },
                         { title: 'PHONE', field: 'phone_number' },
-                        // { title: 'SCORE', field: 'scores' },
                         {
                             title: 'DATE', field: 'created_at', type: 'date',
                             dateSetting: {
@@ -76,11 +74,39 @@ function AdminUsers() {
                         },
                     ]}
                     data={dataSource}
-                    onChangePage={(pages, pageSizes) => {}}
+                    actions={[
+                        {
+                            icon: () => <MdVisibility color="grey" />,
+                            tooltip: 'Show Links',
+                            onClick: (event, rowData) => {
+                                setSelectedUser(rowData)
+                                setOpenLinks(true)
+                            }
+                        }
+                    ]}
+                    onChangePage={(pages, pageSizes) => { }}
                 />
             </div>
+            <Popup open={openLinks} className="users-popup" lockScroll position={["top center"]} closeOnDocumentClick={false} onClose={() => setOpenLinks(false)}>
+                <UserLinksModal user={selectedUser} close={() => setOpenLinks(false)} />
+            </Popup>
+
+            {/* <Popup open={openScores} className="users-popup" lockScroll position={["top center"]} closeOnDocumentClick={false} onClose={() => setOpenScores(false)}>
+                <UserScoresModal user={selectedUser} close={() => setOpenScores(false)} />
+            </Popup> */}
         </div>
     )
+
+    function buildDataSource(data) {
+        let users = data.map(user => {
+            return { 
+                userId: user[0], 
+                ...user[1],
+                created_at: new Date(user[1].created_at),
+            }
+        })
+        setDataSource(users)
+    }
 }
 
 export default AdminUsers

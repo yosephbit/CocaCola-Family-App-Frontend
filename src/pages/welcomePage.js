@@ -3,6 +3,12 @@ import banner from '../assets/img/banner-full.png'
 import flower from '../assets/img/flower.png'
 import flame1 from '../assets/img/flame-1.png'
 import flame2 from '../assets/img/flame-2.png'
+import grandpa from '../assets/img/tiger-1.png'
+import grandma from '../assets/img/tiger-2.png'
+import father from '../assets/img/tiger-3.png'
+import mother from '../assets/img/tiger-4.png'
+import sister from '../assets/img/tiger-5.png'
+import brother from '../assets/img/tiger-6.png'
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import { useSearchParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { getInviteDetails } from '../_helpers/cloudFunctions'
@@ -88,7 +94,14 @@ function WelcomePage() {
                         )
                         }
                     </div>
-
+                    <div className="temp-imgs">
+                        <img src={grandpa} alt="" className="tiger__img" />
+                        <img src={grandma} alt="" className="tiger__img" />
+                        <img src={father} alt="" className="tiger__img" />
+                        <img src={mother} alt="" className="tiger__img" />
+                        <img src={sister} alt="" className="tiger__img" />
+                        <img src={brother} alt="" className="tiger__img" />
+                    </div>
                 </div>
                 <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
                     <div className="modal">

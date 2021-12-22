@@ -322,3 +322,13 @@
         }
     }
 }
+
+.temp-imgs {
+    position: absolute;
+    visibility: hidden;
+    z-index: -1;
+
+    .tiger__img {
+        width: 5px;
+    }
+}
