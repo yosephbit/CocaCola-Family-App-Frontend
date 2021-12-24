@@ -59,6 +59,9 @@ function SocialLinkPage() {
                         <img src={link2} alt="" className="link-img" />
                     </a>
                 </div>
+                <div className='social__text'>
+                    Share  the link with your loved one and wait for them to complete the Trivia Challenge. A SMS will be sent to your registered mobile number to complete the Trivia Challenge.
+                </div>
             </div>
             <Popup open={loading} className="login-popup" closeOnDocumentClick={false} onClose={() => setLoading(false)}>
                 <div className="modal">

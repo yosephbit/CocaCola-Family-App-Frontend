@@ -157,6 +157,15 @@
     }
 }
 
+.ackno-back {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 3px;
+    min-width: 220px;
+}
+
 #popup-root .ackno-popup-overlay {
     background: rgba(black, 0);
 
