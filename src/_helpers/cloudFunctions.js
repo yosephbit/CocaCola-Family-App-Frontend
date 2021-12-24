@@ -4,6 +4,7 @@ import axios from "axios";
 
 // const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
 // const api = 'https://0473-2a01-4f8-172-40a6-00-2.ngrok.io/coke-cny/us-central1'
+// const api = 'http://localhost:5001/macallan-ecf92/us-central1'
 const api = 'https://us-central1-macallan-ecf92.cloudfunctions.net'
 
 axios.interceptors.response.use(function (response) {
@@ -90,12 +91,13 @@ export const getQuiz = (invitationId) => {
     return axios.post(`${api}/getQuiz`, {invitationId})
 }
 
-export const addScoreForPlayTogether = (respondentId,netScore,percentage, fileToUpload) => {
+export const addScoreForPlayTogether = (respondentId, netScore, percentage, fileToUpload, relation) => {
     var formData = new FormData();
     formData.append("fileToUpload", fileToUpload, fileToUpload.name);
     formData.append("respondentId", respondentId);
     formData.append("netScore", netScore);
     formData.append("percentage", percentage);
+    formData.append("relation", relation);
    
     return axios.post(`${api}/addScoreForPlayTogether`, formData, {})
 }

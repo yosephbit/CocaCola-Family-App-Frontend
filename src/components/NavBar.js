@@ -7,7 +7,6 @@ import Popup from 'reactjs-popup'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaBars, FaTimes } from "react-icons/fa";
 import UserContext from '../_helpers/userContext'
-// import { isIOS } from 'react-device-detect';
 
 function NavBar() {
     const [audio] = useState(new Audio(soundfile));
@@ -23,14 +22,14 @@ function NavBar() {
     };
 
     useEffect(() => {
-        document.addEventListener("mousedown", handleInteract, false);
-        // console.log(isIOS, "is ios")
-        // if(!isIOS) {
-        //     document.addEventListener("mousedown", handleInteract, false);
-        // }
-        setTimeout(() => {
-            setVolClass(volClass + ' bounce')
-        }, 5000);
+        if (!user?.token) {
+            document.addEventListener("mousedown", handleInteract, false);
+            setTimeout(() => {
+                setVolClass(volClass + ' bounce')
+            }, 5000);
+        } else {
+            document.removeEventListener("mousedown", handleInteract)
+        }
         //eslint-disable-next-line
     }, []);
 
@@ -73,7 +72,7 @@ function NavBar() {
                                 <Link onClick={close} to="/admin/questions" className="menu__item">Questions</Link>
                                 <Link onClick={close} to="/admin/scores" className="menu__item">Scores</Link>
                                 {/* <Link onClick={close} to="/admin/winners" className="menu__item">Winners</Link> */}
-                                <span onClick={() => {logout(); close();}} className="menu__item">Logout</span>
+                                <span onClick={() => { logout(); close(); }} className="menu__item">Logout</span>
                             </div>
                         ) : (
                             <div className="menu fl-col just-start">

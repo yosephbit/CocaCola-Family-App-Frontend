@@ -1,16 +1,27 @@
 import React, { useContext, useEffect, useState, forwardRef } from 'react'
-import { MdViewColumn, MdRemove,MdArrowDownward, MdSearch, MdChevronLeft,
+import {
+    MdViewColumn, MdRemove, MdArrowDownward, MdSearch, MdChevronLeft,
     MdChevronRight, MdLastPage, MdFirstPage, MdFilterList, MdSaveAlt, MdEdit, MdDeleteOutline,
-    MdClear, MdCheck, MdAddBox } from "react-icons/md";
+    MdClear, MdCheck, MdAddBox
+} from "react-icons/md";
 import MaterialTable from 'material-table'
 import { adminGetScoreList } from '../../_helpers/cloudFunctions';
 import UserContext from '../../_helpers/userContext';
+import { CSVLink } from "react-csv";
 
 function AdminScore() {
+    let headers = [
+        { label: "Challenge Id", key: "challengeId" },
+        { label: "Net Score", key: "netscore" },
+        { label: "Percentage", key: "percentage" },
+        { label: "Share Code", key: "shareCode" },
+        { label: "Date", key: "created_at" }
+    ];
+
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(true)
-    const [pager, setPager] = useState({page: 0, pageSize: 50})
-    const {user} = useContext(UserContext)
+    const [pager, setPager] = useState({ page: 0, pageSize: 50 })
+    const { user } = useContext(UserContext)
     const tableIcons = {
         Add: forwardRef((props, ref) => <MdAddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <MdCheck {...props} ref={ref} />),
@@ -34,7 +45,6 @@ function AdminScore() {
     useEffect(() => {
         adminGetScoreList(user.user, user.token, pager.page, pager.pageSize)
             .then(res => {
-                console.log(res.data)
                 buildDataSource(res.data.scores)
                 setLoading(false)
             })
@@ -53,28 +63,28 @@ function AdminScore() {
                 <div className="line"></div>
             </div>
 
-            <div className="users__content fl-col">
+            <div className="users__content fl-col actions">
+                <CSVLink filename="scores" className="self-end actions__btn mb-15" data={dataSource} headers={headers}>
+                    Export XLS
+                </CSVLink>
+
                 <MaterialTable
                     title="Scores"
                     search={false}
                     icons={tableIcons}
                     isLoading={loading}
                     columns={[
-                        { title: 'NAME', field: 'challengeId' },
+                        { title: 'CHALLENGEID', field: 'challengeId' },
                         { title: 'NETSCORE', field: 'netscore' },
                         { title: 'PERCENTAGE', field: 'percentage' },
                         { title: 'RESPONDANTID', field: 'respondantId' },
                         { title: 'SHARECODE', field: 'shareCode' },
                         {
-                            title: 'DATE', field: 'created_at', type: 'date',
-                            dateSetting: {
-                                locale: "en-GB",
-                                // format: 'dd, M yyyy'
-                            },
+                            title: 'DATE', field: 'created_at'
                         },
                     ]}
                     data={dataSource}
-                    onChangePage={(page, pageSize) => {setPager({page, pageSize})}}
+                    onChangePage={(page, pageSize) => { setPager({ page, pageSize }) }}
                 />
             </div>
         </div>
@@ -86,14 +96,15 @@ function AdminScore() {
                 id: dt[0],
                 challengeId: dt[1].challangeId,
                 link: dt[1].link,
-                netscore: dt[1].netScore, 
+                netscore: dt[1].netScore,
                 percentage: `${(dt[1].percentage || 0).toFixed(0)}%`,
                 respondantId: dt[1].respondentId,
                 shareCode: dt[1].shareCode,
-                created_at: new Date(dt[1].timeStamp),
+                created_at: (new Date(dt[1].timeStamp)).toLocaleString(),
             }
             return score
         })
+        console.log(scores)
         setDataSource(scores)
     }
 }

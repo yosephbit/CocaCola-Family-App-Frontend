@@ -8,7 +8,7 @@ function UserLinksModal({ user, close }) {
         }
     }, [user])
 
-    if (user.links.length === 0) {
+    if (user.links.length === 0 && user?.scores?.length === 0) {
         return (
             <>
                 <div onClick={close} className="modal__close">x</div>
@@ -33,7 +33,6 @@ function UserLinksModal({ user, close }) {
                     const score = getScoreForLink(linkId)
                     console.log(score, 'score')
                     if(score === false) {
-
                         return(
                             <div key={linkId} className="table__row">
                                 <div className="table__cell">{linkId}</div>
@@ -66,7 +65,7 @@ function UserLinksModal({ user, close }) {
                             <div key={challegeId} className="table__row">
                                 <div className="table__cell">Play Together</div>
                                 <div className="table__cell">-</div>
-                                <div className="table__cell">{''}</div>
+                                <div className="table__cell">{challenge?.relation}</div>
                                 <div className="table__cell">{challenge?.percentage?.toFixed(0)} %</div>
                                 <div className="table__cell">{challenge.shareCode}</div>
                                 <div className="table__cell">{(new Date(challenge.timeStamp)).toLocaleString()}</div>

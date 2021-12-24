@@ -8,10 +8,12 @@ import MaterialTable from 'material-table'
 import { getUsers } from '../../_helpers/cloudFunctions';
 import UserContext from '../../_helpers/userContext'
 import Popup from 'reactjs-popup';
-import { UserLinksModal} from '../../components/.';
+import { UserLinksModal } from '../../components/.';
+import { CSVLink } from "react-csv";
 
 function AdminUsers() {
     const [dataSource, setDataSource] = useState([])
+    const [dataSourceExport, setDataSourceExport] = useState([])
     const [loading, setLoading] = useState(true)
     const [openLinks, setOpenLinks] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
@@ -37,13 +39,26 @@ function AdminUsers() {
         ViewColumn: forwardRef((props, ref) => <MdViewColumn {...props} ref={ref} />)
     };
 
+    const headers = [
+        { label: "Name", key: "name" },
+        { label: "Phone Number", key: "phone_number" },
+        { label: "Created Date", key: "created_at" },
+        { label: "Link", key: "invitationId" },
+        { label: "Link Creation Date", key: "linkTimestamp" },
+        { label: "For", key: "relation" },
+        { label: "Score", key: "percentage" },
+        { label: "Participation Code", key: "shareCode" },
+        { label: "Participation Date", key: "participationDate" },
+    ];
+
     useEffect(() => {
         getUsers(user?.user, pager.pageSize, pager.page, user?.token).then(res => {
+            buildDataSourceForExport(res.data.users)
             buildDataSource(res.data.users)
             setLoading(false)
         }).catch(e => {
             setLoading(false)
-            console.log(e.response)
+            console.log(e)
         })
         // eslint-disable-next-line
     }, [pager])
@@ -56,7 +71,11 @@ function AdminUsers() {
                 <div className="line"></div>
             </div>
 
-            <div className="users__content fl-col">
+            <div className="users__content fl-col actions">
+                <CSVLink filename="users" className="self-end actions__btn mb-15" data={dataSourceExport} headers={headers}>
+                    Export XLS
+                </CSVLink>
+
                 <MaterialTable
                     title="Users"
                     search={false}
@@ -65,13 +84,7 @@ function AdminUsers() {
                     columns={[
                         { title: 'NAME', field: 'name' },
                         { title: 'PHONE', field: 'phone_number' },
-                        {
-                            title: 'DATE', field: 'created_at', type: 'date',
-                            dateSetting: {
-                                locale: "en-GB",
-                                // format: 'dd, M yyyy'
-                            },
-                        },
+                        { title: 'DATE', field: 'created_at' },
                     ]}
                     data={dataSource}
                     actions={[
@@ -97,12 +110,34 @@ function AdminUsers() {
         </div>
     )
 
+    function buildDataSourceForExport(data) {
+        let response = []
+        let users = data.map(user => {
+            response.push({
+                userId: user[0],
+                ...user[1],
+                created_at: (new Date(user[1].created_at)).toLocaleString(),
+            })
+            user[1].links.map(([linkId, links]) => {
+                const score = user[1].scores.filter(([scoreId, score]) => score.invitationId === linkId)
+                if (score.length === 0) {
+                    response.push({ invitationId: linkId, percentage: 'Link Not Used Yet', linkTimestamp: (new Date(links.timeStamp)).toLocaleString(), ...links });
+                } else {
+                    let linkscore = score.pop()[1]
+                    response.push({ userId: '', created_at: '', phone_number: '', linkTimestamp: (new Date(links.timeStamp)).toLocaleString(), ...links, participationDate: (new Date(linkscore.timeStamp)).toLocaleString(), ...linkscore, percentage: linkscore.percentage.toFixed(0) })
+                }
+            })
+            user[1].scores?.map(([challegeId, challenge]) => { if (!challenge.challangeId) response.push({ userId: '', created_at: '', phone_number: '', invitationId: 'Play Together', participationDate: (new Date(challenge.timeStamp)).toLocaleString(), ...challenge }) })
+
+        })
+
+        setDataSourceExport(response)
+    }
     function buildDataSource(data) {
         let users = data.map(user => {
-            return { 
-                userId: user[0], 
-                ...user[1],
-                created_at: new Date(user[1].created_at),
+            return {
+                userId: user[0], ...user[1],
+                created_at: new Date(user[1].created_at).toLocaleString(),
             }
         })
         setDataSource(users)

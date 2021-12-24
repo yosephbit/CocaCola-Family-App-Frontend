@@ -54,8 +54,11 @@ function ScorePage() {
 
     useLayoutEffect(() => {
         // if (percentage !== null)
-        if (percentage !== null) {
-
+        if(localStorage.getItem(`scoreId/${id}`)) {
+            setThumb(localStorage.getItem(`scoreId/${id}`))
+            setOpen(false)
+        }
+        else if (percentage !== null) {
             console.log("screen shooting...")
             const ele = document.querySelector('.ht2can')
             const img = ele.querySelector('.score__img')
@@ -81,6 +84,7 @@ function ScorePage() {
                 let file = new File([blob], `score-share.jpg`)
                 upload(file).then(({ data }) => {
                     setThumb(data?.link)
+                    localStorage.setItem(`scoreId/${id}`, data?.link)
                     setOpen(false)
                 }).catch(e => {
                     console.log(e)
@@ -94,6 +98,7 @@ function ScorePage() {
                 toggleStyleForCanvas(header)
             })
         }
+        // eslint-disable-next-line
     }, [percentage])
 
     return (

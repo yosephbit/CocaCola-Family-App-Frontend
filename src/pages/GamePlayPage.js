@@ -368,7 +368,7 @@ function GamePlayPage() {
             }
             const totalQuestions = challengeAnswers.length;
             percentage = (score / totalQuestions) * 100;
-            addScoreForPlayTogether(user, score, percentage, video)
+            addScoreForPlayTogether(user, score, percentage, video, state?.relation)
                 .then(res => {
                     setLoading(false)
                     storePath({ "via": path?.via, "SCORE": res?.data })
